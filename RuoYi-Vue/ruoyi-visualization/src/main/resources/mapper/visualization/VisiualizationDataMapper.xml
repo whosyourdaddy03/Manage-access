@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.visualization.mapper.VisiualizationDataMapper">
+
+    <select id="queryRawData" parameterType="java.lang.String" resultType="java.util.Map">
+        select id, width, height, `depth`, segmented, xmin, xmax, ymin, ymax, pose from seer.annotations where id = #{id};
+    </select>
+
+
+    <select id="queryPrediction" resultType="java.util.Map">
+        select id, epoch, `time`, train_box_loss, train_cls_loss, train_dfl_loss, metrics_precision_B, metrics_recall_B, metrics_mAP50_B, metrics_mAP50_95_B, val_box_loss, val_cls_loss, val_dfl_loss, lr_pg0, lr_pg1, lr_pg2
+        from seer.annotations_epoch_results
+        where id = (select MAX(id) from seer.annotations_epoch_results);
+    </select>
+
+    <!-- 查询所有不同的 epoch id 组 -->
+    <select id="queryAllEpochIds" resultType="java.lang.String">
+        select distinct id from seer.annotations_epoch_results order by id;
+    </select>
+
+    <!-- 查询所有 epoch 结果(按id排序) -->
+    <select id="queryEpochResults" resultType="java.util.Map">
+        select id, epoch, `time`, train_box_loss, train_cls_loss, train_dfl_loss,
+               metrics_precision_B, metrics_recall_B, metrics_mAP50_B, metrics_mAP50_95_B,
+               val_box_loss, val_cls_loss, val_dfl_loss, lr_pg0, lr_pg1, lr_pg2
+        from seer.annotations_epoch_results
+        order by id, epoch;
+    </select>
+
+    <!-- 按指定 id 分组查询 epoch 结果 -->
+    <select id="queryEpochResultsByGroup" parameterType="java.lang.String" resultType="java.util.Map">
+        select id, epoch, `time`, train_box_loss, train_cls_loss, train_dfl_loss,
+               metrics_precision_B, metrics_recall_B, metrics_mAP50_B, metrics_mAP50_95_B,
+               val_box_loss, val_cls_loss, val_dfl_loss, lr_pg0, lr_pg1, lr_pg2
+        from seer.annotations_epoch_results
+        where id = #{id}
+        order by epoch;
+    </select>
+
+    <!-- 查询数据集统计信息(从annotations表按id前缀分组统计) -->
+    <select id="queryDatasetList" resultType="java.util.Map">
+        select
+            folder,
+            concat('Det-Fly ', folder) as name,
+            'BaiduNetdiskDownload' as source,
+            totalCount
+        from (
+            select substring(id, 1, 2) as folder, count(*) as totalCount
+            from seer.annotations
+            group by substring(id, 1, 2)
+        ) t
+        order by folder;
+    </select>
+</mapper>

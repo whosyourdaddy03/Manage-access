@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.visualization.mapper.ModelRegistryMapper">
+
+    <resultMap id="ModelResult" type="com.ruoyi.visualization.domain.ModelRegistry">
+        <id property="id" column="id"/>
+        <result property="modelName" column="model_name"/>
+        <result property="modelVersion" column="model_version"/>
+        <result property="modelType" column="model_type"/>
+        <result property="sourcePath" column="source_path"/>
+        <result property="trainingTaskId" column="training_task_id"/>
+        <result property="metricsMap" column="metrics_mAP"/>
+        <result property="metricsSpeed" column="metrics_speed"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectModelList" resultMap="ModelResult">
+        select id, model_name, model_version, model_type, source_path,
+               training_task_id, metrics_mAP, metrics_speed, status, remark, create_time, update_time
+        from seer.model_registry
+        order by status desc, create_time desc
+    </select>
+
+    <select id="selectModelById" parameterType="java.lang.Long" resultMap="ModelResult">
+        select * from seer.model_registry where id = #{id}
+    </select>
+
+    <insert id="insertModel" parameterType="com.ruoyi.visualization.domain.ModelRegistry"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into seer.model_registry (model_name, model_version, model_type, source_path,
+                                         training_task_id, metrics_mAP, metrics_speed, status, remark, create_time)
+        values (#{modelName}, #{modelVersion}, #{modelType}, #{sourcePath},
+                #{trainingTaskId}, #{metricsMap}, #{metricsSpeed}, #{status}, #{remark}, now())
+    </insert>
+
+    <update id="updateModel" parameterType="com.ruoyi.visualization.domain.ModelRegistry">
+        update seer.model_registry
+        set model_name = #{modelName},
+            model_version = #{modelVersion},
+            model_type = #{modelType},
+            source_path = #{sourcePath},
+            training_task_id = #{trainingTaskId},
+            metrics_mAP = #{metricsMap},
+            metrics_speed = #{metricsSpeed},
+            status = #{status},
+            remark = #{remark},
+            update_time = now()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteModelById" parameterType="java.lang.Long">
+        delete from seer.model_registry where id = #{id}
+    </delete>
+
+    <!-- 扫描本地目录(查询数据库已有的路径做对比) -->
+    <select id="scanLocalModels" parameterType="java.lang.String" resultType="java.util.Map">
+        select
+            #{dirPath} as dir_path,
+            f.file_name,
+            concat(#{dirPath}, '\\', f.file_name) as full_path
+        from (select 'best.pt' as file_name union select 'last.pt') f
+        where not exists (
+            select 1 from seer.model_registry m
+            where m.source_path = concat(#{dirPath}, '\\', f.file_name)
+        )
+    </select>
+
+    <update id="clearInUseStatus">
+        update seer.model_registry set status = 'archived' where status = 'in_use'
+    </update>
+
+    <update id="setInUseStatus">
+        update seer.model_registry set status = 'in_use', update_time = now() where id = #{id}
+    </update>
+
+</mapper>

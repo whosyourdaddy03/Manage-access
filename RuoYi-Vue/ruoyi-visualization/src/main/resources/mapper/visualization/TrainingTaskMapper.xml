@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.visualization.mapper.TrainingTaskMapper">
+
+    <resultMap id="TrainingTaskResult" type="com.ruoyi.visualization.domain.TrainingTask">
+        <id property="id" column="id"/>
+        <result property="trainingTime" column="training_time"/>
+        <result property="modelVersion" column="model_version"/>
+        <result property="epochs" column="epochs"/>
+        <result property="batchSize" column="batch_size"/>
+        <result property="imageSize" column="image_size"/>
+        <result property="bestPtPath" column="best_pt_path"/>
+        <result property="lastPtPath" column="last_pt_path"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <!-- 查询所有训练任务 -->
+    <select id="selectTrainingTaskList" resultMap="TrainingTaskResult">
+        select id, training_time, model_version, epochs, batch_size, image_size,
+               best_pt_path, last_pt_path, create_time
+        from seer.annotations_training_tasks
+        order by id
+    </select>
+
+    <!-- 根据ID查询训练任务 -->
+    <select id="selectTrainingTaskById" parameterType="java.lang.String" resultMap="TrainingTaskResult">
+        select id, training_time, model_version, epochs, batch_size, image_size,
+               best_pt_path, last_pt_path, create_time
+        from seer.annotations_training_tasks
+        where id = #{id}
+    </select>
+
+    <!-- 插入训练任务 -->
+    <insert id="insertTrainingTask" parameterType="com.ruoyi.visualization.domain.TrainingTask">
+        insert into seer.annotations_training_tasks (id, training_time, model_version, epochs, batch_size, image_size,
+                                         best_pt_path, last_pt_path, create_time)
+        values (#{id}, #{trainingTime}, #{modelVersion}, #{epochs}, #{batchSize}, #{imageSize},
+                #{bestPtPath}, #{lastPtPath}, now())
+    </insert>
+
+    <!-- 更新训练任务 -->
+    <update id="updateTrainingTask" parameterType="com.ruoyi.visualization.domain.TrainingTask">
+        update seer.annotations_training_tasks
+        set training_time = #{trainingTime},
+            model_version = #{modelVersion},
+            epochs = #{epochs},
+            batch_size = #{batchSize},
+            image_size = #{imageSize},
+            best_pt_path = #{bestPtPath},
+            last_pt_path = #{lastPtPath}
+        where id = #{id}
+    </update>
+
+    <!-- 从 annotations_epoch_results 同步任务ID（避免重复） -->
+    <insert id="syncTaskIds">
+        insert ignore into seer.annotations_training_tasks (id, model_version, epochs, batch_size, image_size)
+        select distinct r.id, 'YOLOv8s', 300, 16, 640
+        from seer.annotations_epoch_results r
+        where r.id is not null and r.id != ''
+    </insert>
+
+    <!-- 按任务ID查询 epoch 结果 -->
+    <select id="selectEpochResultsByTaskId" parameterType="java.lang.String" resultType="java.util.Map">
+        select id, epoch, `time`, train_box_loss, train_cls_loss, train_dfl_loss,
+               metrics_precision_B, metrics_recall_B, metrics_mAP50_B, metrics_mAP50_95_B,
+               val_box_loss, val_cls_loss, val_dfl_loss, lr_pg0, lr_pg1, lr_pg2
+        from seer.annotations_epoch_results
+        where id = #{id}
+        order by epoch
+    </select>
+
+</mapper>
