@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Vue / Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# ROS 2
+ground_station/ros2_ws/build/
+ground_station/ros2_ws/install/
+ground_station/ros2_ws/log/
+
+# Flight and experiment data
+ground_station/data/
+ground_station/recordings/
+*.ulg
+*.db3
+*.bag
+*.pt
+*.pth
+*.onnx
+
+# Tools and operating systems
+.DS_Store
+.idea/
+.vscode/
+*.log
