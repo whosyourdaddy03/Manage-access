@@ -1,0 +1,17 @@
+services:
+  api:
+    build: ./api
+    environment:
+      APP_ENV: development
+      FLIGHT_ADAPTER: mock
+      TELEMETRY_HZ: 10
+      CORS_ORIGINS: http://localhost:5173,http://localhost:8080
+    ports:
+      - "8000:8000"
+
+  web:
+    build: ./web
+    depends_on:
+      - api
+    ports:
+      - "8080:80"

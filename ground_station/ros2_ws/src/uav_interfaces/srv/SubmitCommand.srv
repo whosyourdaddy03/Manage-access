@@ -1,0 +1,9 @@
+string command_id
+string vehicle_id
+string command_type
+string parameters_json
+---
+bool accepted
+string reason
+string current_state
+builtin_interfaces/Time executed_at

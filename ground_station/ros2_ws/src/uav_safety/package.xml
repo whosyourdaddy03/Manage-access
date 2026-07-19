@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>uav_safety</name>
+  <version>0.1.0</version>
+  <description>Safety command gate and state publisher.</description>
+  <maintainer email="research@example.com">UAV Research Team</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>uav_interfaces</exec_depend>
+</package>
