@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#0a0f1a;overflow:hidden;}
+  #map{position:absolute;inset:0;background:#0a0f1a;}
+  #radar{position:absolute;inset:0;display:none;background:#0a0f1a;}
+  .obs-icon{width:0;height:0;}
+  .obs-arrow{
+    width:0;height:0;
+    border-left:11px solid transparent;border-right:11px solid transparent;
+    border-bottom:24px solid #38bdf8;
+    filter:drop-shadow(0 0 6px rgba(56,189,248,.9));
+    transform-origin:50% 75%;
+  }
+  .tgt{border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px rgba(0,0,0,.8);
+       display:flex;align-items:center;justify-content:center;
+       font:bold 11px "Microsoft YaHei";color:#fff;}
+  .leaflet-container{background:#0a0f1a;}
+  .leaflet-control-attribution{background:rgba(10,15,26,.6)!important;color:#7a8aa0!important;font-size:9px;}
+  .leaflet-control-attribution a{color:#5a7aa0!important;}
+  #tag{position:absolute;left:10px;top:10px;z-index:500;
+      font:12px "Microsoft YaHei";color:#9fc5ff;
+      background:rgba(10,20,35,.72);border:1px solid #2a4a6a;border-radius:6px;
+      padding:4px 10px;}
+</style>
+<script src="leaflet/leaflet.js"></script>
+</head>
+<body>
+<div id="map"></div>
+<canvas id="radar" width="800" height="800"></canvas>
+<div id="tag">目标态势 · 卫星图</div>
+<script>
+let map, obsMarker, tgtMarker, trajLine, rings=[];
+let obs={lat:47.397742,lng:8.545594,heading:0};
+let tgt=null;            // {lat,lng,conf,locked,level}
+let trail=[];              // [[lat,lng],...]
+let rangeRings=[3,5,8];
+const RCOL={green:"#22c55e",yellow:"#eab308",orange:"#f97316",red:"#ef4444",gray:"#64748b"};
+
+function mkTgtIcon(c,conf){
+  const d=document.createElement("div");
+  d.className="tgt";
+  d.style.cssText="width:22px;height:22px;background:"+c+";";
+  d.textContent=conf!=null?conf.toFixed(2):"";
+  return d;
+}
+function init(){
+  map=L.map("map",{zoomControl:true,attributionControl:true}).setView([obs.lat,obs.lng],18);
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {maxZoom:21,attribution:"Esri World Imagery"}).addTo(map);
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+    {maxZoom:21,opacity:.85}).addTo(map);
+  obsMarker=L.marker([obs.lat,obs.lng],{
+    icon:L.divIcon({className:"obs-icon",html:'<div class="obs-arrow" id="obsArrow"></div>',
+                   iconSize:[22,24],iconAnchor:[11,18]}),zIndexOffset:1000}).addTo(map);
+  trajLine=L.polyline([],{color:"#60b4ff",weight:2.5,opacity:.9}).addTo(map);
+  rings=rangeRings.map(r=>L.circle([obs.lat,obs.lng],{radius:r,color:"#f59e0b",
+       weight:1.2,dashArray:"6 6",fillOpacity:0.03,opacity:.55}).addTo(map));
+}
+function setObserver(lat,lng,heading){
+  obs={lat,lng,heading};
+  if(typeof map!=="undefined"){
+    obsMarker.setLatLng([lat,lng]);
+    const a=document.getElementById("obsArrow");
+    if(a) a.style.transform="rotate("+heading+"deg)";
+    rings.forEach((rc,i)=>rc.setLatLng([lat,lng]));
+  }
+}
+function updateTarget(lat,lng,conf,locked,level,visible){
+  const col=RCOL[level]||RCOL.gray;
+  if(visible){
+    tgt={lat,lng,conf,locked,level};
+    if(!tgtMarker){
+      tgtMarker=L.marker([lat,lng],{icon:L.divIcon(
+        {className:"",html:mkTgtIcon(col,conf),iconSize:[22,22],iconAnchor:[11,11]})}).addTo(map);
+    }else{
+      tgtMarker.setLatLng([lat,lng]);
+      tgtMarker.setIcon(L.divIcon(
+        {className:"",html:mkTgtIcon(col,conf),iconSize:[22,22],iconAnchor:[11,11]}));
+    }
+  }else if(tgtMarker){ tgtMarker.remove(); tgtMarker=null; tgt=null; }
+}
+function updateTraj(pts){
+  trail=pts;
+  trajLine.setLatLngs(pts);
+}
+function follow(enable){
+  if(enable&&tgt) map.panTo([tgt.lat,tgt.lng],{animate:false});
+}
+function centerObs(){ map.setView([obs.lat,obs.lng],map.getZoom()); }
+
+/* ---------- 离线雷达态势图 ---------- */
+function drawRadar(){
+  const cv=document.getElementById("radar");
+  const dpr=window.devicePixelRatio||1;
+  const w=cv.clientWidth, h=cv.clientHeight;
+  cv.width=w*dpr; cv.height=h*dpr;
+  const ctx=cv.getContext("2d"); ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h/2, Rmax=Math.min(w,h)/2-40;
+  const worldMax=rangeRings[rangeRings.length-1]*1.25;   // 米
+  const P=(xN,yN)=>[cx + (xN/worldMax)*Rmax, cy - (yN/worldMax)*Rmax];
+  // 环
+  ctx.strokeStyle="#1e3a55"; ctx.lineWidth=1;
+  rangeRings.forEach(r=>{
+    const rr=Rmax*r/worldMax;
+    ctx.beginPath();ctx.arc(cx,cy,rr,0,7);ctx.stroke();
+    ctx.fillStyle="#5a7aa0";ctx.font="11px Microsoft YaHei";
+    ctx.fillText(r+"m",cx+4,cy-rr-3);
+  });
+  // 十字 + N
+  ctx.beginPath();ctx.moveTo(cx-Rmax,cy);ctx.lineTo(cx+Rmax,cy);
+  ctx.moveTo(cx,cy-Rmax);ctx.lineTo(cx,cy+Rmax);ctx.stroke();
+  ctx.fillStyle="#9fc5ff";ctx.font="bold 13px Microsoft YaHei";
+  ctx.fillText("N",cx-4,cy-Rmax-8);
+  // 本机三角
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(obs.heading*Math.PI/180);
+  ctx.fillStyle="#38bdf8";ctx.beginPath();
+  ctx.moveTo(0,-12);ctx.lineTo(9,10);ctx.lineTo(-9,10);ctx.closePath();ctx.fill();
+  ctx.restore();
+  // 航迹
+  if(trail.length>1){
+    ctx.strokeStyle="#60b4ff";ctx.lineWidth=2;ctx.beginPath();
+    trail.forEach((p,i)=>{
+      // 简化: 以本机为中心的相对坐标由python传入备用接口 setRelTrail
+    });ctx.stroke();
+  }
+  // 目标
+  if(tgt){
+    const mPerDegLat=111320;
+    const xN=(tgt.lng-obs.lng)*111320*Math.cos(obs.lat*Math.PI/180);
+    const yN=(tgt.lat-obs.lat)*111320;
+    const [tx,ty]=P(xN,yN);
+    const col=RCOL[tgt.level]||RCOL.gray;
+    ctx.fillStyle=col;ctx.strokeStyle="#fff";ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(tx,ty,8,0,7);ctx.fill();ctx.stroke();
+    ctx.fillStyle="#cfe0f5";ctx.font="11px Microsoft YaHei";
+    ctx.fillText((tgt.conf!=null?tgt.conf.toFixed(2):"")+" 目标",tx+11,ty-8);
+  }
+}
+function setMode(m){
+  const mp=document.getElementById("map"), cv=document.getElementById("radar"),
+        tag=document.getElementById("tag");
+  if(m==="radar"){ mp.style.display="none"; cv.style.display="block";
+    tag.textContent="目标态势 · 离线雷达图"; drawRadar(); }
+  else{ cv.style.display="none"; mp.style.display="block";
+    tag.textContent="目标态势 · 卫星图"; map.invalidateSize(); }
+}
+window.addEventListener("resize",()=>{ if(document.getElementById("radar").style.display==="block") drawRadar(); });
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.log
+records/
+test_runs/
+*.mp4
+*.avi
+dataset/
+selfdata/
+runs/
+!models/weights/
+platform_config.json
+*.tmp
