@@ -1,0 +1,44 @@
+%% 中英文摘要
+\begin{ChineseAbstract}
+
+随着低空禁忌的快速发展，微型无人机在救援、航拍、物流、巡检等多领域广泛应用，但"黑飞""乱飞"等违规飞行事件也随之增多，对机场，军区等保密单位构成了威胁。这一问题已成为反无人机领域待解决的关键问题。雷达，声学，光学，视觉等光学视觉方案具有成本低，部署灵活，可直观确认目标等优势，但同时也面临这两个突出的问题，第一个问题较远距离目标在图像中成像过小，约几十个像素，属于小目标检测问题；第二个问题是在真实的场景环境中，树木、建筑等障碍物随处可见，检测数据中断较为频繁，难以形成连续，持久，可用的航迹。
+
+针对以上问题，本文设计并实现了一个面向反无人机场景的无人机识别与定位系统。在这个系统中，单目可见相机是唯一的视觉传感器，通过“检测-跟踪-定位-显示”这一流程，主要工作包含了以下五个方面。
+
+（1）面向小目标检测搭建模型。该模型以YOLOv8n为基础，在特征金字塔中增加stride=4的P2高分辨率检测头，并且在C2f模块中嵌入EMA搞笑多尺度注意力机制，结合成YOLOv8n-P2-EMA模型。随后将Det-Fly数据集划分为训练集与验证集，避免同一序列帧同时出现在训练和验证中，造成数据泄露。四组消融实验表明：YOLOv8n、+P2、+EMA、+P2+EMA的mAP50分别为 81.3\%、82.3\%、76.2\% 与 83.5\%，AP\_small 分别为 6.1\%、8.3\%、4.1\% 与 9.8\%，推理速度分别为 123、90、101 与 98\,fps。本文模型以 2.94\,M 参数量取得最优综合指标，AP\_small 相对基线提升 60.7\%，并可满足 30\,fps 实时处理需求。
+
+（2）揭示了仿真环境下检测死区的形成机理。在 PX4+jMAVSim 测试中发现，未微调模型在 3--6\,m 近距离段检出率接近 0，在 9\,m 以上远距离段亦无法稳定锁定，有效工作窗口仅 7--9\,m。通过对 2228 帧录像与真值几何的逐帧审计，排除了"俯视视角导致失效"的假设，确认死区的决定因素是目标在图像中的尺度：近距离大尺度样本超出 Det-Fly 的远距小目标分布，属于分布外（OOD）输入；远距离样本则低于初锁门限。
+
+（3）提出了仿真域微调方法并完成自动标注数据构建。利用 jMAVSim 护航相机始终注视目标机的特性，将目标框中心约束在光轴附近，再由真值距离与等效尺寸反算框高，实现零人工标注的 450 帧仿真数据采集；按距离分层覆盖 3--6\,m、6--7\,m、7--9\,m 与 9--12\,m 四个区间。以 20 轮、学习率 0.001、关闭 Mosaic 的方式微调后，3--10\,m 全距离段检出率提升至 100\%，置信度中位数 0.867，检测死区被完全消除。
+
+（4）设计了三态跟踪状态机与单目定位方法。状态机包含 SEARCH、LOCKED 与 COAST 三种状态，采用"0.25 维持门限 + 0.55 初锁门限"的双门限策略抑制误锁，采用 140\,px 空间门限的最近邻匹配抑制身份跳变，采用 1.0\,s 卡尔曼预测维持抑制短时遮挡中断。定位环节由检测框中心直接解算方位角与俯仰角，由框高与等效尺寸解算距离，并以六维状态的自适应卡尔曼滤波（Sage-Husa）平滑三维位置与速度。仿真闭环实验表明，微调后单帧测距 RMSE 为 0.26\,m、AKF 稳态中位误差 0.13\,m、1\,s 距离预测 ADE 中位 0.26\,m、方位角误差中位 0.05\textdegree；实拍视频中 AKF 相对单帧测距 RMSE 降低 32\%，抖动降低 33\%。
+
+（5）完成了系统集成与自动化验证。系统采用"算法端—显示端"双进程架构，算法进程通过 TCP 接收 720p@30fps 视频帧、通过 UDP 接收 50\,Hz 真值，并以 UDP/JSON 向显示端输出结构化结果；基于 PySide6 构建三页签监视大屏，包含卫星地图态势、光电画面、距离与方位仪表、威胁分级、CSV 记录与参数持久化等功能。设计并执行了 14 个自动化用例，覆盖基线检测、真实场景、门限扫描、尺寸敏感、TCP 遮挡与摄像头输入，13 例完成、6 例判定通过、0 例失败，验证了完整链路的正确性与鲁棒性。
+
+最后，本文将所提方法应用于改造后的 jMAVSim 城市巡游场景，实现了目标机主动飞行、护航相机被动尾随的编队巡游，并通过段内加减速与瞄准点滞后使画面呈现真实的追踪感，为后续外场试验与多传感器融合提供了可复现的实验平台。
+
+\textbf{关键词：}反无人机；小目标检测；YOLOv8；P2 检测头；EMA 注意力；卡尔曼滤波；单目测距；仿真域微调
+
+\end{ChineseAbstract}
+
+\begin{EnglishAbstract}
+
+With the rapid development of the low-altitude economy, micro unmanned aerial vehicles (UAVs) have been widely used in many fields such as rescue, aerial photography, logistics, and inspection. However, illegal and irregular flight events such as ``black flights'' and ``chaotic flights'' have also increased, posing threats to airports, military regions, and other confidential units. This problem has become a key issue to be solved in the counter-UAV field. Radar, acoustic, optical, and vision-based solutions have advantages such as low cost, flexible deployment, and intuitive target confirmation, but they also face two prominent problems. The first problem is that distant targets are imaged too small in images, about tens of pixels, which belongs to small-object detection. The second problem is that in real scenarios, obstacles such as trees and buildings are ubiquitous, and detection data interruptions are frequent, making it difficult to form continuous, persistent, and usable tracks.
+
+To address the above problems, this paper designs and implements a UAV identification and localization system for counter-UAV scenarios. In this system, a monocular visible-light camera is the only visual sensor. Through the pipeline of ``detection--tracking--localization--display'', the main work includes the following five aspects.
+
+(1) A model for small-object detection is built. The model is based on YOLOv8n, adds a P2 high-resolution detection head with stride=4 to the feature pyramid, and embeds an Efficient Multi-Scale Attention (EMA) mechanism into the C2f module, forming the YOLOv8n-P2-EMA model. Then the Det-Fly dataset is divided into training and validation sets to avoid the same sequence frames appearing in both training and validation and causing data leakage. Four ablation experiments show that the mAP50 of YOLOv8n, +P2, +EMA, and +P2+EMA are 81.3\%, 82.3\%, 76.2\%, and 83.5\%, respectively; AP\_small are 6.1\%, 8.3\%, 4.1\%, and 9.8\%, respectively; and the inference speeds are 123, 90, 101, and 98\,fps, respectively. The proposed model achieves the best overall performance with 2.94\,M parameters; AP\_small is improved by 60.7\% relative to the baseline, and it can meet the 30\,fps real-time processing requirement.
+
+(2) The formation mechanism of the detection dead zone in the simulation environment is revealed. In PX4+jMAVSim tests, it is found that the detection rate of the model without fine-tuning is close to 0 in the near range of 3--6\,m, and it cannot stably lock in the far range above 9\,m; the effective working window is only 7--9\,m. Through frame-by-frame audit of 2228 frames of video and ground-truth geometry, the hypothesis that ``the top-down view causes failure'' is ruled out, and it is confirmed that the decisive factor of the dead zone is the scale of the target in the image: near-range large-scale samples exceed the far-range small-target distribution of Det-Fly and belong to out-of-distribution (OOD) inputs; far-range samples are below the initial locking threshold.
+
+(3) A simulation-domain fine-tuning method is proposed and automatic annotation data construction is completed. Taking advantage of the characteristic that the jMAVSim escort camera always looks at the target UAV, the center of the target box is constrained near the optical axis, and then the box height is back-calculated from the ground-truth distance and equivalent size, realizing zero-manual-annotation collection of 450 frames of simulation data; the data are stratified by distance and cover four intervals: 3--6\,m, 6--7\,m, 7--9\,m, and 9--12\,m. After fine-tuning for 20 epochs with a learning rate of 0.001 and Mosaic disabled, the detection rate over the full range of 3--10\,m is increased to 100\%, the median confidence is 0.867, and the detection dead zone is completely eliminated.
+
+(4) A three-state tracking state machine and a monocular localization method are designed. The state machine contains three states: SEARCH, LOCKED, and COAST. A dual-threshold strategy of ``0.25 maintenance threshold + 0.55 initial locking threshold'' is used to suppress false locking; nearest-neighbor matching with a 140\,px spatial threshold is used to suppress identity switching; and 1.0\,s Kalman prediction maintenance is used to suppress short-term occlusion interruptions. In the localization stage, the azimuth and elevation angles are directly solved from the center of the detection box, the distance is solved from the box height and equivalent size, and a six-dimensional state adaptive Kalman filter (Sage-Husa) is used to smooth the 3D position and velocity. Simulation closed-loop experiments show that after fine-tuning, the single-frame ranging RMSE is 0.26\,m, the AKF steady-state median error is 0.13\,m, the median ADE of 1\,s distance prediction is 0.26\,m, and the median azimuth error is 0.05\textdegree; in real captured videos, the AKF reduces the RMSE by 32\% and the jitter by 33\% compared with single-frame ranging.
+
+(5) System integration and automated verification are completed. The system adopts a dual-process architecture of ``algorithm side--display side''. The algorithm process receives 720p@30\,fps video frames via TCP and 50\,Hz ground truth via UDP, and outputs structured results to the display side via UDP/JSON; a three-tab monitoring dashboard is built based on PySide6, including satellite map situation, electro-optical imagery, distance and azimuth gauges, threat grading, CSV logging, and parameter persistence. Fourteen automated test cases are designed and executed, covering baseline detection, real scenes, threshold sweeping, size sensitivity, TCP occlusion, and camera input. Thirteen cases are completed, six are judged as passed, and zero cases failed, verifying the correctness and robustness of the complete pipeline.
+
+Finally, the proposed method is applied to a modified jMAVSim urban patrol scene, realizing a formation patrol in which the target UAV flies actively and the escort camera passively tails it. Through intra-segment acceleration/deceleration and aiming-point lag, the image presents a realistic tracking feel, providing a reproducible experimental platform for subsequent field tests and multi-sensor fusion.
+
+\textbf{Keywords:} counter-UAV; small object detection; YOLOv8; P2 detection head; EMA attention; Kalman filter; monocular ranging; simulation-domain fine-tuning
+
+\end{EnglishAbstract}

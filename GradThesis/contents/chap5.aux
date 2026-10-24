@@ -1,0 +1,246 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\@writefile{toc}{\contentsline {chapter}{\numberline {\bfseries  5\hspace  {.3em}}三态跟踪状态机}{41}{chapter.5}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{lof2}{\addvspace {10\p@ }}
+\@writefile{lot2}{\addvspace {10\p@ }}
+\newlabel{chap:sm}{{\bfseries  5}{41}{三态跟踪状态机}{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}问题描述}{41}{section.5.1}\protected@file@percent }
+\newlabel{eq:det_set}{{5-1}{41}{问题描述}{equation.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}误检}{41}{subsection.5.1.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-1}{\ignorespaces 典型误检来源与置信度分布}}{41}{table.caption.15}\protected@file@percent }
+\newlabel{tab:false_positive}{{5{}-1}{41}{典型误检来源与置信度分布}{table.caption.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}身份跳变}{42}{subsection.5.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.3}遮挡中断}{42}{subsection.5.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}状态定义与总体流程}{42}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}状态定义}{42}{subsection.5.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-1}{\ignorespaces 三态跟踪状态机转移关系}}{43}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:state_machine}{{5{}-1}{43}{三态跟踪状态机转移关系}{figure.caption.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}总体流程}{43}{subsection.5.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}SEARCH 状态}{43}{section.5.3}\protected@file@percent }
+\newlabel{sec:search}{{5.3}{43}{SEARCH 状态}{section.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}双门限策略}{43}{subsection.5.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-2}{\ignorespaces 置信度门限扫描结果}}{44}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:threshold_scan}{{5{}-2}{44}{置信度门限扫描结果}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}初锁判定}{44}{subsection.5.3.2}\protected@file@percent }
+\newlabel{eq:filtered_set}{{5-2}{44}{初锁判定}{equation.5.2}{}}
+\newlabel{eq:argmax}{{5-3}{44}{初锁判定}{equation.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}先验空间约束}{44}{subsection.5.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.4}首锁时延}{45}{subsection.5.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}LOCKED 状态}{45}{section.5.4}\protected@file@percent }
+\newlabel{sec:locked}{{5.4}{45}{LOCKED 状态}{section.5.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}候选框收集}{45}{subsection.5.4.1}\protected@file@percent }
+\newlabel{eq:locked_candidates}{{5-4}{45}{候选框收集}{equation.5.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}空间门限关联}{45}{subsection.5.4.2}\protected@file@percent }
+\newlabel{eq:assoc_cost}{{5-5}{45}{空间门限关联}{equation.5.5}{}}
+\newlabel{eq:assoc_argmin}{{5-6}{46}{空间门限关联}{equation.5.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}卡尔曼滤波更新}{46}{subsection.5.4.3}\protected@file@percent }
+\newlabel{eq:meas_vec}{{5-7}{46}{卡尔曼滤波更新}{equation.5.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}丢失判定}{46}{subsection.5.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.5}框尺寸的平滑}{47}{subsection.5.4.5}\protected@file@percent }
+\newlabel{eq:box_smooth}{{5-8}{47}{框尺寸的平滑}{equation.5.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}COAST 状态}{47}{section.5.5}\protected@file@percent }
+\newlabel{sec:coast}{{5.5}{47}{COAST 状态}{section.5.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}预测步}{47}{subsection.5.5.1}\protected@file@percent }
+\newlabel{eq:coast_predict}{{5-9}{47}{预测步}{equation.5.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}超时与恢复}{47}{subsection.5.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.3}预测质量}{48}{subsection.5.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.6}算法描述与复杂度}{48}{section.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}伪代码}{48}{subsection.5.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}复杂度分析}{48}{subsection.5.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}参数汇总}{48}{subsection.5.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.7}实验验证}{48}{section.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.1}门限敏感性}{48}{subsection.5.7.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces 三态跟踪状态机单帧处理}}{49}{algorithm.1}\protected@file@percent }
+\newlabel{alg:state_machine}{{1}{49}{三态跟踪状态机单帧处理}{algorithm.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-2}{\ignorespaces 三态状态机参数汇总}}{50}{table.caption.18}\protected@file@percent }
+\newlabel{tab:sm_params}{{5{}-2}{50}{三态状态机参数汇总}{table.caption.18}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-3}{\ignorespaces 置信度门限扫描详细结果（仿真录像，900 帧）}}{50}{table.caption.19}\protected@file@percent }
+\newlabel{tab:threshold_detail}{{5{}-3}{50}{置信度门限扫描详细结果（仿真录像，900 帧）}{table.caption.19}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.2}遮挡场景}{50}{subsection.5.7.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-4}{\ignorespaces TCP 遮挡用例结果}}{50}{table.caption.20}\protected@file@percent }
+\newlabel{tab:coast_result}{{5{}-4}{50}{TCP 遮挡用例结果}{table.caption.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-3}{\ignorespaces TCP 遮挡用例的状态时序与持续时间分布}}{51}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:coast_timeline}{{5{}-3}{51}{TCP 遮挡用例的状态时序与持续时间分布}{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.3}真实场景录像}{51}{subsection.5.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.8}设计讨论}{51}{section.5.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8.1}为什么不用多目标跟踪框架}{51}{subsection.5.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8.2}为什么用状态机而不是有限状态自动机的形式化方法}{52}{subsection.5.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8.3}失效边界}{52}{subsection.5.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.9}本章小结}{52}{section.5.9}\protected@file@percent }
+\@setckpt{contents/chap5}{
+\setcounter{page}{53}
+\setcounter{equation}{9}
+\setcounter{enumi}{0}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{0}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{5}
+\setcounter{section}{9}
+\setcounter{subsection}{0}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{3}
+\setcounter{table}{4}
+\setcounter{section@level}{0}
+\setcounter{Item}{0}
+\setcounter{Hfootnote}{0}
+\setcounter{Hy@AnnotLevel}{0}
+\setcounter{bookmark@seq@number}{131}
+\setcounter{nlinenum}{0}
+\setcounter{LT@tables}{0}
+\setcounter{LT@chunks}{0}
+\setcounter{caption@flags}{2}
+\setcounter{continuedfloat}{0}
+\setcounter{figureEng}{0}
+\setcounter{tableEng}{0}
+\setcounter{definition}{0}
+\setcounter{lemma}{0}
+\setcounter{theorem}{0}
+\setcounter{corollary}{0}
+\setcounter{proposition}{0}
+\setcounter{assumption}{0}
+\setcounter{float@type}{8}
+\setcounter{algorithm}{1}
+\setcounter{ALC@unique}{35}
+\setcounter{ALC@line}{35}
+\setcounter{ALC@rem}{0}
+\setcounter{ALC@depth}{0}
+\setcounter{tabx@nest}{0}
+\setcounter{listtotal}{0}
+\setcounter{listcount}{0}
+\setcounter{liststart}{0}
+\setcounter{liststop}{0}
+\setcounter{citecount}{0}
+\setcounter{citetotal}{0}
+\setcounter{multicitecount}{0}
+\setcounter{multicitetotal}{0}
+\setcounter{instcount}{53}
+\setcounter{maxnames}{1}
+\setcounter{minnames}{1}
+\setcounter{maxitems}{1}
+\setcounter{minitems}{1}
+\setcounter{citecounter}{0}
+\setcounter{maxcitecounter}{0}
+\setcounter{savedcitecounter}{0}
+\setcounter{uniquelist}{0}
+\setcounter{uniquename}{0}
+\setcounter{refsection}{0}
+\setcounter{refsegment}{0}
+\setcounter{maxextratitle}{0}
+\setcounter{maxextratitleyear}{0}
+\setcounter{maxextraname}{2}
+\setcounter{maxextradate}{0}
+\setcounter{maxextraalpha}{0}
+\setcounter{abbrvpenalty}{50}
+\setcounter{highnamepenalty}{50}
+\setcounter{lownamepenalty}{25}
+\setcounter{maxparens}{3}
+\setcounter{parenlevel}{0}
+\setcounter{blx@maxsection}{0}
+\setcounter{mincomprange}{10}
+\setcounter{maxcomprange}{100000}
+\setcounter{mincompwidth}{1}
+\setcounter{afterword}{0}
+\setcounter{savedafterword}{0}
+\setcounter{annotator}{0}
+\setcounter{savedannotator}{0}
+\setcounter{author}{0}
+\setcounter{savedauthor}{0}
+\setcounter{bookauthor}{0}
+\setcounter{savedbookauthor}{0}
+\setcounter{commentator}{0}
+\setcounter{savedcommentator}{0}
+\setcounter{editor}{0}
+\setcounter{savededitor}{0}
+\setcounter{editora}{0}
+\setcounter{savededitora}{0}
+\setcounter{editorb}{0}
+\setcounter{savededitorb}{0}
+\setcounter{editorc}{0}
+\setcounter{savededitorc}{0}
+\setcounter{foreword}{0}
+\setcounter{savedforeword}{0}
+\setcounter{holder}{0}
+\setcounter{savedholder}{0}
+\setcounter{introduction}{0}
+\setcounter{savedintroduction}{0}
+\setcounter{namea}{0}
+\setcounter{savednamea}{0}
+\setcounter{nameb}{0}
+\setcounter{savednameb}{0}
+\setcounter{namec}{0}
+\setcounter{savednamec}{0}
+\setcounter{translator}{0}
+\setcounter{savedtranslator}{0}
+\setcounter{shortauthor}{0}
+\setcounter{savedshortauthor}{0}
+\setcounter{shorteditor}{0}
+\setcounter{savedshorteditor}{0}
+\setcounter{labelname}{0}
+\setcounter{savedlabelname}{0}
+\setcounter{institution}{0}
+\setcounter{savedinstitution}{0}
+\setcounter{lista}{0}
+\setcounter{savedlista}{0}
+\setcounter{listb}{0}
+\setcounter{savedlistb}{0}
+\setcounter{listc}{0}
+\setcounter{savedlistc}{0}
+\setcounter{listd}{0}
+\setcounter{savedlistd}{0}
+\setcounter{liste}{0}
+\setcounter{savedliste}{0}
+\setcounter{listf}{0}
+\setcounter{savedlistf}{0}
+\setcounter{location}{0}
+\setcounter{savedlocation}{0}
+\setcounter{organization}{0}
+\setcounter{savedorganization}{0}
+\setcounter{origlocation}{0}
+\setcounter{savedoriglocation}{0}
+\setcounter{origpublisher}{0}
+\setcounter{savedorigpublisher}{0}
+\setcounter{publisher}{0}
+\setcounter{savedpublisher}{0}
+\setcounter{language}{0}
+\setcounter{savedlanguage}{0}
+\setcounter{origlanguage}{0}
+\setcounter{savedoriglanguage}{0}
+\setcounter{pageref}{0}
+\setcounter{savedpageref}{0}
+\setcounter{textcitecount}{0}
+\setcounter{textcitetotal}{0}
+\setcounter{textcitemaxnames}{0}
+\setcounter{biburlbigbreakpenalty}{100}
+\setcounter{biburlbreakpenalty}{200}
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
+\setcounter{smartand}{1}
+\setcounter{bbx:relatedcount}{0}
+\setcounter{bbx:relatedtotal}{0}
+\setcounter{gbnamefmtcase}{0}
+\setcounter{gbalignlabel}{0}
+\setcounter{gbcitelocalcase}{0}
+\setcounter{gbbiblocalcase}{0}
+\setcounter{lanordernum}{0}
+\setcounter{cbx@tempcnta}{0}
+\setcounter{cbx@tempcntb}{23}
+\setcounter{cbx@tempcntc}{0}
+\setcounter{cbx@tempcntd}{-1}
+\setcounter{gbrefcompress}{2}
+\setcounter{parentequation}{0}
+\setcounter{KVtest}{1}
+\setcounter{subfigure}{0}
+\setcounter{subfigure@save}{4}
+\setcounter{lofdepth}{1}
+\setcounter{subtable}{0}
+\setcounter{subtable@save}{0}
+\setcounter{lotdepth}{1}
+}

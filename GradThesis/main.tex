@@ -1,0 +1,118 @@
+\documentclass{ustbthesis}
+
+\usepackage[backend=biber,
+style=gb7714-2015,
+    sortcites=true,autocite=inline,autopunct=true,hyperref=true,
+    natbib
+    ]{biblatex}
+
+\hypersetup{hidelinks,colorlinks=false,citecolor=black}
+\addbibresource{myrefs.bib}
+
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[labelfont=bf,textfont=bf,font=small]{subfig}
+\newcommand{\figref}[1]{~\ref{#1}~}
+\newcommand{\tabref}[1]{~\ref{#1}~}
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%封面信息%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 作者
+\Author{梁 辰}
+\EnglishAuthor{Liang Chen}
+%% 标题
+\Title{面向反无人机场景的无人机识别与定位系统设计与实现}
+\EnglishTitle{Design and Implementation of a Drone Recognition and Localization System for Counter-UAV Scenarios}
+%% 日期
+\Date{2026年 11月 20日}
+\EnglishDate{Nov, 2026}
+%% 学院
+\College{数理学院}
+\EnglishCollege{School of Mathematics and Physics}
+%% 地址
+\Address{海淀区学院路30号}
+\EnglishAddress{30 Xueyuan Road，Haidian District}
+%%培养单位（所在单位、学位授予单位）%%
+\Affiliation{北京科技大学}
+\EnglishAffiliation{University of Science and Technology Beijing}
+%% 邮编
+\Postcode{100083}
+%% 城市
+\City{北京}
+\EnglishCity{Beijing}
+%% 国家
+\Country{中国}
+\EnglishCountry{P.R.CHINA}
+%%学号%%
+\StudentCode{M202640106}
+%%专业%%
+\Major{软件工程}
+\EnglishMajor{Software Engineering}
+%%研究方向%%
+\Direction{计算机视觉方向}
+\EnglishDirection{Computer Vision}
+%%导师%%
+\Supervisor{段世红}
+\EnglishSupervisor{Shihong Duan}
+
+\DegreeType{学术型}
+\EnglishDegreeType{Science}
+
+%%中图分类号%%
+\CLCNumber{TP391}
+%%UDC分类号%%
+\UDCNumber{004.8}
+%%学校代码%%
+\UniversityCode{10008}
+\UniversityLogoFile{images/ustb.png}
+%% 密级
+\SecurityLevel{公开}
+%% 提交日期
+\SubmissionDate{2026年 11月 20日}
+\EnglishSubmissionDate{Nov, 2026}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%封面信息%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\TitlePage
+
+\SecondPage
+
+\ThirdPage
+
+\pagestyle{fancy}
+
+%% 中英文摘要
+\include{contents/abstract}
+%% 目录
+\tableofcontents
+
+\mainmatter
+\pagenumbering{arabic}\setcounter{page}{1}
+\pagestyle{fancy}
+
+\include{contents/chap1}
+\include{contents/chap2}
+\include{contents/chap3}
+\include{contents/chap4}
+\include{contents/chap5}
+\include{contents/chap6}
+\include{contents/chap7}
+\include{contents/chap8}
+\include{contents/chap9}
+\include{contents/chap10}
+
+\chapter*{参考文献}\addcontentsline{toc}{chapter}{参考文献}
+
+\printbibliography[heading=none]
+
+%% 致谢
+\include{contents/thanks}
+%% 作者简历及在学研究成果
+\include{contents/mresume}
+%% 关于论文使用授权的说明
+\postDeclarations
+%% 学位论文数据集
+\include{contents/dataset}
+
+\end{document}

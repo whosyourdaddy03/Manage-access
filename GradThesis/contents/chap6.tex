@@ -1,0 +1,392 @@
+%% 第六章 单目定位与自适应卡尔曼滤波
+\chapter{单目定位与自适应卡尔曼滤波}
+\label{chap:loc}
+
+检测给出目标在画面中的位置，跟踪维持目标的时间连续性，而定位则要回答"目标在哪里、有多远"。本章建立从像素坐标到三维位置的完整解算链路，推导方位角、俯仰角与距离的计算公式，分析误差传播规律，设计六维状态的自适应卡尔曼滤波器，并通过仿真闭环与实拍视频评估定位精度。
+
+\section{坐标系与符号约定}
+
+为避免歧义，本节先统一符号。表~\ref{tab:coord_symbol} 列出了本文使用的坐标系与主要符号。
+
+\begin{table}[htbp]
+\centering
+\caption{坐标系与符号约定}
+\label{tab:coord_symbol}
+\small
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{符号} & \textbf{含义} \\
+\midrule
+$\mathcal{F}_w$ & 世界坐标系，NED：$x$ 北、$y$ 东、$z$ 地（向下为正） \\
+$\mathcal{F}_c$ & 相机坐标系：$z_c$ 沿光轴向前，$x_c$ 向右，$y_c$ 向下 \\
+$(u,v)$ & 像素坐标，原点在左上角 \\
+$(c_x,c_y)$ & 主点像素坐标 \\
+$(f_x,f_y)$ & 以像素为单位的焦距 \\
+$D$ & 目标等效尺寸（m） \\
+$h_{px}$ & 检测框高度（px） \\
+$Z$ & 目标沿光轴方向的距离（m） \\
+$\alpha,\beta$ & 方位角、俯仰角（rad 或 \textdegree） \\
+$\mathbf{x}_k$ & 卡尔曼滤波状态向量 \\
+$\mathbf{z}_k$ & 量测向量 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+需要特别注意 NED 与相机坐标系的差异：NED 中 $z$ 向下为正，相机坐标系中 $z_c$ 向前为正、$y_c$ 向下为正。本文在算法端统一使用相机坐标系进行解算，在显示端再转换为世界系坐标用于地图标注。仿真真值广播同时提供世界系位置与相机系位置，便于交叉验证。
+
+\section{方位角与俯仰角}
+
+\subsection{像素直算法}
+
+设检测框中心为 $(u,v)$，主点为 $(c_x,c_y)$，焦距为 $f$（本文仿真相机的 $f_x=f_y=f$）。目标相对光轴的方位角与俯仰角为
+
+\begin{equation}
+\alpha = \arctan\left(\frac{u-c_x}{f}\right),\qquad
+\beta = \arctan\left(\frac{v-c_y}{f}\right).
+\label{eq:angle_direct}
+\end{equation}
+
+其中方位角以光轴为 0、向右为正；俯仰角以光轴为 0、向下为正。若需要转换为"向上为正"的显示习惯，取 $\beta'=-\beta$。
+
+该方法的优点是：只依赖单帧像素坐标与相机内参，不依赖任何运动模型；即使目标做剧烈机动，角度估计始终反映当前帧的真实方向；计算量极小（两次反正切）。缺点是：角度精度受检测框中心抖动影响，且当目标接近画面边缘时，镜头畸变会引入系统误差。
+
+\subsection{角度误差传播}
+
+对式~\eqref{eq:angle_direct} 求导，可得角度误差与像素误差的关系：
+
+\begin{equation}
+\Delta\alpha = \frac{f}{(u-c_x)^2+f^2}\,\Delta u
+= \frac{\cos^2\alpha}{f}\,\Delta u.
+\label{eq:angle_err}
+\end{equation}
+
+在光轴附近（$\alpha\approx0$），$\Delta\alpha\approx\Delta u/f$。以 $f=1108$\,px、中心抖动 $\Delta u=2$\,px 为例，角度误差约 0.10\textdegree。当目标偏离光轴 30\textdegree 时，$\cos^2\alpha\approx0.75$，角度误差略降至 0.08\textdegree。这说明像素直算的角度误差在视场中心最大、边缘略小，总体在 0.1\textdegree 量级，满足反无人机系统的指示精度要求。
+
+\subsection{与滤波角度法的对比}
+
+另一种做法是用卡尔曼滤波估计的三维位置反算角度：
+
+\begin{equation}
+\alpha_{kf} = \arctan\left(\frac{\hat{x}}{\hat{z}}\right),\qquad
+\beta_{kf} = \arctan\left(\frac{\hat{y}}{\hat{z}}\right).
+\label{eq:angle_kf}
+\end{equation}
+
+这种做法的优点是输出平滑，与距离读数一致；缺点是角度依赖滤波器的横向状态，当目标被遮挡、滤波器进入预测外推时，横向位置可能漂移，导致角度指示偏离真实方向。本文在仿真中对比了两种方法：在正常跟踪时二者差异小于 0.2\textdegree；在 COAST 期间，滤波角度法的漂移可达 1--2\textdegree，而像素直算法在无检测时不输出角度（或保持上次值），不会产生虚假的"目标转向"。
+
+基于这一对比，本文最终采用\textbf{像素直算}作为角度输出，卡尔曼滤波仅用于距离与三维位置平滑。这一选择牺牲了角度的平滑性，换取了角度指示的物理真实性，符合监视系统"宁可不动、不可乱动"的设计原则。
+
+\subsection{真值口径问题}
+
+在仿真评估中，角度真值的定义容易出错。jMAVSim 的护航相机通过 \texttt{setViewerTargetObject} 自动注视目标机，因此目标在画面中的真实视轴偏角恒约为 0。此时，若把"世界坐标系下的绝对方位角"当作真值，会得到几十度的巨大误差；而实际上这是相机自身偏航造成的，并非算法误差。
+
+本文的角度评估统一采用\textbf{视轴偏角口径}：真值为目标相对相机光轴的角度（仿真中约为 0），算法输出为式~\eqref{eq:angle_direct} 计算的角度，误差为二者之差。这一口径与操作员在画面上看到的"目标偏离中心多少"一致，也与检测框中心的像素偏移直接对应。
+
+\section{距离解算}
+
+\subsection{相似三角形原理}
+
+在已知目标真实尺寸的前提下，针孔相机的成像满足相似三角形关系。设目标实际高度为 $D$，在像平面上的高度为 $h$（像素），焦距为 $f$，则
+
+\begin{equation}
+\frac{D}{Z} = \frac{h}{f}\quad\Longrightarrow\quad
+Z = \frac{f\cdot D}{h_{px}}.
+\label{eq:range_est}
+\end{equation}
+
+本文使用\textbf{框高}而非框宽，原因有二。第一，无人机在偏航旋转时，机臂展开宽度的投影变化很大（正对时最宽、侧对时最窄），而机身高度相对稳定；第二，框宽容易受到旋翼模糊与背景粘连的影响，框高的边界更清晰。
+
+\subsection{等效尺寸标定}
+
+等效尺寸 $D$ 是式~\eqref{eq:range_est} 中唯一的先验参数，其准确性直接决定测距的绝对精度。本文的标定方法是：在已知真值距离 $Z_{true}$ 下，测量检测框高度 $h_{px}$，反算
+
+\begin{equation}
+D = \frac{h_{px}\cdot Z_{true}}{f}.
+\label{eq:size_calib}
+\end{equation}
+
+在多个距离上重复测量并取中位数。本文在不同阶段的标定结果如表~\ref{tab:size_calib} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{等效尺寸标定结果}
+\label{tab:size_calib}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{阶段} & \textbf{模型} & \textbf{标定值(m)} & \textbf{说明} \\
+\midrule
+仿真微调前 & p2ema\_v8n & 0.230 & 框较紧，未包含旋翼外缘 \\
+仿真微调后 & p2ema\_simft & 0.270 & 框略大，包含桨叶与起落架 \\
+仿真微调后（复核） & p2ema\_simft & 0.268 & 独立录像复核，差异 0.7\% \\
+实拍视频 & p2ema\_simft & 0.255 & 实拍目标机型不同 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+标定值随模型与目标机型变化，不能跨域混用。本文在仿真域统一使用 0.270\,m，在实拍视频中使用 0.255\,m，并在配置文件中显式标注，避免误用。
+
+\subsection{误差传播}
+
+对式~\eqref{eq:range_est} 取对数并微分，得
+
+\begin{equation}
+\frac{\Delta Z}{Z} = \frac{\Delta D}{D} - \frac{\Delta h_{px}}{h_{px}}.
+\label{eq:range_err_rel}
+\end{equation}
+
+式~\eqref{eq:range_err_rel} 揭示了两个重要规律。
+
+第一，\textbf{距离误差与距离成正比}。由于 $h_{px}=fD/Z$，相对误差可写为
+
+\begin{equation}
+\frac{\Delta Z}{Z} = \frac{\Delta D}{D} + \frac{Z\,\Delta h_{px}}{fD}.
+\label{eq:range_err_abs}
+\end{equation}
+
+绝对误差 $\Delta Z$ 随 $Z^2$ 增长：
+
+\begin{equation}
+\Delta Z \approx Z^2\cdot\frac{\Delta h_{px}}{fD}.
+\label{eq:range_err_square}
+\end{equation}
+
+这意味着远距离测距精度会迅速恶化。以 $f=1108$\,px、$D=0.27$\,m、$\Delta h_{px}=2$\,px 为例，$Z=5$\,m 时 $\Delta Z\approx0.17$\,m，$Z=10$\,m 时约 0.67\,m，$Z=20$\,m 时约 2.7\,m。
+
+第二，\textbf{等效尺寸误差是系统偏差}。若 $D$ 标定偏大 10\%，则所有距离读数都会偏大 10\%，且无法通过滤波消除。这是单目测距的固有局限，必须通过精确标定或引入其他测距手段（如激光测距、双目视觉）来弥补。
+
+\subsection{框高抖动的影响}
+
+检测框高度在相邻帧之间存在 1--3\,px 的抖动，对应 5\,m 处约 0.1--0.25\,m 的距离抖动。本文通过两种方式抑制：其一，对框高做一阶低通平滑（式~\eqref{eq:box_smooth}）；其二，用卡尔曼滤波对三维位置做平滑。前者在量测层抑制高频抖动，后者在状态层融合运动模型，二者叠加可将稳态误差降低到 0.13\,m（仿真）与 2.7\,m（实拍，受限于相机未标定与伪真值）。
+
+\section{自适应卡尔曼滤波器设计}
+
+\subsection{状态与量测}
+
+本文定义六维状态向量：
+
+\begin{equation}
+\mathbf{x}_k = \begin{bmatrix}
+x & y & z & v_x & v_y & v_z
+\end{bmatrix}^{T},
+\label{eq:state6}
+\end{equation}
+
+其中 $(x,y,z)$ 为目标在相机坐标系下的位置，$(v_x,v_y,v_z)$ 为速度。量测为式~\eqref{eq:meas_vec} 给出的三维位置：
+
+\begin{equation}
+\mathbf{z}_k = \begin{bmatrix}x_m & y_m & z_m\end{bmatrix}^{T}.
+\label{eq:meas3}
+\end{equation}
+
+状态转移矩阵与量测矩阵为
+
+\begin{equation}
+\mathbf{F} = \begin{bmatrix}\mathbf{I}_3 & \Delta t\,\mathbf{I}_3\\ \mathbf{0} & \mathbf{I}_3\end{bmatrix},
+\qquad
+\mathbf{H} = \begin{bmatrix}\mathbf{I}_3 & \mathbf{0}\end{bmatrix}.
+\label{eq:F_H}
+\end{equation}
+
+本文取 $\Delta t=1/30$\,s，与实际帧率一致。若帧率波动，可用实际时间戳差值替代固定值。
+
+\subsection{过程噪声}
+
+假设目标在相邻帧间做匀速运动，加速度为白噪声，则过程噪声协方差为
+
+\begin{equation}
+\mathbf{Q} = q\cdot\begin{bmatrix}
+\dfrac{\Delta t^4}{4}\mathbf{I}_3 & \dfrac{\Delta t^3}{2}\mathbf{I}_3\\[6pt]
+\dfrac{\Delta t^3}{2}\mathbf{I}_3 & \Delta t^2\mathbf{I}_3
+\end{bmatrix},
+\label{eq:Q}
+\end{equation}
+
+其中 $q$ 为加速度方差。工程实现中也常使用简化的对角形式
+
+\begin{equation}
+\mathbf{Q} = \mathrm{diag}\left(q_p,q_p,q_p,q_v,q_v,q_v\right),
+\label{eq:Q_diag}
+\end{equation}
+
+本文采用对角形式，取 $q_p=10^{-3}$、$q_v=10^{-2}$。$q$ 越大，滤波器越信任量测、响应越快，但稳态抖动越大；$q$ 越小，输出越平滑，但机动跟随滞后。本文的取值在仿真中通过网格搜索确定，兼顾了响应与平滑。
+
+\subsection{量测噪声与自适应估计}
+
+量测噪声协方差 $\mathbf{R}$ 的初值取
+
+\begin{equation}
+\mathbf{R}_0 = \mathrm{diag}\left(10^{-4},10^{-4},0.25\right),
+\label{eq:R0}
+\end{equation}
+
+其中横向方差远小于纵向方差，原因是方位角与俯仰角由像素直算，精度较高（约 0.1\textdegree），而距离由框高反算，精度较低（约 0.2--0.5\,m）。这一各向异性的设置符合单目测距的实际误差结构。
+
+自适应部分采用 Sage-Husa 方法，按式~\eqref{eq:sage_husa} 用滑动窗口估计 $\mathbf{R}$。实现中做了三点处理：
+
+（1）\textbf{对角化}：只保留 $\hat{\mathbf{R}}$ 的对角元素，忽略相关性，避免矩阵非正定；
+
+（2）\textbf{下界约束}：将每个对角元素限制在 $[R_{min},R_{max}]$ 内，防止滤波器因残差偶然变小而过度信任量测；
+
+（3）\textbf{平滑更新}：用指数滑动平均替代简单平均：
+
+\begin{equation}
+\hat{\mathbf{R}}_k = (1-\lambda)\hat{\mathbf{R}}_{k-1}+\lambda\,\tilde{\mathbf{R}}_k,
+\qquad \lambda=0.1.
+\label{eq:R_ema}
+\end{equation}
+
+其中 $\tilde{\mathbf{R}}_k$ 为由当前新息构造的瞬时估计。$\lambda=0.1$ 对应约 10 帧的时间常数，既能跟踪量测质量的变化，又不会因单帧异常而剧烈波动。
+
+\subsection{初始化的注意事项}
+
+滤波器初始化时，位置取首帧量测，速度取零，协方差取较大的值（表示"对速度一无所知"）。若速度初值估计错误，滤波器需要若干帧才能收敛。本文在仿真中统计，连续检出 5 帧后滤波器基本收敛，因此将所有"稳态"指标定义为连续检出不少于 5 帧后的样本。
+
+另一个容易忽略的问题是\textbf{量测与状态的维度匹配}。本文早期版本曾把标量距离直接送入六维滤波器，导致状态与量测维度不一致，滤波输出出现严重偏差。修正方法是严格按照式~\eqref{eq:meas_vec} 构造三维量测。这一问题在文献中较少提及，但对初学者是常见的坑，本文特别指出。
+
+\section{定位精度评估}
+
+\subsection{仿真闭环评估}
+
+仿真闭环的实验设置详见第七章。这里直接给出定位精度结果，如表~\ref{tab:esim} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{仿真闭环定位精度（微调后模型，2818 帧）}
+\label{tab:esim}
+\small
+\begin{tabular}{lc}
+\toprule
+\textbf{指标} & \textbf{数值} \\
+\midrule
+全帧检出率（conf$\ge$0.25） & 100.0\% \\
+单帧测距 RMSE & 0.26\,m \\
+单帧测距 MAE & 0.17\,m \\
+AKF 稳态中位误差 MedAE & 0.13\,m \\
+AKF 稳态 RMSE & 0.32\,m \\
+1\,s 距离预测 ADE 中位 & 0.26\,m \\
+1\,s 距离预测 ADE 均值 & 0.40\,m \\
+方位角误差中位（视轴偏角口径） & 0.05\textdegree \\
+方位角误差 P95 & 0.16\textdegree \\
+俯仰角误差中位 & 0.93\textdegree \\
+俯仰角误差 P95 & 0.98\textdegree \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+从表~\ref{tab:esim} 可以看到，单帧测距 RMSE 为 0.26\,m，经过 AKF 平滑后稳态中位误差降至 0.13\,m，说明滤波对抑制框高抖动有效。方位角误差中位仅 0.05\textdegree，接近像素量化极限；俯仰角误差中位 0.93\textdegree，明显大于方位角，原因是仿真相机的纵向主点存在约 17\,px 的偏移，而本文的角度解算使用了标称主点。若在配置中补偿该偏移，俯仰角误差可进一步降低。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{images/pictures/sim_analysis_4panel.jpg}
+\caption{仿真闭环四联分析图（距离、误差、角度与状态分布）}
+\label{fig:sim_analysis}
+\end{figure}
+
+图~\ref{fig:sim_analysis} 给出了四联分析图，包括距离时序、测距误差分布、角度误差与状态占比。可以看到，测距误差在目标做机动时略有增大，但整体保持在 $\pm0.5$\,m 以内。
+
+\subsection{实拍视频评估}
+
+实拍视频为 1920$\times$1080@30fps，连续检出段 660 帧。由于相机未做严格标定，焦距按 60\textdegree 视场估算为 1728\,px；等效尺寸使用仿真标定值 0.255\,m；伪真值取稳态段距离中位数 7.93\,m。评估结果如表~\ref{tab:e3} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{实拍视频定位精度（E3）}
+\label{tab:e3}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{方法} & \textbf{距离 RMSE(m)} & \textbf{抖动 $\sigma$(m)} \\
+\midrule
+单帧原始 & 4.061 & 3.959 \\
+滑动平均（15 帧） & 2.900 & -- \\
+标准 KF（固定 $\mathbf{R}$） & 3.922 & 3.822 \\
+AKF（Sage-Husa） & \textbf{2.760} & \textbf{2.663} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+AKF 相对单帧原始测距，RMSE 降低 32\%，抖动降低 33\%；相对固定 $\mathbf{R}$ 的标准 KF，RMSE 降低 29.6\%。需要说明，实拍的绝对误差较大（2.76\,m），主要原因是相机未标定、等效尺寸借用仿真值、伪真值本身存在偏差。但三种方法在同一伪真值下的相对比较是公平的，AKF 的平滑优势可信。
+
+\subsection{短期预测精度}
+
+COAST 状态依赖滤波器的预测能力。本文在实拍数据上评估了不同预测时域的精度，结果如表~\ref{tab:e3b} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{短期预测精度（ADE，伪真值=离线检测距离）}
+\label{tab:e3b}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{预测时域} & \textbf{匀速外推 ADE(m)} & \textbf{AKF 预测 ADE(m)} & \textbf{改善} & \textbf{样本数} \\
+\midrule
+0.5\,s & 1.967 & \textbf{1.106} & 43.8\% & 635 \\
+1.0\,s & 2.754 & \textbf{1.308} & 52.5\% & 620 \\
+2.0\,s & 4.624 & \textbf{1.799} & 61.1\% & 590 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+AKF 的预测在三个时域上均显著优于匀速外推，且时域越长优势越明显。原因是 AKF 不仅利用当前速度，还利用历史量测的不确定度调整预测的"可信范围"，在目标机动时不会像匀速外推那样线性放大误差。
+
+\subsection{角度精度}
+
+表~\ref{tab:e3c} 给出了角度精度。单帧原始与 AKF 平滑的差异很小（方位角 0.360\textdegree\ vs 0.354\textdegree，俯仰角 0.788\textdegree\ vs 0.728\textdegree），这是因为本文最终采用像素直算角度，AKF 平滑版本仅作为对比。俯仰角误差大于方位角，与仿真结论一致，原因同样是纵向主点偏移与目标在画面中的垂直运动更剧烈。
+
+\begin{table}[htbp]
+\centering
+\caption{角度精度（稳态段中位绝对偏差）}
+\label{tab:e3c}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{方法} & \textbf{方位角 MAD(\textdegree)} & \textbf{俯仰角 MAD(\textdegree)} \\
+\midrule
+单帧原始 & 0.360 & 0.788 \\
+AKF 平滑 & \textbf{0.354} & \textbf{0.728} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{误差来源与改进方向}
+
+\subsection{主要误差来源}
+
+本文将单目定位的误差来源归纳为五类，如表~\ref{tab:error_sources} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{单目定位误差来源与量级}
+\label{tab:error_sources}
+\small
+\begin{tabularx}{\textwidth}{lccX}
+\toprule
+\textbf{来源} & \textbf{量级（5\,m）} & \textbf{是否可校正} & \textbf{说明} \\
+\midrule
+框高抖动 & 0.10--0.25\,m & 部分 & 可用低通与 KF 抑制 \\
+等效尺寸偏差 & 与标定误差成正比 & 可 & 需精确标定，不可用滤波消除 \\
+相机内参误差 & 与焦距误差成正比 & 可 & 需棋盘格标定 \\
+镜头畸变 & 边缘可达 0.3\,m & 可 & 去畸变后显著降低 \\
+目标姿态变化 & 0.05--0.15\,m & 难 & 框高随俯仰角变化 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{改进方向}
+
+针对上述误差，可采取的改进措施包括：
+
+（1）\textbf{相机标定}。使用棋盘格标定内参与畸变，替代按视场角估算焦距的做法，可将实拍 RMSE 从米级降低到亚米级；
+
+（2）\textbf{尺寸自适应}。根据目标机型选择对应的等效尺寸，或利用多帧几何一致性在线估计尺寸；
+
+（3）\textbf{融合测距}。在条件允许时引入激光测距或双目视觉，与单目测距做卡尔曼融合；
+
+（4）\textbf{姿态补偿}。利用检测框的宽高比估计目标偏航角，对框高做投影补偿。
+
+本文受时间与设备限制，仅完成了第一项的部分工作（自建数据集的标定），其余留待后续研究。
+
+\section{本章小结}
+
+本章建立了从像素坐标到三维位置的完整定位链路。角度由检测框中心直接解算，误差在 0.1\textdegree\ 量级；距离由框高与等效尺寸解算，误差随距离平方增长，5\,m 处约 0.17\,m。为抑制框高抖动，本文设计了六维状态的自适应卡尔曼滤波器，采用各向异性量测噪声与 Sage-Husa 在线估计。仿真闭环中，单帧测距 RMSE 0.26\,m，AKF 稳态中位误差 0.13\,m，1\,s 预测 ADE 中位 0.26\,m；实拍视频中，AKF 相对单帧 RMSE 降低 32\%、抖动降低 33\%。本章还讨论了角度真值口径、量测维度匹配等实现中的易错点，并给出了误差来源与改进方向。

@@ -1,0 +1,236 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\@writefile{toc}{\contentsline {chapter}{\numberline {\bfseries  2\hspace  {.3em}}相关理论与关键技术}{11}{chapter.2}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{lof2}{\addvspace {10\p@ }}
+\@writefile{lot2}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}目标检测基础}{11}{section.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}卷积神经网络}{11}{subsection.2.1.1}\protected@file@percent }
+\newlabel{eq:conv}{{2-1}{11}{卷积神经网络}{equation.2.1}{}}
+\newlabel{eq:silu}{{2-2}{11}{卷积神经网络}{equation.2.2}{}}
+\newlabel{eq:bn}{{2-3}{11}{卷积神经网络}{equation.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}特征金字塔与多尺度检测}{12}{subsection.2.1.2}\protected@file@percent }
+\newlabel{eq:fpn}{{2-4}{12}{特征金字塔与多尺度检测}{equation.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}检测头的预测形式与损失函数}{12}{subsection.2.1.3}\protected@file@percent }
+\newlabel{eq:bce}{{2-5}{12}{检测头的预测形式与损失函数}{equation.2.5}{}}
+\newlabel{eq:dfl}{{2-6}{12}{检测头的预测形式与损失函数}{equation.2.6}{}}
+\newlabel{eq:ciou}{{2-7}{12}{检测头的预测形式与损失函数}{equation.2.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.4}评测指标}{13}{subsection.2.1.4}\protected@file@percent }
+\newlabel{eq:iou}{{2-8}{13}{评测指标}{equation.2.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}YOLOv8 网络结构}{13}{section.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}整体结构}{13}{subsection.2.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}C2f 模块}{14}{subsection.2.2.2}\protected@file@percent }
+\newlabel{eq:c2f}{{2-9}{14}{C2f 模块}{equation.2.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}SPPF 与解耦头}{14}{subsection.2.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}注意力机制}{14}{section.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}从 SE 到 CBAM}{14}{subsection.2.3.1}\protected@file@percent }
+\newlabel{eq:se}{{2-10}{14}{从 SE 到 CBAM}{equation.2.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}EMA 高效多尺度注意力}{15}{subsection.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}卡尔曼滤波}{15}{section.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}线性高斯状态空间模型}{15}{subsection.2.4.1}\protected@file@percent }
+\newlabel{eq:state_space}{{2-11}{15}{线性高斯状态空间模型}{equation.2.11}{}}
+\newlabel{eq:kf_predict_x}{{2-12}{15}{线性高斯状态空间模型}{equation.2.12}{}}
+\newlabel{eq:kf_predict_P}{{2-13}{16}{线性高斯状态空间模型}{equation.2.13}{}}
+\newlabel{eq:kf_gain}{{2-14}{16}{线性高斯状态空间模型}{equation.2.14}{}}
+\newlabel{eq:kf_update}{{2-15}{16}{线性高斯状态空间模型}{equation.2.15}{}}
+\newlabel{eq:kf_cov}{{2-16}{16}{线性高斯状态空间模型}{equation.2.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}自适应噪声估计}{16}{subsection.2.4.2}\protected@file@percent }
+\newlabel{eq:innovation}{{2-17}{16}{自适应噪声估计}{equation.2.17}{}}
+\newlabel{eq:innovation_cov}{{2-18}{16}{自适应噪声估计}{equation.2.18}{}}
+\newlabel{eq:sage_husa}{{2-19}{16}{自适应噪声估计}{equation.2.19}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}滤波的收敛性与可观测性}{17}{subsection.2.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}针孔相机模型与标定}{17}{section.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}坐标系定义}{17}{subsection.2.5.1}\protected@file@percent }
+\newlabel{eq:world2cam}{{2-20}{17}{坐标系定义}{equation.2.20}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}投影模型}{17}{subsection.2.5.2}\protected@file@percent }
+\newlabel{eq:projection}{{2-21}{17}{投影模型}{equation.2.21}{}}
+\newlabel{eq:pixel}{{2-22}{18}{投影模型}{equation.2.22}{}}
+\newlabel{eq:distortion}{{2-23}{18}{投影模型}{equation.2.23}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}张正友标定法}{18}{subsection.2.5.3}\protected@file@percent }
+\newlabel{eq:homography}{{2-24}{18}{张正友标定法}{equation.2.24}{}}
+\newlabel{eq:reproj}{{2-25}{18}{张正友标定法}{equation.2.25}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}PX4 与 jMAVSim 仿真框架}{19}{section.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.1}PX4 Autopilot 与 SITL}{19}{subsection.2.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.2}jMAVSim 架构}{19}{subsection.2.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.3}离屏渲染与帧流}{20}{subsection.2.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.7}系统开发技术}{20}{section.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7.1}PySide6 与 QtWebEngine}{20}{subsection.2.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7.2}OpenCV 与 PyTorch}{20}{subsection.2.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7.3}TCP 与 UDP 通信}{21}{subsection.2.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.8}本章小结}{21}{section.2.8}\protected@file@percent }
+\@setckpt{contents/chap2}{
+\setcounter{page}{22}
+\setcounter{equation}{25}
+\setcounter{enumi}{0}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{0}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{2}
+\setcounter{section}{8}
+\setcounter{subsection}{0}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{section@level}{0}
+\setcounter{Item}{0}
+\setcounter{Hfootnote}{0}
+\setcounter{Hy@AnnotLevel}{0}
+\setcounter{bookmark@seq@number}{50}
+\setcounter{nlinenum}{0}
+\setcounter{LT@tables}{0}
+\setcounter{LT@chunks}{0}
+\setcounter{caption@flags}{2}
+\setcounter{continuedfloat}{0}
+\setcounter{figureEng}{0}
+\setcounter{tableEng}{0}
+\setcounter{definition}{0}
+\setcounter{lemma}{0}
+\setcounter{theorem}{0}
+\setcounter{corollary}{0}
+\setcounter{proposition}{0}
+\setcounter{assumption}{0}
+\setcounter{float@type}{8}
+\setcounter{algorithm}{0}
+\setcounter{ALC@unique}{0}
+\setcounter{ALC@line}{0}
+\setcounter{ALC@rem}{0}
+\setcounter{ALC@depth}{0}
+\setcounter{tabx@nest}{0}
+\setcounter{listtotal}{0}
+\setcounter{listcount}{0}
+\setcounter{liststart}{0}
+\setcounter{liststop}{0}
+\setcounter{citecount}{0}
+\setcounter{citetotal}{0}
+\setcounter{multicitecount}{0}
+\setcounter{multicitetotal}{0}
+\setcounter{instcount}{47}
+\setcounter{maxnames}{1}
+\setcounter{minnames}{1}
+\setcounter{maxitems}{1}
+\setcounter{minitems}{1}
+\setcounter{citecounter}{0}
+\setcounter{maxcitecounter}{0}
+\setcounter{savedcitecounter}{0}
+\setcounter{uniquelist}{0}
+\setcounter{uniquename}{0}
+\setcounter{refsection}{0}
+\setcounter{refsegment}{0}
+\setcounter{maxextratitle}{0}
+\setcounter{maxextratitleyear}{0}
+\setcounter{maxextraname}{2}
+\setcounter{maxextradate}{0}
+\setcounter{maxextraalpha}{0}
+\setcounter{abbrvpenalty}{50}
+\setcounter{highnamepenalty}{50}
+\setcounter{lownamepenalty}{25}
+\setcounter{maxparens}{3}
+\setcounter{parenlevel}{0}
+\setcounter{blx@maxsection}{0}
+\setcounter{mincomprange}{10}
+\setcounter{maxcomprange}{100000}
+\setcounter{mincompwidth}{1}
+\setcounter{afterword}{0}
+\setcounter{savedafterword}{0}
+\setcounter{annotator}{0}
+\setcounter{savedannotator}{0}
+\setcounter{author}{0}
+\setcounter{savedauthor}{0}
+\setcounter{bookauthor}{0}
+\setcounter{savedbookauthor}{0}
+\setcounter{commentator}{0}
+\setcounter{savedcommentator}{0}
+\setcounter{editor}{0}
+\setcounter{savededitor}{0}
+\setcounter{editora}{0}
+\setcounter{savededitora}{0}
+\setcounter{editorb}{0}
+\setcounter{savededitorb}{0}
+\setcounter{editorc}{0}
+\setcounter{savededitorc}{0}
+\setcounter{foreword}{0}
+\setcounter{savedforeword}{0}
+\setcounter{holder}{0}
+\setcounter{savedholder}{0}
+\setcounter{introduction}{0}
+\setcounter{savedintroduction}{0}
+\setcounter{namea}{0}
+\setcounter{savednamea}{0}
+\setcounter{nameb}{0}
+\setcounter{savednameb}{0}
+\setcounter{namec}{0}
+\setcounter{savednamec}{0}
+\setcounter{translator}{0}
+\setcounter{savedtranslator}{0}
+\setcounter{shortauthor}{0}
+\setcounter{savedshortauthor}{0}
+\setcounter{shorteditor}{0}
+\setcounter{savedshorteditor}{0}
+\setcounter{labelname}{0}
+\setcounter{savedlabelname}{0}
+\setcounter{institution}{0}
+\setcounter{savedinstitution}{0}
+\setcounter{lista}{0}
+\setcounter{savedlista}{0}
+\setcounter{listb}{0}
+\setcounter{savedlistb}{0}
+\setcounter{listc}{0}
+\setcounter{savedlistc}{0}
+\setcounter{listd}{0}
+\setcounter{savedlistd}{0}
+\setcounter{liste}{0}
+\setcounter{savedliste}{0}
+\setcounter{listf}{0}
+\setcounter{savedlistf}{0}
+\setcounter{location}{0}
+\setcounter{savedlocation}{0}
+\setcounter{organization}{0}
+\setcounter{savedorganization}{0}
+\setcounter{origlocation}{0}
+\setcounter{savedoriglocation}{0}
+\setcounter{origpublisher}{0}
+\setcounter{savedorigpublisher}{0}
+\setcounter{publisher}{0}
+\setcounter{savedpublisher}{0}
+\setcounter{language}{0}
+\setcounter{savedlanguage}{0}
+\setcounter{origlanguage}{0}
+\setcounter{savedoriglanguage}{0}
+\setcounter{pageref}{0}
+\setcounter{savedpageref}{0}
+\setcounter{textcitecount}{0}
+\setcounter{textcitetotal}{0}
+\setcounter{textcitemaxnames}{0}
+\setcounter{biburlbigbreakpenalty}{100}
+\setcounter{biburlbreakpenalty}{200}
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
+\setcounter{smartand}{1}
+\setcounter{bbx:relatedcount}{0}
+\setcounter{bbx:relatedtotal}{0}
+\setcounter{gbnamefmtcase}{0}
+\setcounter{gbalignlabel}{0}
+\setcounter{gbcitelocalcase}{0}
+\setcounter{gbbiblocalcase}{0}
+\setcounter{lanordernum}{0}
+\setcounter{cbx@tempcnta}{0}
+\setcounter{cbx@tempcntb}{32}
+\setcounter{cbx@tempcntc}{0}
+\setcounter{cbx@tempcntd}{-1}
+\setcounter{gbrefcompress}{2}
+\setcounter{parentequation}{0}
+\setcounter{KVtest}{1}
+\setcounter{subfigure}{0}
+\setcounter{subfigure@save}{0}
+\setcounter{lofdepth}{1}
+\setcounter{subtable}{0}
+\setcounter{subtable@save}{0}
+\setcounter{lotdepth}{1}
+}
