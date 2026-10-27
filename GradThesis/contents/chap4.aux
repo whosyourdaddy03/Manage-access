@@ -1,71 +1,134 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {\bfseries  4\hspace  {.3em}}检测模型改进与消融实验}{31}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {\bfseries  4\hspace  {.3em}}三态跟踪与单目定位}{45}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lof2}{\addvspace {10\p@ }}
 \@writefile{lot2}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}基础模型选型}{31}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}规模选择}{31}{subsection.4.1.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4{}-1}{\ignorespaces YOLOv8 各规模模型对比}}{31}{table.caption.6}\protected@file@percent }
-\newlabel{tab:model_scale}{{4{}-1}{31}{YOLOv8 各规模模型对比}{table.caption.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}标准结构的局限}{32}{subsection.4.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}P2 小目标检测头}{32}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}结构设计}{32}{subsection.4.2.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4{}-2}{\ignorespaces 各检测层特征图尺寸与网格占用（640$\times $640 输入）}}{32}{table.caption.7}\protected@file@percent }
-\newlabel{tab:p2_shapes}{{4{}-2}{32}{各检测层特征图尺寸与网格占用（640$\times $640 输入）}{table.caption.7}{}}
-\newlabel{eq:p2_fusion}{{4-1}{32}{结构设计}{equation.4.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}检测头配置}{33}{subsection.4.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}计算量与参数分析}{33}{subsection.4.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}正负样本分配}{33}{subsection.4.2.4}\protected@file@percent }
-\newlabel{eq:align_metric}{{4-2}{33}{正负样本分配}{equation.4.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}EMA 注意力机制集成}{33}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}插入位置}{33}{subsection.4.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}模块结构}{34}{subsection.4.3.2}\protected@file@percent }
-\newlabel{eq:ema_fusion}{{4-3}{34}{模块结构}{equation.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}计算开销}{34}{subsection.4.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}训练配置}{34}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}数据集与划分}{34}{subsection.4.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}超参数}{35}{subsection.4.4.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4{}-3}{\ignorespaces 检测模型训练超参数}}{35}{table.caption.8}\protected@file@percent }
-\newlabel{tab:train_hp}{{4{}-3}{35}{检测模型训练超参数}{table.caption.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}训练过程}{35}{subsection.4.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4{}-1}{\ignorespaces 训练损失与验证指标曲线}}{35}{figure.caption.9}\protected@file@percent }
-\newlabel{fig:training_curves}{{4{}-1}{35}{训练损失与验证指标曲线}{figure.caption.9}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {基线 YOLOv8n}}}{35}{subfigure.1.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {YOLOv8n-P2-EMA}}}{35}{subfigure.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}消融实验}{36}{section.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}实验设置}{36}{subsection.4.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}实验结果}{36}{subsection.4.5.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4{}-4}{\ignorespaces 检测模型消融实验（Det-Fly 验证集，imgsz=640）}}{36}{table.caption.10}\protected@file@percent }
-\newlabel{tab:ablation}{{4{}-4}{36}{检测模型消融实验（Det-Fly 验证集，imgsz=640）}{table.caption.10}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}结果分析}{36}{subsection.4.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.4}混淆矩阵与 P-R 曲线}{37}{subsection.4.5.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4{}-2}{\ignorespaces 验证集混淆矩阵}}{37}{figure.caption.11}\protected@file@percent }
-\newlabel{fig:confusion}{{4{}-2}{37}{验证集混淆矩阵}{figure.caption.11}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {基线 YOLOv8n}}}{37}{subfigure.2.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {YOLOv8n-P2-EMA}}}{37}{subfigure.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4{}-3}{\ignorespaces YOLOv8n-P2-EMA 的 P-R 与 F1 曲线}}{38}{figure.caption.12}\protected@file@percent }
-\newlabel{fig:pr_f1}{{4{}-3}{38}{YOLOv8n-P2-EMA 的 P-R 与 F1 曲线}{figure.caption.12}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {P-R 曲线}}}{38}{subfigure.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {F1-置信度曲线}}}{38}{subfigure.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.5}检测效果可视化}{38}{subsection.4.5.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4{}-4}{\ignorespaces 验证集批量预测结果（绿框为真值，红框为预测）}}{38}{figure.caption.13}\protected@file@percent }
-\newlabel{fig:val_predictions}{{4{}-4}{38}{验证集批量预测结果（绿框为真值，红框为预测）}{figure.caption.13}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.6}与非 YOLO 方法的横向讨论}{38}{section.4.6}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4{}-5}{\ignorespaces 基线与本文模型的典型帧对比}}{39}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:compare}{{4{}-5}{39}{基线与本文模型的典型帧对比}{figure.caption.14}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {样本一}}}{39}{subfigure.5.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {样本二}}}{39}{subfigure.5.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {样本三}}}{39}{subfigure.5.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {样本四}}}{39}{subfigure.5.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.7}有效工作范围与失效模式}{39}{section.4.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}置信度与目标尺度的关系}{39}{subsection.4.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}典型失效模式}{39}{subsection.4.7.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.8}本章小结}{40}{section.4.8}\protected@file@percent }
+\newlabel{chap:sm}{{\bfseries  4}{45}{三态跟踪与单目定位}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}问题描述}{45}{section.4.1}\protected@file@percent }
+\newlabel{eq:det_set}{{4-1}{45}{问题描述}{equation.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}误检}{45}{subsection.4.1.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-1}{\ignorespaces 典型误检来源与置信度分布}}{46}{table.caption.20}\protected@file@percent }
+\newlabel{tab:false_positive}{{4{}-1}{46}{典型误检来源与置信度分布}{table.caption.20}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}身份跳变}{46}{subsection.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}遮挡中断}{46}{subsection.4.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}状态定义与总体流程}{46}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}状态定义}{46}{subsection.4.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4{}-1}{\ignorespaces 三态跟踪状态机转移关系}}{47}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:state_machine}{{4{}-1}{47}{三态跟踪状态机转移关系}{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}总体流程}{47}{subsection.4.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}SEARCH 状态}{47}{section.4.3}\protected@file@percent }
+\newlabel{sec:search}{{4.3}{47}{SEARCH 状态}{section.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}双门限策略}{47}{subsection.4.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4{}-2}{\ignorespaces 置信度门限扫描结果}}{48}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:threshold_scan}{{4{}-2}{48}{置信度门限扫描结果}{figure.caption.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}初锁判定}{48}{subsection.4.3.2}\protected@file@percent }
+\newlabel{eq:filtered_set}{{4-2}{48}{初锁判定}{equation.4.2}{}}
+\newlabel{eq:argmax}{{4-3}{48}{初锁判定}{equation.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}先验空间约束}{49}{subsection.4.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}首锁时延}{49}{subsection.4.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}LOCKED 状态}{49}{section.4.4}\protected@file@percent }
+\newlabel{sec:locked}{{4.4}{49}{LOCKED 状态}{section.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}候选框收集}{49}{subsection.4.4.1}\protected@file@percent }
+\newlabel{eq:locked_candidates}{{4-4}{49}{候选框收集}{equation.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}空间门限关联}{49}{subsection.4.4.2}\protected@file@percent }
+\newlabel{eq:assoc_cost}{{4-5}{49}{空间门限关联}{equation.4.5}{}}
+\newlabel{eq:assoc_argmin}{{4-6}{50}{空间门限关联}{equation.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}卡尔曼滤波更新}{50}{subsection.4.4.3}\protected@file@percent }
+\newlabel{eq:meas_vec}{{4-7}{50}{卡尔曼滤波更新}{equation.4.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.4}丢失判定}{50}{subsection.4.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.5}框尺寸的平滑}{51}{subsection.4.4.5}\protected@file@percent }
+\newlabel{eq:box_smooth}{{4-8}{51}{框尺寸的平滑}{equation.4.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}COAST 状态}{51}{section.4.5}\protected@file@percent }
+\newlabel{sec:coast}{{4.5}{51}{COAST 状态}{section.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}预测步}{51}{subsection.4.5.1}\protected@file@percent }
+\newlabel{eq:coast_predict}{{4-9}{51}{预测步}{equation.4.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}超时与恢复}{51}{subsection.4.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}预测质量}{52}{subsection.4.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}算法描述与复杂度}{52}{section.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.1}伪代码}{52}{subsection.4.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.2}复杂度分析}{52}{subsection.4.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.3}参数汇总}{52}{subsection.4.6.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-2}{\ignorespaces 三态状态机参数汇总}}{52}{table.caption.23}\protected@file@percent }
+\newlabel{tab:sm_params}{{4{}-2}{52}{三态状态机参数汇总}{table.caption.23}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces 三态跟踪状态机单帧处理}}{53}{algorithm.1}\protected@file@percent }
+\newlabel{alg:state_machine}{{1}{53}{三态跟踪状态机单帧处理}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.7}实验验证}{54}{section.4.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}门限敏感性}{54}{subsection.4.7.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-3}{\ignorespaces 置信度门限扫描详细结果（仿真录像，900 帧）}}{54}{table.caption.24}\protected@file@percent }
+\newlabel{tab:threshold_detail}{{4{}-3}{54}{置信度门限扫描详细结果（仿真录像，900 帧）}{table.caption.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}遮挡场景}{54}{subsection.4.7.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-4}{\ignorespaces TCP 遮挡用例结果}}{54}{table.caption.25}\protected@file@percent }
+\newlabel{tab:coast_result}{{4{}-4}{54}{TCP 遮挡用例结果}{table.caption.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4{}-3}{\ignorespaces TCP 遮挡用例的状态时序与持续时间分布}}{55}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:coast_timeline}{{4{}-3}{55}{TCP 遮挡用例的状态时序与持续时间分布}{figure.caption.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}真实场景录像}{55}{subsection.4.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.8}设计讨论}{55}{section.4.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.1}为什么不用多目标跟踪框架}{55}{subsection.4.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.2}为什么用状态机而不是有限状态自动机的形式化方法}{55}{subsection.4.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.3}失效边界}{56}{subsection.4.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.9}单目定位与自适应卡尔曼滤波}{56}{section.4.9}\protected@file@percent }
+\newlabel{chap:loc}{{4.9}{56}{单目定位与自适应卡尔曼滤波}{section.4.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.1}坐标系与符号约定}{56}{subsection.4.9.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-5}{\ignorespaces 坐标系与符号约定}}{56}{table.caption.27}\protected@file@percent }
+\newlabel{tab:coord_symbol}{{4{}-5}{56}{坐标系与符号约定}{table.caption.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.2}方位角与俯仰角}{57}{subsection.4.9.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{像素直算法}{57}{subsection.4.9.2}\protected@file@percent }
+\newlabel{eq:angle_direct}{{4-10}{57}{像素直算法}{equation.4.10}{}}
+\@writefile{toc}{\contentsline {subsubsection}{角度误差传播}{57}{equation.4.10}\protected@file@percent }
+\newlabel{eq:angle_err}{{4-11}{57}{角度误差传播}{equation.4.11}{}}
+\@writefile{toc}{\contentsline {subsubsection}{与滤波角度法的对比}{57}{equation.4.11}\protected@file@percent }
+\newlabel{eq:angle_kf}{{4-12}{58}{与滤波角度法的对比}{equation.4.12}{}}
+\@writefile{toc}{\contentsline {subsubsection}{真值口径问题}{58}{equation.4.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.3}距离解算}{58}{subsection.4.9.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{相似三角形原理}{58}{subsection.4.9.3}\protected@file@percent }
+\newlabel{eq:range_est}{{4-13}{58}{相似三角形原理}{equation.4.13}{}}
+\@writefile{toc}{\contentsline {subsubsection}{等效尺寸标定}{59}{equation.4.13}\protected@file@percent }
+\newlabel{eq:size_calib}{{4-14}{59}{等效尺寸标定}{equation.4.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-6}{\ignorespaces 等效尺寸标定结果}}{59}{table.caption.28}\protected@file@percent }
+\newlabel{tab:size_calib}{{4{}-6}{59}{等效尺寸标定结果}{table.caption.28}{}}
+\@writefile{toc}{\contentsline {subsubsection}{误差传播}{59}{table.caption.28}\protected@file@percent }
+\newlabel{eq:range_err_rel}{{4-15}{59}{误差传播}{equation.4.15}{}}
+\newlabel{eq:range_err_abs}{{4-16}{59}{误差传播}{equation.4.16}{}}
+\newlabel{eq:range_err_square}{{4-17}{59}{误差传播}{equation.4.17}{}}
+\@writefile{toc}{\contentsline {subsubsection}{框高抖动的影响}{60}{equation.4.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.4}自适应卡尔曼滤波器设计}{60}{subsection.4.9.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{状态与量测}{60}{subsection.4.9.4}\protected@file@percent }
+\newlabel{eq:state6}{{4-18}{60}{状态与量测}{equation.4.18}{}}
+\newlabel{eq:meas3}{{4-19}{60}{状态与量测}{equation.4.19}{}}
+\newlabel{eq:F_H}{{4-20}{60}{状态与量测}{equation.4.20}{}}
+\@writefile{toc}{\contentsline {subsubsection}{过程噪声}{61}{equation.4.20}\protected@file@percent }
+\newlabel{eq:Q}{{4-21}{61}{过程噪声}{equation.4.21}{}}
+\newlabel{eq:Q_diag}{{4-22}{61}{过程噪声}{equation.4.22}{}}
+\@writefile{toc}{\contentsline {subsubsection}{量测噪声与自适应估计}{61}{equation.4.22}\protected@file@percent }
+\newlabel{eq:R0}{{4-23}{61}{量测噪声与自适应估计}{equation.4.23}{}}
+\newlabel{eq:R_ema}{{4-24}{61}{量测噪声与自适应估计}{equation.4.24}{}}
+\@writefile{toc}{\contentsline {subsubsection}{初始化的注意事项}{62}{equation.4.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.5}定位精度评估}{62}{subsection.4.9.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{仿真闭环评估}{62}{subsection.4.9.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-7}{\ignorespaces 仿真闭环定位精度（微调后模型，2818 帧）}}{62}{table.caption.29}\protected@file@percent }
+\newlabel{tab:esim}{{4{}-7}{62}{仿真闭环定位精度（微调后模型，2818 帧）}{table.caption.29}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4{}-4}{\ignorespaces 仿真闭环四联分析图（距离、误差、角度与状态分布）}}{63}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:sim_analysis}{{4{}-4}{63}{仿真闭环四联分析图（距离、误差、角度与状态分布）}{figure.caption.30}{}}
+\@writefile{toc}{\contentsline {subsubsection}{实拍视频评估}{63}{figure.caption.30}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-8}{\ignorespaces 实拍视频定位精度（E3）}}{63}{table.caption.31}\protected@file@percent }
+\newlabel{tab:e3}{{4{}-8}{63}{实拍视频定位精度（E3）}{table.caption.31}{}}
+\@writefile{toc}{\contentsline {subsubsection}{短期预测精度}{64}{table.caption.31}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-9}{\ignorespaces 短期预测精度（ADE，伪真值=离线检测距离）}}{64}{table.caption.32}\protected@file@percent }
+\newlabel{tab:e3b}{{4{}-9}{64}{短期预测精度（ADE，伪真值=离线检测距离）}{table.caption.32}{}}
+\@writefile{toc}{\contentsline {subsubsection}{角度精度}{64}{table.caption.32}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-10}{\ignorespaces 角度精度（稳态段中位绝对偏差）}}{64}{table.caption.33}\protected@file@percent }
+\newlabel{tab:e3c}{{4{}-10}{64}{角度精度（稳态段中位绝对偏差）}{table.caption.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.6}误差来源与改进方向}{64}{subsection.4.9.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{主要误差来源}{64}{subsection.4.9.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4{}-11}{\ignorespaces 单目定位误差来源与量级}}{65}{table.caption.34}\protected@file@percent }
+\newlabel{tab:error_sources}{{4{}-11}{65}{单目定位误差来源与量级}{table.caption.34}{}}
+\@writefile{toc}{\contentsline {subsubsection}{改进方向}{65}{table.caption.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.10}本章小结}{65}{section.4.10}\protected@file@percent }
 \@setckpt{contents/chap4}{
-\setcounter{page}{41}
-\setcounter{equation}{3}
+\setcounter{page}{67}
+\setcounter{equation}{24}
 \setcounter{enumi}{0}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
@@ -74,18 +137,18 @@
 \setcounter{mpfootnote}{0}
 \setcounter{part}{0}
 \setcounter{chapter}{4}
-\setcounter{section}{8}
+\setcounter{section}{10}
 \setcounter{subsection}{0}
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{5}
-\setcounter{table}{4}
+\setcounter{figure}{4}
+\setcounter{table}{11}
 \setcounter{section@level}{0}
 \setcounter{Item}{0}
 \setcounter{Hfootnote}{0}
 \setcounter{Hy@AnnotLevel}{0}
-\setcounter{bookmark@seq@number}{95}
+\setcounter{bookmark@seq@number}{128}
 \setcounter{nlinenum}{0}
 \setcounter{LT@tables}{0}
 \setcounter{LT@chunks}{0}
@@ -100,9 +163,9 @@
 \setcounter{proposition}{0}
 \setcounter{assumption}{0}
 \setcounter{float@type}{8}
-\setcounter{algorithm}{0}
-\setcounter{ALC@unique}{0}
-\setcounter{ALC@line}{0}
+\setcounter{algorithm}{1}
+\setcounter{ALC@unique}{35}
+\setcounter{ALC@line}{35}
 \setcounter{ALC@rem}{0}
 \setcounter{ALC@depth}{0}
 \setcounter{tabx@nest}{0}
@@ -114,7 +177,7 @@
 \setcounter{citetotal}{0}
 \setcounter{multicitecount}{0}
 \setcounter{multicitetotal}{0}
-\setcounter{instcount}{51}
+\setcounter{instcount}{59}
 \setcounter{maxnames}{1}
 \setcounter{minnames}{1}
 \setcounter{maxitems}{1}
@@ -225,14 +288,14 @@
 \setcounter{gbbiblocalcase}{0}
 \setcounter{lanordernum}{0}
 \setcounter{cbx@tempcnta}{0}
-\setcounter{cbx@tempcntb}{12}
+\setcounter{cbx@tempcntb}{29}
 \setcounter{cbx@tempcntc}{0}
 \setcounter{cbx@tempcntd}{-1}
 \setcounter{gbrefcompress}{2}
 \setcounter{parentequation}{0}
 \setcounter{KVtest}{1}
 \setcounter{subfigure}{0}
-\setcounter{subfigure@save}{4}
+\setcounter{subfigure@save}{2}
 \setcounter{lofdepth}{1}
 \setcounter{subtable}{0}
 \setcounter{subtable@save}{0}

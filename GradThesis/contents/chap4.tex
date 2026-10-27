@@ -1,294 +1,780 @@
-%% 第四章 检测模型改进与消融实验
-\chapter{检测模型改进与消融实验}
+\chapter{三态跟踪与单目定位}
+\label{chap:sm}
 
-本章介绍面向无人机小目标的检测模型改进。首先说明基础模型的选择依据，分析标准 YOLOv8n 在小目标上的结构性局限；然后详细阐述 P2 检测头与 EMA 注意力的设计、插入位置与计算开销；接着给出训练配置与消融实验结果，并从特征分辨率、注意力响应与参数效率三个角度解释结果；最后讨论模型的有效工作范围与失效模式。
+检测器每帧吐出一组候选框，可候选框并不等于一条能用的航迹。框会误检，会在多个目标之间跳，也会因遮挡整帧消失；即便框的位置可信，系统还得回答目标在哪儿、离得多远。本章把这两件事接在一起处理：前半部分建立 SEARCH/LOCKED/COAST 三态跟踪状态机，逐状态说明处理流程、参数取值与转移条件，并给出伪代码、复杂度分析与实验验证；后半部分建立由像素坐标到三维位置的定位链路，涵盖角度解算、距离解算、误差传播分析，以及一个六维状态的自适应卡尔曼滤波器。
 
-\section{基础模型选型}
+先看跟踪。若系统把每帧置信度最高的框直接当成输出，操作员会在屏幕上看到幽灵目标、突然跳走的标记，以及遮挡时的闪烁，后文列出的三个工程问题都由此而来。再看定位，检测框的中心决定视线方向，框高结合目标等效尺寸决定距离，两者的误差结构完全不同：前者受像素量化限制，后者随距离的平方恶化。把这两条线的误差分开处理，是本章设计的基本出发点。跟踪负责时间上的连续，定位负责空间上的数值，二者共用同一套滤波器状态。
 
-\subsection{规模选择}
+\section{问题描述}
 
-YOLOv8 提供 n、s、m、l、x 五种规模，参数量从约 3\,M 到约 68\,M。选择何种规模需要综合考虑精度、速度与部署条件。本文的目标平台是一台配备 RTX 4060 笔记本 GPU 的普通计算机，系统需要在处理 720p 视频的同时完成界面渲染、地图更新与数据记录，因此检测模型不能占用过多显存与算力。
+设第 $k$ 帧检测器输出候选框集合为
 
-表~\ref{tab:model_scale} 给出了各规模在 COCO 上的参考指标（Ultralytics 官方数据）与本文实测的推理速度。
+\begin{equation}
+\mathcal{D}_k = \left\{\left(\mathbf{b}_i, c_i\right)\right\}_{i=1}^{N_k},
+\label{eq:det_set}
+\end{equation}
+
+其中 $\mathbf{b}_i=(x_{1,i},y_{1,i},x_{2,i},y_{2,i})$ 为边框，$c_i\in[0,1]$ 为置信度。若直接把 $\arg\max_i c_i$ 作为系统输出，会面临以下三个问题。
+
+\subsection{误检}
+
+复杂背景里，检测器会给出低置信度的假阳性：树叶间隙的亮斑、建筑窗户的反光、天空云朵的边缘，都可能被当成无人机。表~\ref{tab:false_positive} 整理了本文在仿真与实拍数据中遇到的典型误检来源及其置信度范围。
 
 \begin{table}[htbp]
 \centering
-\caption{YOLOv8 各规模模型对比}
-\label{tab:model_scale}
+\caption{典型误检来源与置信度分布}
+\label{tab:false_positive}
+\small
+\begin{tabularx}{\textwidth}{lccX}
+\toprule
+\textbf{误检来源} & \textbf{置信度范围} & \textbf{持续时间} & \textbf{特征} \\
+\midrule
+树叶间隙亮斑 & 0.20--0.35 & 1--3 帧 & 随风吹动，位置漂移 \\
+建筑窗户反光 & 0.25--0.45 & 5--20 帧 & 位置固定，随光照变化 \\
+天空云边缘 & 0.20--0.30 & 1--2 帧 & 形状不规则，面积大 \\
+远处鸟类 & 0.30--0.55 & 10--30 帧 & 有生命运动，轨迹不规则 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+要是每帧都采信最高分框，地图上就会冒出“幽灵目标”，操作员无从判断哪个是真的。于是需要一个高于维持门限的\textbf{初锁门限}，只有足够可信的框才允许建立航迹。
+
+\subsection{身份跳变}
+
+画面里同时有几个候选框时，只取最高分会让目标身份在帧与帧之间跳。设想第 $k$ 帧最高分框对应目标 A，第 $k+1$ 帧 A 短暂变模糊，目标 B（另一架无人机，或一个高分假阳性）顶了上来，航迹就被“嫁接”到 B 上。监视画面中的表现是标记忽然跑到别处，严重时后续测距与地图标注全错。
+
+治这个毛病要靠\textbf{空间一致性约束}：相邻帧之间同一目标的位置不会突变。30\,fps 下，目标即便以 20\,m/s 飞行，两帧间位移也只有 0.67\,m；在 10\,m 距离、60\textdegree 视场下约合 40\,px。拿“与上一帧位置的像素距离”作关联代价，再配一个合适的空间门限，大多数错误关联就能挡掉。
+
+\subsection{遮挡中断}
+
+目标被树木、建筑、电线杆挡住时，检测输出为空。若系统认定“每帧必须有检测”，遮挡期间航迹就断了，操作员看到的是标记闪烁、距离读数跳成“--”。更麻烦的是目标重新出现后，系统得重新搜索、重新初锁，这期间很可能锁到别的东西。
+
+对策是\textbf{预测维持}：检测缺失的短时间内，用滤波器保存的运动状态外推位置，让航迹在视觉上保持连续；超过一定时限再放手，免得对早已飞离的目标做虚假跟踪。
+
+\section{状态定义与总体流程}
+
+\subsection{状态定义}
+
+三种状态定义如下。
+
+（1）\textbf{SEARCH}：搜索状态。系统尚未建立可信航迹，逐帧检查是否存在置信度超过初锁门限的候选框；
+
+（2）\textbf{LOCKED}：锁定状态。系统已建立航迹，每帧在候选框集合中关联最可能属于当前目标的框，并用卡尔曼滤波更新状态；
+
+（3）\textbf{COAST}：预测维持状态。当前帧没有可用候选框，系统用卡尔曼滤波的预测步外推目标位置，等待目标重新出现。
+
+状态转移关系如图~\ref{fig:state_machine} 所示。
+
+\begin{figure}[htbp]
+\centering
+\fbox{\parbox{0.92\textwidth}{
+\centering
+\vspace{4pt}
+\textbf{SEARCH} \quad$\xrightarrow[\text{未超过初锁门限}]{\text{最高置信度} > 0.55}$\quad \textbf{LOCKED}
+\quad$\xrightarrow[\text{连续 1.0\,s 无检测}]{\text{本帧无候选框}}$\quad \textbf{COAST}\\[6pt]
+\textbf{COAST} \quad$\xrightarrow[\text{超过 1.0\,s}]{\text{重新出现候选框}}$\quad \textbf{LOCKED}
+\qquad\qquad
+\textbf{COAST} \quad$\xrightarrow{\text{超时或无匹配}}$\quad \textbf{SEARCH}\\[6pt]
+\textbf{LOCKED} \quad$\xrightarrow{\text{连续 15 帧无法关联}}$\quad \textbf{SEARCH}
+\vspace{4pt}
+}}
+\caption{三态跟踪状态机转移关系}
+\label{fig:state_machine}
+\end{figure}
+
+\subsection{总体流程}
+
+每收到一帧检测结果，系统按当前状态分派：
+
+（1）SEARCH：走搜索逻辑（第~\ref{sec:search} 节）；
+
+（2）LOCKED：走关联与更新逻辑（第~\ref{sec:locked} 节）；若本帧没有候选框，转入 COAST；
+
+（3）COAST：走预测逻辑（第~\ref{sec:coast} 节）；目标重新出现则回 LOCKED，超时则回 SEARCH；
+
+（4）无论处于哪一态，都把当前状态、置信度、距离、角度写入数据记录，供显示端与后续分析取用。
+
+\section{SEARCH 状态}
+\label{sec:search}
+
+\subsection{双门限策略}
+
+SEARCH 要办的事有两件：发现真目标，且别锁错。本文采用双门限策略：
+
+（1）\textbf{维持门限} $\tau_{m}=0.25$：低于此值的框直接丢弃，不进入后续处理；
+
+（2）\textbf{初锁门限} $\tau_{l}=0.55$：只有超过此值的框才触发状态切换。
+
+两个门限之间留出 0.30 的缓冲带。缓冲带的意义在于：SEARCH 期间系统只对高置信度目标作出反应，低分假阳性诱导不了它；一旦进入 LOCKED，置信度要求就放宽，只要目标还在画面里、分数高于 0.25 便继续跟，不必每帧再“说服”系统一次。
+
+门限数值不是拍脑袋定的，来自验证集置信度分布的统计。图~\ref{fig:threshold_scan} 给出不同门限下仿真录像的锁定率与航迹保持率。门限由 0.20 提到 0.35，锁定率从 96.9\% 落到 66.6\%，航迹保持率从 100\% 降到 81.2\%；再提到 0.50，锁定率只剩 56.8\%。可见仿真域微调后的模型置信度整体偏高（中位数 0.867），0.25 的维持门限足够留住有效目标，0.55 的初锁门限也足以滤掉绝大多数假阳性。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{images/pictures/chart_threshold.png}
+\caption{置信度门限扫描结果}
+\label{fig:threshold_scan}
+\end{figure}
+
+\subsection{初锁判定}
+
+SEARCH 状态下，过滤后的候选框集合为
+
+\begin{equation}
+\tilde{\mathcal{D}}_k = \left\{(\mathbf{b}_i,c_i)\in\mathcal{D}_k \mid c_i\ge\tau_m\right\}.
+\label{eq:filtered_set}
+\end{equation}
+
+若 $\tilde{\mathcal{D}}_k$ 为空，本帧无候选，保持 SEARCH；否则取置信度最高者：
+
+\begin{equation}
+i^{*} = \arg\max_{i:\,(\mathbf{b}_i,c_i)\in\tilde{\mathcal{D}}_k} c_i.
+\label{eq:argmax}
+\end{equation}
+
+若 $c_{i^{*}}\ge\tau_l$，则以 $\mathbf{b}_{i^{*}}$ 初始化航迹，状态切换为 LOCKED，并用该框的中心与框高初始化卡尔曼滤波器的位置量测；不满足就继续 SEARCH。
+
+\subsection{先验空间约束}
+
+仿真画面里除了目标，还会出现“自身机”（ego drone）与背景伪影。不加约束的话，SEARCH 有可能锁到自身机的桨叶或近处建筑上。本文因此引入\textbf{先验空间约束}：按任务设定，目标活动空域在距相机 3--12\,m 之内。由框高反算的距离 $Z$ 若小于 3\,m 或大于 12\,m，该框降权或直接剔除。
+
+这条约束站得住脚，是因为反无人机系统的告警距离本来就由人设定，操作员清楚目标大致在哪个空域；把先验写进状态机，误锁概率能降下来一大截。仿真中它被用来剔除自身机与远处伪影，实拍时上下界则按现场情况调整。
+
+\subsection{首锁时延}
+
+首锁时延指视频开始到首次进入 LOCKED 的时间。14 个用例里，仿真录像的首锁时延为 0.00--0.07\,s，即前 2--3 帧内完成锁定；真实场景录像是 0.03\,s。目标清晰可见时，双门限并没有带来可察觉的发现延迟。
+
+\section{LOCKED 状态}
+\label{sec:locked}
+
+\subsection{候选框收集}
+
+进入 LOCKED 后，候选框不再需要越过初锁门限，只要求高于维持门限：
+
+\begin{equation}
+\tilde{\mathcal{D}}_k = \left\{(\mathbf{b}_i,c_i)\in\mathcal{D}_k \mid c_i\ge\tau_m\right\}.
+\label{eq:locked_candidates}
+\end{equation}
+
+同时逐个计算框高反算距离，超出先验空域 $[Z_{min},Z_{max}]$ 的剔除。
+
+\subsection{空间门限关联}
+
+上一帧目标的平滑中心记为 $\mathbf{p}_{k-1}=(u_{k-1},v_{k-1})$，第 $i$ 个候选框的中心为 $\mathbf{p}_i=(u_i,v_i)$，关联代价取欧氏像素距离：
+
+\begin{equation}
+d_i = \left\|\mathbf{p}_i-\mathbf{p}_{k-1}\right\|_2.
+\label{eq:assoc_cost}
+\end{equation}
+
+取代价最小的候选框：
+
+\begin{equation}
+i^{*} = \arg\min_{i} d_i.
+\label{eq:assoc_argmin}
+\end{equation}
+
+若 $d_{i^{*}}\le d_{gate}$，该框即本帧量测；否则本帧无有效关联，转入 COAST。
+
+$d_{gate}$ 的取值要在“跟得上”与“不跳变”之间取平衡。取小了，目标一机动就丢；取大了，容易连到旁边的其他物体上。本文取 $d_{gate}=140$\,px，依据是：1280$\times$720 画面、60\textdegree 水平视场下焦距约 1108\,px；目标相对速度 15\,m/s、帧间隔 1/30\,s 时位移 0.5\,m，在 5\,m 处约合 110\,px。再考虑框中心抖动与目标机动，140\,px 留了约 30\% 的余量。
+
+\subsection{卡尔曼滤波更新}
+
+关联成功后，把框中心与框高反算距离折算成相机坐标系下的三维位置量测：
+
+\begin{equation}
+\mathbf{z}_k = \begin{bmatrix}
+Z_k\cdot\dfrac{u_k-c_x}{f_x}\\[4pt]
+Z_k\cdot\dfrac{v_k-c_y}{f_y}\\[4pt]
+Z_k
+\end{bmatrix},
+\label{eq:meas_vec}
+\end{equation}
+
+其中 $Z_k=f\cdot D/h_{px}$ 为框高反算距离，$(c_x,c_y)$ 为主点，$(f_x,f_y)$ 为焦距。量测送入卡尔曼滤波的更新步（式~\eqref{eq:kf_gain}--\eqref{eq:kf_cov}），得到平滑后的位置与速度。
+
+这里有一条必须守住的规矩：\textbf{不能把标量距离直接当量测}。本文的滤波器状态是六维位置—速度向量，量测也必须是三维位置；标量距离塞进去，状态与量测的维度对不上，滤波会发散。早期版本正是这么写的，后来改成严格的三维量测构造才修正过来。
+
+\subsection{丢失判定}
+
+若连续 $N_{lost}$ 帧都无法完成关联（每帧最近候选的距离都超过 $d_{gate}$，或候选集为空），判定目标丢失，重置航迹并回到 SEARCH。本文取 $N_{lost}=15$，对应 0.5\,s。这个时限比 COAST 的 1.0\,s 短，理由是：连着 15 帧都关联不上，目标多半已经飞出视场或做了剧烈机动，硬撑航迹没有意义；而 COAST 的 1.0\,s 是给“短暂遮挡”留的，遮挡期间目标还在视场内，只是检测器一时看不见。
+
+\subsection{框尺寸的平滑}
+
+检测框的宽高在帧间有抖动，直接拿来测距会产生跳变。本文对框高做一阶低通平滑：
+
+\begin{equation}
+\bar{h}_k = \alpha h_k + (1-\alpha)\bar{h}_{k-1},\qquad \alpha=0.35.
+\label{eq:box_smooth}
+\end{equation}
+
+平滑后的框高用于距离解算，原始框高保留显示。$\alpha$ 的取值在响应与平滑之间折中：$\alpha$ 越大跟得越快、抖动也越大；$\alpha$ 越小越平滑、滞后越明显。0.35 对应的时间常数约 2--3 帧，30\,fps 下约 0.1\,s，实时性不受影响。
+
+\section{COAST 状态}
+\label{sec:coast}
+
+\subsection{预测步}
+
+LOCKED 状态下本帧若没有有效关联，系统不马上放弃，而是转入 COAST，执行卡尔曼滤波的预测步：
+
+\begin{equation}
+\hat{\mathbf{x}}_{k|k-1} = \mathbf{F}\hat{\mathbf{x}}_{k-1|k-1},\qquad
+\mathbf{P}_{k|k-1} = \mathbf{F}\mathbf{P}_{k-1|k-1}\mathbf{F}^{T}+\mathbf{Q}.
+\label{eq:coast_predict}
+\end{equation}
+
+预测位置用来驱动地图标记、距离读数与角度仪表，遮挡期间显示不至于中断。没有量测，协方差 $\mathbf{P}$ 会随预测步数增加而变大，滤波器的不确定度随之上升。显示端用黄色标记表示 COAST 状态，提醒操作员当前数据是外推出来的。
+
+\subsection{超时与恢复}
+
+COAST 状态设时限 $T_{coast}=1.0$\,s。时限内若某帧出现可关联的候选框，立即回 LOCKED 并用该量测更新滤波器；超过时限仍无候选，判为目标丢失，重置航迹、回 SEARCH。
+
+$T_{coast}$ 的依据是真实遮挡的持续时间。目标穿过一棵树或一根电线杆通常 0.1--0.5\,s，穿过一栋建筑可能要 0.5--1.0\,s。1.0\,s 的预算够覆盖绝大多数短时遮挡，又不会对已飞离的目标维持太久的虚假航迹。仿真遮挡用例中，遮挡期间的平均 COAST 持续时间为 0.35\,s，最长 0.82\,s，都在时限之内。
+
+\subsection{预测质量}
+
+COAST 预测得好不好，取决于遮挡前的速度估计。遮挡前目标做匀速直线运动，误差主要来自过程噪声；遮挡前正在机动，误差会迅速扩大。仿真统计的预测位置与真值偏差为：遮挡 0.2\,s 约 0.15\,m，0.5\,s 约 0.45\,m，1.0\,s 约 1.1\,m。这样的精度维持显示连续够用，用于精确打击引导则不够。
+
+\section{算法描述与复杂度}
+
+\subsection{伪代码}
+
+单帧处理流程见算法~\ref{alg:state_machine}。
+
+\begin{algorithm}[htbp]
+\caption{三态跟踪状态机单帧处理}
+\label{alg:state_machine}
+\begin{algorithmic}[1]
+\REQUIRE 当前状态 $s$，检测集合 $\mathcal{D}_k$，上一帧中心 $\mathbf{p}_{k-1}$，滤波器状态 $\hat{\mathbf{x}}_{k-1}$
+\ENSURE 新状态 $s'$，滤波状态 $\hat{\mathbf{x}}_k$，输出数据 $o_k$
+\STATE $\tilde{\mathcal{D}}_k \leftarrow \{(\mathbf{b},c)\in\mathcal{D}_k \mid c\ge\tau_m,\ Z(\mathbf{b})\in[Z_{min},Z_{max}]\}$
+\IF{$s = \text{SEARCH}$}
+    \IF{$\tilde{\mathcal{D}}_k = \emptyset$}
+        \STATE $s' \leftarrow \text{SEARCH}$;\quad $o_k \leftarrow \text{search\_output}()$
+    \ELSE
+        \STATE $i^{*}\leftarrow\arg\max_i c_i$
+        \IF{$c_{i^{*}}\ge\tau_l$}
+            \STATE 初始化滤波器；$s'\leftarrow\text{LOCKED}$
+        \ELSE
+            \STATE $s'\leftarrow\text{SEARCH}$
+        \ENDIF
+    \ENDIF
+\ELSIF{$s = \text{LOCKED}$}
+    \IF{$\tilde{\mathcal{D}}_k = \emptyset$}
+        \STATE $s'\leftarrow\text{COAST}$;\quad 记录 COAST 起始时间
+    \ELSE
+        \STATE $i^{*}\leftarrow\arg\min_i\|\mathbf{p}_i-\mathbf{p}_{k-1}\|$
+        \IF{$\|\mathbf{p}_{i^{*}}-\mathbf{p}_{k-1}\|\le d_{gate}$}
+            \STATE 构造三维量测 $\mathbf{z}_k$；执行 KF 更新；$s'\leftarrow\text{LOCKED}$
+        \ELSE
+            \STATE $s'\leftarrow\text{COAST}$;\quad 记录 COAST 起始时间
+        \ENDIF
+    \ENDIF
+\ELSIF{$s = \text{COAST}$}
+    \STATE 执行 KF 预测步
+    \IF{存在可通过关联的候选框}
+        \STATE 执行 KF 更新；$s'\leftarrow\text{LOCKED}$
+    \ELSIF{$t-t_{coast} > T_{coast}$}
+        \STATE 重置航迹；$s'\leftarrow\text{SEARCH}$
+    \ELSE
+        \STATE $s'\leftarrow\text{COAST}$
+    \ENDIF
+\ENDIF
+\STATE 输出 $o_k$（状态、置信度、距离、角度、平滑位置）
+\RETURN $s',\hat{\mathbf{x}}_k,o_k$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{复杂度分析}
+
+设候选框数量为 $N$，每帧的主要操作是遍历候选框计算关联代价，时间复杂度为 $O(N)$。YOLOv8 经 NMS 后的候选框通常不超过 20 个，状态机的开销可以忽略（小于 0.1\,ms）。卡尔曼滤波的矩阵运算是固定 6 维，单次更新约 10 微秒。整条跟踪环节的耗时远小于检测环节（约 6\,ms）。
+
+\subsection{参数汇总}
+
+表~\ref{tab:sm_params} 把状态机的参数与取值依据一并列出。
+
+\begin{table}[htbp]
+\centering
+\caption{三态状态机参数汇总}
+\label{tab:sm_params}
+\small
+\begin{tabularx}{\textwidth}{lccX}
+\toprule
+\textbf{参数} & \textbf{符号} & \textbf{取值} & \textbf{依据} \\
+\midrule
+维持门限 & $\tau_m$ & 0.25 & 保留弱目标，过滤低置信度假阳性 \\
+初锁门限 & $\tau_l$ & 0.55 & 高于典型假阳性上限，防止误锁 \\
+空间门限 & $d_{gate}$ & 140\,px & 15\,m/s 相对速度在 5\,m 处的像素位移加余量 \\
+丢失帧数 & $N_{lost}$ & 15 & 0.5\,s，覆盖快速机动与短时飞出 \\
+COAST 时限 & $T_{coast}$ & 1.0\,s & 覆盖穿树/穿杆遮挡，避免虚假长时跟踪 \\
+框高平滑系数 & $\alpha$ & 0.35 & 约 2--3 帧时间常数 \\
+空域先验 & $[Z_{min},Z_{max}]$ & 3--12\,m & 仿真目标活动范围，实拍按场景调整 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{实验验证}
+
+\subsection{门限敏感性}
+
+图~\ref{fig:threshold_scan} 已经反映了门限对锁定率的影响，表~\ref{tab:threshold_detail} 再补上三组门限下的详细指标。
+
+\begin{table}[htbp]
+\centering
+\caption{置信度门限扫描详细结果（仿真录像，900 帧）}
+\label{tab:threshold_detail}
 \small
 \begin{tabular}{lccccc}
 \toprule
-\textbf{模型} & \textbf{参数量(M)} & \textbf{COCO mAP50-95} & \textbf{640 推理(ms)} & \textbf{显存(MB)} & \textbf{适用场景} \\
+\textbf{门限} & \textbf{锁定率} & \textbf{航迹保持率} & \textbf{置信度均值} & \textbf{距离范围(m)} & \textbf{FPS} \\
 \midrule
-YOLOv8n & 3.2 & 37.3 & 6.2 & 约 420 & 边缘/桌面实时 \\
-YOLOv8s & 11.2 & 44.9 & 11.5 & 约 680 & 桌面实时 \\
-YOLOv8m & 25.9 & 50.2 & 25.8 & 约 1100 & 服务器 \\
-YOLOv8l & 43.7 & 52.9 & 44.6 & 约 1600 & 服务器 \\
-YOLOv8x & 68.2 & 53.9 & 68.3 & 约 2200 & 离线分析 \\
+0.20 & 96.9\% & 100.0\% & 0.550 & 3.0--6.2 & 29.5 \\
+0.35 & 66.6\% & 81.2\% & 0.661 & 3.0--6.2 & 35.8 \\
+0.50 & 56.8\% & 81.9\% & 0.707 & 3.0--6.2 & 39.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-本文选择 nano 版本，原因有三。第一，在 640 输入下推理耗时约 6\,ms，端到端（含预处理、后处理与绘制）可稳定在 30\,fps 以上，满足实时监视需求。第二，参数量小，模型文件约 6\,MB，便于随桌面应用分发，也便于在 CPU 上降级运行。第三，nano 版本的容量有限，小目标能力较弱，改进空间大，能够更清晰地体现 P2 与 EMA 的作用；若直接使用 large 模型，改进带来的相对提升可能被强大的基线能力掩盖。
+门限抬高后锁定率下降，是因为部分帧的置信度落在 0.20--0.50 之间，被判为未锁定而计入 SEARCH；但航迹保持率仍在 81\% 以上，已锁定的帧依旧连续。置信度均值随门限上升，符合“只留高分样本”的预期。FPS 随门限上升，则是被跟踪的候选框变少、后处理开销降低所致。
 
-\subsection{标准结构的局限}
+\subsection{遮挡场景}
 
-YOLOv8n 的检测头接在 P3、P4、P5 三层，对应 stride 8、16、32。对于 640$\times$640 输入，三层特征图尺寸分别为 80$\times$80、40$\times$40、20$\times$20。一个宽度为 20\,px 的目标在 P3 上仅占 2.5 个网格，在 P4 上占 1.25 个，在 P5 上不足 1 个。由于每个网格只能预测有限数量的目标，且特征在经过多次下采样后已经丢失了大量边缘与纹理信息，微小目标在标准结构上的响应非常弱。
-
-更具体地说，小目标的检测依赖于浅层特征，但浅层特征的语义判别力不足，容易将树叶、窗户、云朵误判为目标；深层特征语义强，但空间分辨率低，小目标已经"消失"。这一矛盾是 FPN 试图解决的核心问题，但当目标小于 32\,px 时，即使 P3 层也难以提供足够的分辨率。因此，增加更浅的检测层是直接且有效的思路。
-
-\section{P2 小目标检测头}
-
-\subsection{结构设计}
-
-本文在标准 YOLOv8n 的颈部增加一条自底向上的分支，将 stride=4 的浅层特征 $C_2$ 与 P3 上采样后的特征融合，得到 P2 特征图，并在其上接一个额外的检测头。设输入为 640$\times$640，各层特征图尺寸如表~\ref{tab:p2_shapes} 所示。
+表~\ref{tab:coast_result} 是三轮 TCP 遮挡用例的结果。目标机按预设航线飞行，途中多次被建筑与树木遮挡，每轮约 20\,s。
 
 \begin{table}[htbp]
 \centering
-\caption{各检测层特征图尺寸与网格占用（640$\times$640 输入）}
-\label{tab:p2_shapes}
+\caption{TCP 遮挡用例结果}
+\label{tab:coast_result}
 \small
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{检测层} & \textbf{stride} & \textbf{特征图} & \textbf{20\,px 目标占用网格} & \textbf{40\,px 目标占用网格} & \textbf{感受野} \\
+\textbf{轮次} & \textbf{帧数} & \textbf{锁定率} & \textbf{航迹保持率} & \textbf{首锁(s)} & \textbf{置信度均值} & \textbf{处理fps} \\
 \midrule
-P2（本文新增） & 4 & 160$\times$160 & 5.0 & 10.0 & 较小 \\
-P3 & 8 & 80$\times$80 & 2.5 & 5.0 & 中 \\
-P4 & 16 & 40$\times$40 & 1.25 & 2.5 & 较大 \\
-P5 & 32 & 20$\times$20 & $<1$ & 1.25 & 大 \\
+第 1 轮 & 424 & 55.4\% & 88.9\% & 0.00 & 0.751 & 21.1 \\
+第 2 轮 & 428 & 56.1\% & 90.7\% & 0.00 & 0.739 & 21.3 \\
+第 3 轮 & 437 & 59.3\% & 94.5\% & 0.21 & 0.751 & 21.8 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-融合路径可以写为
+三轮锁定率在 55\%--59\% 之间，意味着约四成帧处于遮挡或无检测状态；可航迹保持率（LOCKED+COAST 占比）达到 88.9\%--94.5\%，说明 COAST 把遮挡期的空白填上了。若没有 COAST，航迹保持率就等于锁定率，只剩 55\%--59\%，标记会闪得厉害。
 
-\begin{equation}
-P_2 = \mathrm{Conv}_{3\times3}\left(\mathrm{Conv}_{1\times1}(C_2)\oplus
-\mathrm{Upsample}_{2\times}\left(\mathrm{Conv}_{1\times1}(P_3)\right)\right),
-\label{eq:p2_fusion}
-\end{equation}
+图~\ref{fig:coast_timeline} 是第 3 轮用例的状态时序分布。COAST 段落短而密集，单次多在 0.1--0.4\,s，与目标穿过单个遮挡物的时间相符。
 
-其中 $\oplus$ 为逐元素相加。与自顶向下的 FPN 路径相比，这条"浅层直连"路径的最大特点是\textbf{传播距离短}：$C_2$ 只经过一次 $1\times1$ 卷积与一次 $3\times3$ 卷积便到达检测头，梯度回传路径也相应缩短，有利于浅层特征的训练。
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{images/pictures/chart_tcp_state.png}
+\caption{TCP 遮挡用例的状态时序与持续时间分布}
+\label{fig:coast_timeline}
+\end{figure}
 
-\subsection{检测头配置}
+\subsection{真实场景录像}
 
-新增的 P2 检测头与原有检测头结构一致，包含分类分支与回归分支，输出通道数为 $4\times16+1$（DFL 的 16 个分布参数、4 个边框参数与 1 个类别）。由于 P2 特征图尺寸是 P3 的 4 倍，检测头的计算量与显存占用显著增加。本文通过在 P2 分支使用较少的通道数（64）来控制开销。
+真实场景录像（C04）里目标频繁进出树丛，锁定率只有 23.2\%，航迹保持率却达到 99.3\%。两个数字表面上看相互矛盾，说的其实是同一件事：绝大多数帧没有检测，但目标并未真正丢失，航迹由 COAST 维持；只有目标确实飞出视场或被长时间遮挡，系统才回到 SEARCH。可见“锁定率低”并不等于“系统失效”，评跟踪系统时，航迹保持率比单帧锁定率更能说明实际可用性。
 
-\subsection{计算量与参数分析}
+\section{设计讨论}
 
-引入 P2 后，模型参数量从 3.01\,M 降至 2.93\,M，这一反直觉的现象需要解释。参数量减少的原因是：YOLOv8 的解耦头在不同尺度上共享部分结构，新增 P2 头的同时，颈部的一部分高层卷积被替换为更浅的融合路径，整体参数量略有下降。但计算量并未下降：P2 特征图的分辨率是 P3 的 4 倍，检测头在该层上的卷积计算量约为原来的 4 倍，因此 FPS 从 123 降至 90。
+\subsection{为什么不用多目标跟踪框架}
 
-这一权衡是合理的：反无人机场景对召回率的要求高于对帧率的要求，90\,fps 仍远高于 30\,fps 的视频帧率，留有充足余量。
+SORT\cite{sort} 与 DeepSORT\cite{deepsort} 面向多目标场景，轨迹管理、外观特征提取、匈牙利匹配一应俱全。本文的系统是单目标反无人机，同一时刻只需跟住威胁最大的那一个，复杂的轨迹管理用不上。简化后的状态机有三点好处：计算开销极低、行为可解释、参数现场可调。将来若要同时跟多架无人机，可以在状态机之上加轨迹池与数据关联层，现有设计不必推翻。
 
-\subsection{正负样本分配}
+\subsection{为什么用状态机而不是有限状态自动机的形式化方法}
 
-YOLOv8 使用 TaskAlignedAssigner 进行正负样本分配，其匹配分数为分类分数与 IoU 的加权乘积：
+本文的状态机在形式上就是一个确定性有限状态自动机，但没有走模型检验那套形式化路线。原因在于输入是连续视频流，状态转移依赖置信度、距离这类连续量，形式化建模的收益有限；工程上更要紧的是参数可调、日志可查。行为正确性靠 14 个用例的回归测试兜底，而不是靠形式化证明。
 
-\begin{equation}
-t = s^{\alpha}\cdot u^{\beta},
-\label{eq:align_metric}
-\end{equation}
+\subsection{失效边界}
 
-其中 $s$ 为预测类别的置信度，$u$ 为预测框与真值框的 IoU，$\alpha,\beta$ 为权重。对于小目标，IoU 对 1--2\,px 的偏移非常敏感，容易导致正样本过少。P2 层的高分辨率缓解了这一问题：同样的像素偏移在 P2 上对应的 IoU 下降更小，正样本数量更充足，训练更稳定。
+状态机的有效性押在两个假设上：相邻帧位移不超过空间门限；遮挡时间不超过 COAST 时限。目标以极高速度飞行（例如穿越机以 30\,m/s 飞行），或被长时间完全遮挡（例如穿过多层建筑），系统就会丢目标。这是设计上的取舍，第五章的“能力边界”一节有如实讨论。
 
-\section{EMA 注意力机制集成}
 
-\subsection{插入位置}
+\section{单目定位与自适应卡尔曼滤波}
+\label{chap:loc}
 
-本文将 EMA 模块插入骨干网络与颈部中的 C2f 模块之后，具体位于每个 C2f 的输出端。选择这一位置的原因是：C2f 的输出已经融合了多感受野特征，在此处进行注意力重加权，可以在不破坏特征提取过程的前提下抑制背景响应。若将 EMA 插入 C2f 内部，会改变 Bottleneck 的梯度流，实验中发现训练更不稳定。
+检测给出目标在画面里的位置，跟踪维持它的时间连续性，定位要回答的则是“目标在哪里、有多远”。这一部分建立从像素坐标到三维位置的解算链路，推导方位角、俯仰角与距离的计算式，分析误差如何传播，设计六维状态的自适应卡尔曼滤波器，并借助仿真闭环与实拍视频检验定位精度。
 
-\subsection{模块结构}
+\subsection{坐标系与符号约定}
 
-设 EMA 的输入为 $\mathbf{X}\in\mathbb{R}^{C\times H\times W}$，其处理流程可形式化描述如下。
-
-（1）分组：将通道分为 $G$ 组，每组 $C/G$ 个通道，记为 $\mathbf{X}_g$。
-
-（2）方向池化：对每组分别沿宽度与高度方向做平均池化，得到 $\mathbf{z}_h\in\mathbb{R}^{C/G\times H}$ 与 $\mathbf{z}_w\in\mathbb{R}^{C/G\times W}$。
-
-（3）一维卷积：用核长为 $k$ 的一维卷积对 $\mathbf{z}_h,\mathbf{z}_w$ 做跨通道交互，再经 sigmoid 得到方向权重。
-
-（4）特征增强：将方向权重与 $\mathbf{X}_g$ 相乘，得到 $\mathbf{X}_g^{h}$ 与 $\mathbf{X}_g^{w}$。
-
-（5）跨空间融合：对两组增强特征做全局平均池化，经 softmax 得到跨组权重，再加权求和：
-
-\begin{equation}
-\mathbf{Y}_g = \alpha_g^{h}\cdot\mathbf{X}_g^{h} + \alpha_g^{w}\cdot\mathbf{X}_g^{w},
-\label{eq:ema_fusion}
-\end{equation}
-
-其中 $\alpha_g^{h},\alpha_g^{w}$ 为 softmax 归一化后的跨空间权重。
-
-（6）输出：将所有组的 $\mathbf{Y}_g$ 拼接，得到最终输出。
-
-与 CBAM 相比，EMA 的一维卷积参数量极小（约为 $2Ck/G$），且方向池化天然适合建模细长目标；跨空间融合则避免了分组造成的组间信息隔离。
-
-\subsection{计算开销}
-
-EMA 的主要开销来自方向池化与一维卷积，均为线性复杂度。在 640 输入下，插入 EMA 使单帧推理时间增加约 2\,ms，FPS 从 101 降至 98（与 P2 联合时）。这一开销在可接受范围内。
-
-\section{训练配置}
-
-\subsection{数据集与划分}
-
-训练使用第三章介绍的 Det-Fly 数据集，按序列划分训练集与验证集，训练集约 10600 帧，验证集约 2670 帧。输入尺寸 640$\times$640，单类别 UAV。
-
-\subsection{超参数}
-
-训练超参数如表~\ref{tab:train_hp} 所示。预览版用于快速验证改进方向，正式版用于最终报告。两版的主要差异是训练轮次与输入尺寸：预览版 30 轮、640 输入；正式版 100 轮、640 输入（部分消融实验使用 1024 输入以观察高分辨率的影响）。
+为避免歧义，先把符号统一。表~\ref{tab:coord_symbol} 列出本文使用的坐标系与主要符号。
 
 \begin{table}[htbp]
 \centering
-\caption{检测模型训练超参数}
-\label{tab:train_hp}
+\caption{坐标系与符号约定}
+\label{tab:coord_symbol}
+\small
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{符号} & \textbf{含义} \\
+\midrule
+$\mathcal{F}_w$ & 世界坐标系，NED：$x$ 北、$y$ 东、$z$ 地（向下为正） \\
+$\mathcal{F}_c$ & 相机坐标系：$z_c$ 沿光轴向前，$x_c$ 向右，$y_c$ 向下 \\
+$(u,v)$ & 像素坐标，原点在左上角 \\
+$(c_x,c_y)$ & 主点像素坐标 \\
+$(f_x,f_y)$ & 以像素为单位的焦距 \\
+$D$ & 目标等效尺寸（m） \\
+$h_{px}$ & 检测框高度（px） \\
+$Z$ & 目标沿光轴方向的距离（m） \\
+$\alpha,\beta$ & 方位角、俯仰角（rad 或 \textdegree） \\
+$\mathbf{x}_k$ & 卡尔曼滤波状态向量 \\
+$\mathbf{z}_k$ & 量测向量 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+NED 与相机坐标系的差别要特别留意：NED 中 $z$ 向下为正，相机坐标系中 $z_c$ 沿光轴向前为正、$y_c$ 向下为正。算法端一律在相机系里解算，显示端再换算到世界系做地图标注。仿真真值广播同时给出世界系与相机系位置，便于交叉核对。
+
+\subsection{方位角与俯仰角}
+
+\subsubsection{像素直算法}
+
+设检测框中心为 $(u,v)$，主点为 $(c_x,c_y)$，焦距为 $f$（本文仿真相机中 $f_x=f_y=f$）。目标相对光轴的方向角为
+
+\begin{equation}
+\alpha = \arctan\left(\frac{u-c_x}{f}\right),\qquad
+\beta = \arctan\left(\frac{v-c_y}{f}\right).
+\label{eq:angle_direct}
+\end{equation}
+
+方位角以光轴为 0、向右为正；俯仰角以光轴为 0、向下为正。若要按“向上为正”的显示习惯，取 $\beta'=-\beta$。
+
+这样算的好处是只依赖单帧像素坐标与相机内参，不依赖任何运动模型；目标再怎么机动，角度始终对应本帧的真实方向；计算量也小，两次反正切而已。坏处是精度受框中心抖动牵制，目标靠近画面边缘时镜头畸变还会引入系统误差。
+
+\subsubsection{角度误差传播}
+
+对式~\eqref{eq:angle_direct} 求导，角度误差与像素误差的关系是
+
+\begin{equation}
+\Delta\alpha = \frac{f}{(u-c_x)^2+f^2}\,\Delta u
+= \frac{\cos^2\alpha}{f}\,\Delta u.
+\label{eq:angle_err}
+\end{equation}
+
+光轴附近（$\alpha\approx0$）有 $\Delta\alpha\approx\Delta u/f$。以 $f=1108$\,px、中心抖动 $\Delta u=2$\,px 计，角度误差约 0.10\textdegree；目标偏离光轴 30\textdegree 时，$\cos^2\alpha\approx0.75$，误差反而略降到 0.08\textdegree。可见像素直算的误差在视场中心最大、边缘略小，总在 0.1\textdegree 量级，够反无人机系统的指示精度用。
+
+\subsubsection{与滤波角度法的对比}
+
+另一种做法是拿卡尔曼滤波估出的三维位置反算角度：
+
+\begin{equation}
+\alpha_{kf} = \arctan\left(\frac{\hat{x}}{\hat{z}}\right),\qquad
+\beta_{kf} = \arctan\left(\frac{\hat{y}}{\hat{z}}\right).
+\label{eq:angle_kf}
+\end{equation}
+
+好处是输出平滑，与距离读数一致；坏处是角度依赖滤波器的横向状态，目标被遮挡、滤波器转入预测外推时，横向位置可能漂移，角度指示就偏了。本文在仿真中对比过两种方法：正常跟踪时差异小于 0.2\textdegree；COAST 期间，滤波角度法的漂移可达 1--2\textdegree，像素直算在无检测时不输出角度（或保持上次值），不会凭空造出“目标转向”。
+
+比完就定了\textbf{像素直算}作角度输出，卡尔曼滤波只管距离与三维位置平滑。角度的平滑性被牺牲，换来的是指示的物理真实性，这与监视系统“宁可不动、不可乱动”的设计原则一致。
+
+\subsubsection{真值口径问题}
+
+仿真评估里，角度真值的定义最易出现偏差。jMAVSim 的护航相机通过 \texttt{setViewerTargetObject} 自动注视目标机，目标在画面中的真实视轴偏角因此恒约为 0。此时若拿“世界坐标系下的绝对方位角”当真值，误差会大到几十度；该偏差实际源于相机自身偏航，与算法无关。
+
+本文的角度评估统一采用\textbf{视轴偏角口径}：真值取目标相对相机光轴的角度（仿真中约为 0），算法输出取式~\eqref{eq:angle_direct} 所得的角度，误差为两者之差。这一口径与操作员在画面上看到的“目标偏离中心多少”一致，也与检测框中心的像素偏移直接对应。
+
+\subsection{距离解算}
+
+\subsubsection{相似三角形原理}
+
+目标真实尺寸已知时，针孔成像满足相似三角形关系。设目标实际高度为 $D$，像平面上的高度为 $h$（像素），焦距为 $f$，则
+
+\begin{equation}
+\frac{D}{Z} = \frac{h}{f}\quad\Longrightarrow\quad
+Z = \frac{f\cdot D}{h_{px}}.
+\label{eq:range_est}
+\end{equation}
+
+本文用\textbf{框高}而不是框宽。无人机偏航旋转时机臂展开宽度的投影变化很大（正对最宽、侧对最窄），机身高度却相对稳定；框宽还容易受旋翼模糊与背景粘连影响，框高的边界更干净。
+
+\subsubsection{等效尺寸标定}
+
+等效尺寸 $D$ 是式~\eqref{eq:range_est} 里唯一的先验参数，标得准不准直接决定测距的绝对精度。标定办法是：在已知真值距离 $Z_{true}$ 下量取检测框高度 $h_{px}$，反算
+
+\begin{equation}
+D = \frac{h_{px}\cdot Z_{true}}{f}.
+\label{eq:size_calib}
+\end{equation}
+
+在多个距离上重复测量，取中位数。本文各阶段的标定结果见表~\ref{tab:size_calib}。
+
+\begin{table}[htbp]
+\centering
+\caption{等效尺寸标定结果}
+\label{tab:size_calib}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{阶段} & \textbf{模型} & \textbf{标定值(m)} & \textbf{说明} \\
+\midrule
+仿真微调前 & p2ema\_v8n & 0.230 & 框较紧，未包含旋翼外缘 \\
+仿真微调后 & p2ema\_simft & 0.270 & 框略大，包含桨叶与起落架 \\
+仿真微调后（复核） & p2ema\_simft & 0.268 & 独立录像复核，差异 0.7\% \\
+实拍视频 & p2ema\_simft & 0.255 & 实拍目标机型不同 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+标定值随模型与目标机型而变，不能跨域混用。仿真域统一用 0.270\,m，实拍视频用 0.255\,m，并在配置文件中显式标注，省得误用。
+
+\subsubsection{误差传播}
+
+对式~\eqref{eq:range_est} 取对数再微分，得
+
+\begin{equation}
+\frac{\Delta Z}{Z} = \frac{\Delta D}{D} - \frac{\Delta h_{px}}{h_{px}}.
+\label{eq:range_err_rel}
+\end{equation}
+
+式~\eqref{eq:range_err_rel} 透出两条规律。
+
+其中一条是\textbf{距离误差与距离成正比}。由 $h_{px}=fD/Z$，相对误差可写成
+
+\begin{equation}
+\frac{\Delta Z}{Z} = \frac{\Delta D}{D} + \frac{Z\,\Delta h_{px}}{fD}.
+\label{eq:range_err_abs}
+\end{equation}
+
+绝对误差 $\Delta Z$ 随 $Z^2$ 增长：
+
+\begin{equation}
+\Delta Z \approx Z^2\cdot\frac{\Delta h_{px}}{fD}.
+\label{eq:range_err_square}
+\end{equation}
+
+这意味着远距离测距精度会迅速恶化。取 $f=1108$\,px、$D=0.27$\,m、$\Delta h_{px}=2$\,px，$Z=5$\,m 时 $\Delta Z\approx0.17$\,m，$Z=10$\,m 时约 0.67\,m，$Z=20$\,m 时约 2.7\,m。
+
+另一条是\textbf{等效尺寸误差属于系统偏差}。$D$ 若标大 10\%，所有距离读数一起偏大 10\%，滤波也消不掉。这是单目测距的固有局限，只能靠精确标定，或引入激光测距、双目视觉之类的其他手段来弥补。
+
+\subsubsection{框高抖动的影响}
+
+检测框高度在相邻帧间有 1--3\,px 的抖动，折合 5\,m 处约 0.1--0.25\,m 的距离抖动。本文用两道手段压住它：对框高做一阶低通平滑（式~\eqref{eq:box_smooth}），在量测层削掉高频抖动；用卡尔曼滤波平滑三维位置，在状态层融合运动模型。两者叠加，稳态误差可降到 0.13\,m（仿真）与 2.7\,m（实拍，受限于相机未标定与伪真值）。
+
+\subsection{自适应卡尔曼滤波器设计}
+
+\subsubsection{状态与量测}
+
+状态向量取六维：
+
+\begin{equation}
+\mathbf{x}_k = \begin{bmatrix}
+x & y & z & v_x & v_y & v_z
+\end{bmatrix}^{T},
+\label{eq:state6}
+\end{equation}
+
+其中 $(x,y,z)$ 为目标在相机坐标系下的位置，$(v_x,v_y,v_z)$ 为速度。量测即式~\eqref{eq:meas_vec} 给出的三维位置：
+
+\begin{equation}
+\mathbf{z}_k = \begin{bmatrix}x_m & y_m & z_m\end{bmatrix}^{T}.
+\label{eq:meas3}
+\end{equation}
+
+状态转移矩阵与量测矩阵为
+
+\begin{equation}
+\mathbf{F} = \begin{bmatrix}\mathbf{I}_3 & \Delta t\,\mathbf{I}_3\\ \mathbf{0} & \mathbf{I}_3\end{bmatrix},
+\qquad
+\mathbf{H} = \begin{bmatrix}\mathbf{I}_3 & \mathbf{0}\end{bmatrix}.
+\label{eq:F_H}
+\end{equation}
+
+本文取 $\Delta t=1/30$\,s，与实际帧率一致。帧率有波动时，用实际时间戳差值替代固定值即可。
+
+\subsubsection{过程噪声}
+
+假定目标在相邻帧间匀速运动、加速度为白噪声，过程噪声协方差为
+
+\begin{equation}
+\mathbf{Q} = q\cdot\begin{bmatrix}
+\dfrac{\Delta t^4}{4}\mathbf{I}_3 & \dfrac{\Delta t^3}{2}\mathbf{I}_3\\[6pt]
+\dfrac{\Delta t^3}{2}\mathbf{I}_3 & \Delta t^2\mathbf{I}_3
+\end{bmatrix},
+\label{eq:Q}
+\end{equation}
+
+其中 $q$ 为加速度方差。工程实现中也常使用简化的对角形式
+
+\begin{equation}
+\mathbf{Q} = \mathrm{diag}\left(q_p,q_p,q_p,q_v,q_v,q_v\right),
+\label{eq:Q_diag}
+\end{equation}
+
+本文用对角形式，取 $q_p=10^{-3}$、$q_v=10^{-2}$。$q$ 越大，滤波器越信任量测、响应越快，稳态抖动也越大；$q$ 越小输出越平滑，机动跟随越滞后。这组取值在仿真中经网格搜索确定，响应与平滑都照顾到了。
+
+\subsubsection{量测噪声与自适应估计}
+
+量测噪声协方差 $\mathbf{R}$ 的初值取
+
+\begin{equation}
+\mathbf{R}_0 = \mathrm{diag}\left(10^{-4},10^{-4},0.25\right),
+\label{eq:R0}
+\end{equation}
+
+横向方差远小于纵向，原因很直接：方位角与俯仰角由像素直算，精度较高（约 0.1\textdegree），距离由框高反算，精度较低（约 0.2--0.5\,m）。这种各向异性正好对应单目测距的实际误差结构。
+
+自适应部分采用 Sage-Husa 方法，按式~\eqref{eq:sage_husa} 用滑动窗口估计 $\mathbf{R}$。实现上做了三点处理：
+
+（1）\textbf{对角化}：只保留 $\hat{\mathbf{R}}$ 的对角元素，忽略相关性，避免矩阵非正定；
+
+（2）\textbf{下界约束}：将每个对角元素限制在 $[R_{min},R_{max}]$ 内，防止滤波器因残差偶然变小而过度信任量测；
+
+（3）\textbf{平滑更新}：用指数滑动平均替代简单平均：
+
+\begin{equation}
+\hat{\mathbf{R}}_k = (1-\lambda)\hat{\mathbf{R}}_{k-1}+\lambda\,\tilde{\mathbf{R}}_k,
+\qquad \lambda=0.1.
+\label{eq:R_ema}
+\end{equation}
+
+其中 $\tilde{\mathbf{R}}_k$ 为由当前新息构造的瞬时估计。$\lambda=0.1$ 对应约 10 帧的时间常数，量测质量的变化跟得上，单帧异常也不会引起剧烈波动。
+
+\subsubsection{初始化的注意事项}
+
+初始化时位置取首帧量测，速度取零，协方差取较大的值（等于承认“对速度一无所知”）。速度初值若估错，滤波器要若干帧才收敛。仿真统计显示，连续检出 5 帧后滤波器基本收敛，因此本文把“稳态”指标一律定义为连续检出不少于 5 帧之后的样本。
+
+另有一处容易忽略：\textbf{量测与状态的维度必须匹配}。本文早期版本曾把标量距离直接送进六维滤波器，状态与量测维度不一致，输出偏差严重。修正办法是严格按式~\eqref{eq:meas_vec} 构造三维量测。文献里谈这个问题的并不多，初学者却常在这里栽跟头，故特别记上一笔。
+
+\subsection{定位精度评估}
+
+\subsubsection{仿真闭环评估}
+
+仿真闭环的实验设置见第五章。这里直接给出定位精度结果，如表~\ref{tab:esim} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{仿真闭环定位精度（微调后模型，2818 帧）}
+\label{tab:esim}
+\small
+\begin{tabular}{lc}
+\toprule
+\textbf{指标} & \textbf{数值} \\
+\midrule
+全帧检出率（conf$\ge$0.25） & 100.0\% \\
+单帧测距 RMSE & 0.26\,m \\
+单帧测距 MAE & 0.17\,m \\
+AKF 稳态中位误差 MedAE & 0.13\,m \\
+AKF 稳态 RMSE & 0.32\,m \\
+1\,s 距离预测 ADE 中位 & 0.26\,m \\
+1\,s 距离预测 ADE 均值 & 0.40\,m \\
+方位角误差中位（视轴偏角口径） & 0.05\textdegree \\
+方位角误差 P95 & 0.16\textdegree \\
+俯仰角误差中位 & 0.93\textdegree \\
+俯仰角误差 P95 & 0.98\textdegree \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表~\ref{tab:esim} 中，单帧测距 RMSE 为 0.26\,m，经 AKF 平滑后稳态中位误差降到 0.13\,m，滤波是否真的压住了框高抖动，从这处回落上就能看出。方位角误差中位仅 0.05\textdegree，已接近像素量化极限；俯仰角误差中位 0.93\textdegree，明显大于方位角，原因是仿真相机的纵向主点存在约 17\,px 偏移，而角度解算用的是标称主点。若在配置中把这一偏移补上，俯仰角误差还能再降。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{images/pictures/sim_analysis_4panel.jpg}
+\caption{仿真闭环四联分析图（距离、误差、角度与状态分布）}
+\label{fig:sim_analysis}
+\end{figure}
+
+图~\ref{fig:sim_analysis} 是四联分析图，含距离时序、测距误差分布、角度误差与状态占比。目标机动时测距误差略有增大，整体仍守在 $\pm0.5$\,m 以内。
+
+\subsubsection{实拍视频评估}
+
+实拍视频为 1920$\times$1080@30fps，连续检出段 660 帧。相机未做严格标定，焦距按 60\textdegree 视场估算为 1728\,px；等效尺寸借用仿真标定值 0.255\,m；伪真值取稳态段距离中位数 7.93\,m。评估结果见表~\ref{tab:e3}。
+
+\begin{table}[htbp]
+\centering
+\caption{实拍视频定位精度（E3）}
+\label{tab:e3}
 \small
 \begin{tabular}{lcc}
 \toprule
-\textbf{参数} & \textbf{预览版} & \textbf{正式版} \\
+\textbf{方法} & \textbf{距离 RMSE(m)} & \textbf{抖动 $\sigma$(m)} \\
 \midrule
-输入尺寸 & 640$\times$640 & 640$\times$640（部分 1024） \\
-训练轮次 & 30 & 100 \\
-批量大小 & 8 & 8 \\
-优化器 & SGD & SGD \\
-初始学习率 & 0.01 & 0.01 \\
-动量 & 0.937 & 0.937 \\
-权重衰减 & 0.0005 & 0.0005 \\
-预热轮次 & 3 & 3 \\
-Mosaic 概率 & 1.0 & 1.0 \\
-混合精度 & 开启 & 开启 \\
-随机种子 & 固定 & 固定 \\
+单帧原始 & 4.061 & 3.959 \\
+滑动平均（15 帧） & 2.900 & -- \\
+标准 KF（固定 $\mathbf{R}$） & 3.922 & 3.822 \\
+AKF（Sage-Husa） & \textbf{2.760} & \textbf{2.663} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{训练过程}
+相对单帧原始测距，AKF 的 RMSE 低 32\%，抖动低 33\%；相对固定 $\mathbf{R}$ 的标准 KF，RMSE 低 29.6\%。实拍的绝对误差偏大（2.76\,m），主因是相机未标定、等效尺寸借用仿真值、伪真值本身也有偏差。不过三种方法用的是同一伪真值，横向比较仍然公平，AKF 的平滑优势可信。
 
-图~\ref{fig:training_curves} 给出了基线模型与本文模型的训练曲线。可以看到，两者在约 20 轮后趋于稳定，本文模型的分类损失与回归损失均低于基线，且验证集 mAP 曲线更平滑，说明 P2 与 EMA 的引入没有导致过拟合。
+\subsubsection{短期预测精度}
 
-\begin{figure}[htbp]
-\centering
-\subfloat[基线 YOLOv8n]{\includegraphics[width=0.47\textwidth]{images/pictures/training_curves_base.png}}
-\hfill
-\subfloat[YOLOv8n-P2-EMA]{\includegraphics[width=0.47\textwidth]{images/pictures/training_curves_p2ema.png}}
-\caption{训练损失与验证指标曲线}
-\label{fig:training_curves}
-\end{figure}
-
-\section{消融实验}
-
-\subsection{实验设置}
-
-为验证 P2 与 EMA 各自的作用及组合效果，本文设计了四组对照实验：基线 YOLOv8n、+P2、+EMA、+P2+EMA。四组实验使用完全相同的数据划分、超参数与评测脚本，仅在网络结构上不同。评测在 Det-Fly 验证集上进行，输入 640，置信度阈值 0.001（mAP 计算需要低阈值以覆盖完整 P-R 曲线）。
-
-\subsection{实验结果}
-
-实验结果如表~\ref{tab:ablation} 所示。
+COAST 状态靠的就是滤波器的预测能力。本文在实拍数据上评估了不同预测时域的精度，结果见表~\ref{tab:e3b}。
 
 \begin{table}[htbp]
 \centering
-\caption{检测模型消融实验（Det-Fly 验证集，imgsz=640）}
-\label{tab:ablation}
+\caption{短期预测精度（ADE，伪真值=离线检测距离）}
+\label{tab:e3b}
 \small
-\begin{tabular}{lcccccccc}
+\begin{tabular}{lcccc}
 \toprule
-\textbf{模型} & \textbf{参数(M)} & \textbf{mAP50} & \textbf{mAP50-95} & \textbf{P} & \textbf{R} & \textbf{FPS} & \textbf{AP\_small} & \textbf{AP\_med} \\
+\textbf{预测时域} & \textbf{匀速外推 ADE(m)} & \textbf{AKF 预测 ADE(m)} & \textbf{改善} & \textbf{样本数} \\
 \midrule
-YOLOv8n（基线） & 3.01 & 81.3 & 41.8 & 91.2 & 75.9 & 123.0 & 6.1 & 77.0 \\
-+P2 & 2.93 & 82.3 & 41.3 & 88.9 & 77.6 & 90.3 & 8.3 & 76.2 \\
-+EMA & 3.02 & 76.2 & 36.3 & 85.5 & 72.2 & 101.0 & 4.1 & 75.0 \\
-+P2+EMA（本文） & 2.94 & \textbf{83.5} & 41.2 & 88.2 & \textbf{79.2} & 98.4 & \textbf{9.8} & \textbf{78.0} \\
+0.5\,s & 1.967 & \textbf{1.106} & 43.8\% & 635 \\
+1.0\,s & 2.754 & \textbf{1.308} & 52.5\% & 620 \\
+2.0\,s & 4.624 & \textbf{1.799} & 61.1\% & 590 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-表中所有指标单位为百分数，FPS 为帧每秒。AP\_small 为 COCO 面积口径、IoU=0.5、101 点插值。
+三个时域上 AKF 的预测都明显优于匀速外推，时域越长差距越大。原因是 AKF 不只利用当前速度，还会借历史量测的不确定度调整预测的可信范围，目标机动时不会像匀速外推那样把误差线性放大。
 
-\subsection{结果分析}
+\subsubsection{角度精度}
 
-\textbf{（1）P2 单独作用}。mAP50 从 81.3\% 提升至 82.3\%，Recall 从 75.9\% 提升至 77.6\%，AP\_small 从 6.1\% 提升至 8.3\%，相对提升 36.1\%。这说明高分辨率检测层确实增强了小目标召回。与此同时，Precision 从 91.2\% 降至 88.9\%，mAP50-95 略降 0.5 个百分点，原因是 P2 层引入了更多弱响应，部分背景被误检。FPS 从 123 降至 90，符合计算量分析。
+角度精度见表~\ref{tab:e3c}。单帧原始与 AKF 平滑的差别很小（方位角 0.360\textdegree\ vs 0.354\textdegree，俯仰角 0.788\textdegree\ vs 0.728\textdegree），因为本文最终输出的是像素直算角度，AKF 平滑版本只作对比。俯仰角误差大于方位角，与仿真结论一致，原因同样是纵向主点偏移与目标在画面中的垂直运动更剧烈。
 
-\textbf{（2）EMA 单独作用}。结果看似异常：mAP50 降至 76.2\%，AP\_small 仅 4.1\%，甚至低于基线。这一现象不能简单解释为"EMA 无效"。本文的分析是：EMA 的注意力重加权在缺乏高分辨率特征时，会把权重集中在 P3/P4 上已经模糊的目标区域，而这些区域的边界信息不足以支撑精确定位；同时，注意力对背景的抑制过于激进，导致部分低置信度的真实目标被"压"到阈值以下。换言之，EMA 需要一张"看得清"的特征图才能发挥"认得准"的作用。
-
-\textbf{（3）P2+EMA 的互补性}。两者联合后，mAP50 达到 83.5\%，Recall 79.2\%，AP\_small 9.8\%，均为四组最优。AP\_small 相对基线提升 60.7\%，相对 +P2 提升 18.1\%。这一结果支持了"P2 提供分辨率、EMA 提供判别力"的解释：P2 让目标在特征图上占据足够多的网格，EMA 在这些网格上进一步区分目标与背景，二者形成正向互补。
-
-\textbf{（4）参数效率}。本文模型的参数量为 2.94\,M，低于基线的 3.01\,M，却取得了最优的 mAP50 与 AP\_small。这说明性能提升并非来自模型容量扩张，而是来自特征利用效率的改善。对于部署在边缘设备上的反无人机系统，这一特性尤为重要。
-
-\textbf{（5）速度}。本文模型 FPS 为 98.4，约为基线的 80\%，但仍为 30\,fps 视频帧率的 3 倍以上。考虑到系统还需要进行卡尔曼滤波、界面绘制与网络通信，保留 2--3 倍余量是必要的。
-
-\subsection{混淆矩阵与 P-R 曲线}
-
-图~\ref{fig:confusion} 给出了基线模型与本文模型的混淆矩阵。两者在"背景误检"上的差异不大，本文模型的漏检（真值为正、预测为背景）明显减少，这与 Recall 的提升一致。
-
-\begin{figure}[htbp]
+\begin{table}[htbp]
 \centering
-\subfloat[基线 YOLOv8n]{\includegraphics[width=0.45\textwidth]{images/pictures/confusion_matrix_base.png}}
-\hfill
-\subfloat[YOLOv8n-P2-EMA]{\includegraphics[width=0.45\textwidth]{images/pictures/confusion_matrix_p2ema.png}}
-\caption{验证集混淆矩阵}
-\label{fig:confusion}
-\end{figure}
+\caption{角度精度（稳态段中位绝对偏差）}
+\label{tab:e3c}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{方法} & \textbf{方位角 MAD(\textdegree)} & \textbf{俯仰角 MAD(\textdegree)} \\
+\midrule
+单帧原始 & 0.360 & 0.788 \\
+AKF 平滑 & \textbf{0.354} & \textbf{0.728} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-图~\ref{fig:pr_f1} 给出了本文模型的 P-R 曲线与 F1 曲线。P-R 曲线在高召回区间的"尾部"比基线更饱满，说明模型在低置信度区域仍能保持一定的精度，这对后续状态机的低门限初筛是有利的。
+\subsection{误差来源与改进方向}
 
-\begin{figure}[htbp]
+\subsubsection{主要误差来源}
+
+单目定位的误差来源可归为五类，见表~\ref{tab:error_sources}。
+
+\begin{table}[htbp]
 \centering
-\subfloat[P-R 曲线]{\includegraphics[width=0.47\textwidth]{images/pictures/pr_curve_p2ema.png}}
-\hfill
-\subfloat[F1-置信度曲线]{\includegraphics[width=0.47\textwidth]{images/pictures/f1_curve_p2ema.png}}
-\caption{YOLOv8n-P2-EMA 的 P-R 与 F1 曲线}
-\label{fig:pr_f1}
-\end{figure}
+\caption{单目定位误差来源与量级}
+\label{tab:error_sources}
+\small
+\begin{tabularx}{\textwidth}{lccX}
+\toprule
+\textbf{来源} & \textbf{量级（5\,m）} & \textbf{是否可校正} & \textbf{说明} \\
+\midrule
+框高抖动 & 0.10--0.25\,m & 部分 & 可用低通与 KF 抑制 \\
+等效尺寸偏差 & 与标定误差成正比 & 可 & 需精确标定，不可用滤波消除 \\
+相机内参误差 & 与焦距误差成正比 & 可 & 需棋盘格标定 \\
+镜头畸变 & 边缘可达 0.3\,m & 可 & 去畸变后显著降低 \\
+目标姿态变化 & 0.05--0.15\,m & 难 & 框高随俯仰角变化 \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
-\subsection{检测效果可视化}
+\subsubsection{改进方向}
 
-图~\ref{fig:val_predictions} 展示了验证集的批量预测结果。绿色框为真值，红色框为预测。可以看到，本文模型在目标较小、背景复杂的场景中仍能给出稳定的框，框的边界与真值吻合较好。
+针对这些来源，可走的路有几条：
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.92\textwidth]{images/pictures/val_predictions.jpg}
-\caption{验证集批量预测结果（绿框为真值，红框为预测）}
-\label{fig:val_predictions}
-\end{figure}
+（1）\textbf{相机标定}。用棋盘格标内参与畸变，替掉按视场角估算焦距的做法，实拍 RMSE 有望从米级降到亚米级；
 
-图~\ref{fig:compare} 给出了四组典型帧的对比，按"基线置信度与本文置信度差异"排序选取，用于直观展示改进在困难样本上的效果。蓝色虚线框为真值，实线框为预测。
+（2）\textbf{尺寸自适应}。按目标机型选对应等效尺寸，或利用多帧几何一致性在线估计尺寸；
 
-\begin{figure}[htbp]
-\centering
-\subfloat[样本一]{\includegraphics[width=0.48\textwidth]{images/pictures/compare_01.jpg}}
-\hfill
-\subfloat[样本二]{\includegraphics[width=0.48\textwidth]{images/pictures/compare_02.jpg}}\\
-\subfloat[样本三]{\includegraphics[width=0.48\textwidth]{images/pictures/compare_03.jpg}}
-\hfill
-\subfloat[样本四]{\includegraphics[width=0.48\textwidth]{images/pictures/compare_04.jpg}}
-\caption{基线与本文模型的典型帧对比}
-\label{fig:compare}
-\end{figure}
+（3）\textbf{融合测距}。条件允许时引入激光测距或双目视觉，与单目测距做卡尔曼融合；
 
-\section{与非 YOLO 方法的横向讨论}
+（4）\textbf{姿态补偿}。用检测框宽高比估计目标偏航角，对框高做投影补偿。
 
-Det-Fly 数据集上已有 Faster R-CNN\cite{faster_rcnn}、SSD\cite{ssd} 与 RT-DETR\cite{rt_detr} 等方法的评测结果。需要说明的是，这些结果来自不同论文，数据划分、输入尺寸与训练轮次并不统一，直接比较数值并不严谨。本文仅做定性讨论。
-
-两阶段方法 Faster R-CNN 的优势在于区域建议机制能够对候选区域做二次细化，对极小目标的定位精度较高；劣势是推理速度慢，难以满足实时监视需求。单阶段方法 SSD 速度较快，但其特征金字塔的浅层语义较弱，小目标召回有限。Transformer 方法 RT-DETR 通过集合预测避免了 NMS，在密集小目标场景中表现较好，但计算量与显存占用显著高于 YOLOv8n。
-
-本文方法在保持 nano 级参数量的前提下，通过 P2 与 EMA 提升了小目标能力，其定位是"在边缘设备上可实时运行的小目标检测方案"，而非追求绝对精度最优。这一定位与反无人机系统的实际部署条件相符。
-
-\section{有效工作范围与失效模式}
-
-\subsection{置信度与目标尺度的关系}
-
-检测模型的置信度随目标在画面中的尺度变化而显著变化。本文在仿真环境中做了系统测量（详见第七章），发现未微调模型在目标占画面高度约 1/5 以上时置信度接近 0，在目标过小时置信度低于 0.25。前者属于训练分布外的大尺度输入，后者属于信息不足。模型的有效工作窗口约为目标高度占画面的 1/20 至 1/8。
-
-这一现象提示：检测模型的能力不能只用 mAP 概括，必须结合部署场景的尺度分布评估。对于反无人机系统，这意味着需要通过镜头焦距、安装高度与告警距离的综合设计，使目标在告警时落在有效窗口内。
-
-\subsection{典型失效模式}
-
-本文观察到三类典型失效。
-
-（1）\textbf{背景纹理误检}。树叶缝隙、建筑窗户的反光、天空中的云边缘在低分辨率下与无人机轮廓相似，模型可能给出 0.2--0.4 的置信度。这类误检通常置信度不高，可被初锁门限过滤，但在 SEARCH 状态下会造成短暂的候选框闪烁。
-
-（2）\textbf{多目标粘连}。当画面中出现两架以上无人机且距离较近时，检测框可能合并，导致后续跟踪时目标身份不清。本文的系统面向单目标场景，未专门处理该情况。
-
-（3）\textbf{极端光照}。逆光、夜间与强反光条件下，目标轮廓与背景的对比度下降，检出率显著降低。第四章的退化实验表明，P2+EMA 在暗光条件下相对基线有明显优势，但仍无法与正常光照相比。
+受时间与设备所限，本文只完成了第一项的一部分（自建数据集的标定），其余留待后续研究。
 
 \section{本章小结}
 
-本章以 YOLOv8n 为基础，引入 P2 高分辨率检测头与 EMA 注意力，构建了面向无人机小目标的检测模型。消融实验表明：P2 单独使用可提升召回与 AP\_small，但会引入少量误检；EMA 单独使用会因缺乏高分辨率特征而性能下降；二者联合后取得最优的 mAP50 83.5\%、Recall 79.2\% 与 AP\_small 9.8\%，且参数量低于基线。本章从特征分辨率与注意力重加权两个角度解释了这一互补关系，并讨论了模型的有效工作范围与三类典型失效模式，为后续章节的状态机设计与仿真域微调提供了依据。
+本章把“跟得住”与“定得准”两件事放在同一套系统里。跟踪方面，针对误检、身份跳变与遮挡中断，设计了 SEARCH/LOCKED/COAST 三态状态机：双门限把发现与维持分开，空间门限承担帧间关联，COAST 借滤波预测填补遮挡空白。门限扫描、遮挡用例与实拍录像都显示，锁定率与航迹保持率会出现明显分离，后者更能反映系统可用性。定位方面，角度取像素直算，误差在 0.1\textdegree\ 量级；距离由框高与等效尺寸解算，误差随距离平方增长，5\,m 处约 0.17\,m。六维自适应卡尔曼滤波器采用各向异性量测噪声与 Sage-Husa 在线估计，仿真中把稳态中位误差压到 0.13\,m，实拍中相对单帧把 RMSE 与抖动各降三成左右。两部分共用同一套滤波器状态：状态机决定何时更新、何时外推，滤波器负责把量测变成平滑且可预测的航迹。文中还交代了角度真值口径与量测维度匹配这两处实现上的易错点，并列出误差来源与可选的改进方向。

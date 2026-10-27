@@ -19,6 +19,258 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global/global}
+    \entry{uav_regulation2023}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=8db4ae35e90f8fa1deb453afdfb5e0dc}{%
+           family={{国务院 and 中央军事委员会}},
+           familyi={国\bibinitperiod}}}%
+      }
+      \name{namea}{1}{}{%
+        {{hash=8db4ae35e90f8fa1deb453afdfb5e0dc}{%
+           family={{国务院 and 中央军事委员会}},
+           familyi={国\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {chinese}%
+      }
+      \strng{namehash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{fullhash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{fullhashraw}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{bibnamehash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{authorbibnamehash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{authornamehash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{authorfullhash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{authorfullhashraw}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{nameabibnamehash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{nameanamehash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{nameafullhash}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \strng{nameafullhashraw}{8db4ae35e90f8fa1deb453afdfb5e0dc}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{languageid}{chinese}
+      \field{lansortorder}{1}
+      \field{note}{2024年1月1日起施行}
+      \field{title}{无人驾驶航空器飞行管理暂行条例}
+      \field{usera}{Z}
+      \field{userd}{chinese}
+      \field{userf}{chinese}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \keyw{uav_regulation2023}
+    \endentry
+    \entry{caac2025}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=3ff79b6ad2c080481463bf598f029098}{%
+           family={{中国民用航空局}},
+           familyi={中\bibinitperiod}}}%
+      }
+      \name{namea}{1}{}{%
+        {{hash=3ff79b6ad2c080481463bf598f029098}{%
+           family={{中国民用航空局}},
+           familyi={中\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {chinese}%
+      }
+      \strng{namehash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{fullhash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{fullhashraw}{3ff79b6ad2c080481463bf598f029098}
+      \strng{bibnamehash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{authorbibnamehash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{authornamehash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{authorfullhash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{authorfullhashraw}{3ff79b6ad2c080481463bf598f029098}
+      \strng{nameabibnamehash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{nameanamehash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{nameafullhash}{3ff79b6ad2c080481463bf598f029098}
+      \strng{nameafullhashraw}{3ff79b6ad2c080481463bf598f029098}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{http://www.caac.gov.cn/PHONE/XWZX/MHYW/202604/t20260417_230603.html}}
+      \field{langid}{english}
+      \field{languageid}{chinese}
+      \field{lansortorder}{1}
+      \field{title}{2025年民航行业发展统计公报}
+      \field{usera}{Z}
+      \field{userd}{chinese}
+      \field{userf}{chinese}
+      \field{year}{2026}
+      \field{dateera}{ce}
+      \keyw{caac2025}
+    \endentry
+    \entry{lowaltitude_economy2026}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}{%
+           family={{中国新闻网}},
+           familyi={中\bibinitperiod}}}%
+      }
+      \name{namea}{1}{}{%
+        {{hash=a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}{%
+           family={{中国新闻网}},
+           familyi={中\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {chinese}%
+      }
+      \strng{namehash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{fullhash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{fullhashraw}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{bibnamehash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{authorbibnamehash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{authornamehash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{authorfullhash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{authorfullhashraw}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{nameabibnamehash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{nameanamehash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{nameafullhash}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \strng{nameafullhashraw}{a4d1efdfdac47d5dd8d5ee6a1cb8ae1d}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{http://www.chinanews.com.cn/cj/2026/05-18/10623778.shtml}}
+      \field{langid}{english}
+      \field{languageid}{chinese}
+      \field{lansortorder}{1}
+      \field{title}{低空安全司亮相 万亿级产业“管理双翼”就位}
+      \field{usera}{Z}
+      \field{userd}{chinese}
+      \field{userf}{chinese}
+      \field{year}{2026}
+      \field{dateera}{ce}
+      \keyw{lowaltitude_economy2026}
+    \endentry
+    \entry{antidrone_market2025}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=4fb21352ee4fd5af5b5cc9e7b5714e5f}{%
+           family={{MarketsandMarkets}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \name{namea}{1}{}{%
+        {{hash=4fb21352ee4fd5af5b5cc9e7b5714e5f}{%
+           family={{MarketsandMarkets}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {english}%
+      }
+      \strng{namehash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{fullhash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{fullhashraw}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{bibnamehash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{authorbibnamehash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{authornamehash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{authorfullhash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{authorfullhashraw}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{nameabibnamehash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{nameanamehash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{nameafullhash}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \strng{nameafullhashraw}{4fb21352ee4fd5af5b5cc9e7b5714e5f}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.marketsandmarkets.com/Market-Reports/anti-drone-market-177013645.html}}
+      \field{langid}{english}
+      \field{languageid}{english}
+      \field{lansortorder}{4}
+      \field{title}{Anti-Drone Market Size, AI, Radar and Detection Trends 2030}
+      \field{usera}{Z}
+      \field{userd}{english}
+      \field{userf}{english}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \keyw{antidrone_market2025}
+    \endentry
+    \entry{cctv_blackfly2025}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=34f321b3e306023c9ff6fd893de54900}{%
+           family={{央视网}},
+           familyi={央\bibinitperiod}}}%
+      }
+      \name{namea}{1}{}{%
+        {{hash=34f321b3e306023c9ff6fd893de54900}{%
+           family={{央视网}},
+           familyi={央\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {chinese}%
+      }
+      \strng{namehash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{fullhash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{fullhashraw}{34f321b3e306023c9ff6fd893de54900}
+      \strng{bibnamehash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{authorbibnamehash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{authornamehash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{authorfullhash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{authorfullhashraw}{34f321b3e306023c9ff6fd893de54900}
+      \strng{nameabibnamehash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{nameanamehash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{nameafullhash}{34f321b3e306023c9ff6fd893de54900}
+      \strng{nameafullhashraw}{34f321b3e306023c9ff6fd893de54900}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://news.cctv.cn/2025/04/24/ARTIiijJ1VnGWD4q8cBLTuKM250424.shtml}}
+      \field{langid}{english}
+      \field{languageid}{chinese}
+      \field{lansortorder}{1}
+      \field{title}{中央空管办组织加强无人机“黑飞”“扰航”查处力度}
+      \field{usera}{Z}
+      \field{userd}{chinese}
+      \field{userf}{chinese}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \keyw{cctv_blackfly2025}
+    \endentry
+    \entry{people_blackfly2026}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=22b8714354a246d28c3feae73771cceb}{%
+           family={{人民日报}},
+           familyi={人\bibinitperiod}}}%
+      }
+      \name{namea}{1}{}{%
+        {{hash=22b8714354a246d28c3feae73771cceb}{%
+           family={{人民日报}},
+           familyi={人\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {chinese}%
+      }
+      \strng{namehash}{22b8714354a246d28c3feae73771cceb}
+      \strng{fullhash}{22b8714354a246d28c3feae73771cceb}
+      \strng{fullhashraw}{22b8714354a246d28c3feae73771cceb}
+      \strng{bibnamehash}{22b8714354a246d28c3feae73771cceb}
+      \strng{authorbibnamehash}{22b8714354a246d28c3feae73771cceb}
+      \strng{authornamehash}{22b8714354a246d28c3feae73771cceb}
+      \strng{authorfullhash}{22b8714354a246d28c3feae73771cceb}
+      \strng{authorfullhashraw}{22b8714354a246d28c3feae73771cceb}
+      \strng{nameabibnamehash}{22b8714354a246d28c3feae73771cceb}
+      \strng{nameanamehash}{22b8714354a246d28c3feae73771cceb}
+      \strng{nameafullhash}{22b8714354a246d28c3feae73771cceb}
+      \strng{nameafullhashraw}{22b8714354a246d28c3feae73771cceb}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{http://paper.people.com.cn/rmrb/pad/content/202602/05/content_30138629.html}}
+      \field{langid}{english}
+      \field{languageid}{chinese}
+      \field{lansortorder}{1}
+      \field{title}{打击超高“黑飞”，守护天空安全}
+      \field{usera}{Z}
+      \field{userd}{chinese}
+      \field{userf}{chinese}
+      \field{year}{2026}
+      \field{dateera}{ce}
+      \keyw{people_blackfly2026}
+    \endentry
     \entry{radar_cuav}{article}{}{}
       \name{author}{4}{}{%
         {{hash=5c02c63527012e770d58d611391e2cd6}{%
@@ -79,8 +331,8 @@
       \strng{nameanamehash}{5ece0e1b53844878a1add84fa8158bec}
       \strng{nameafullhash}{76fb9a692871380942b4d2e4fd78ba77}
       \strng{nameafullhashraw}{76fb9a692871380942b4d2e4fd78ba77}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{IET Cyber-Systems and Robotics}
@@ -150,8 +402,8 @@
       \strng{nameanamehash}{b6753da0f3f44d63ee920e450ee0491b}
       \strng{nameafullhash}{1fda393b63bdac535b0efdf932d7f238}
       \strng{nameafullhashraw}{1fda393b63bdac535b0efdf932d7f238}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{arXiv preprint arXiv:2504.11967}
@@ -219,8 +471,8 @@
       \strng{nameanamehash}{40a6e610ceed4b305cbe3869d9db90b1}
       \strng{nameafullhash}{1c2bc9e6e9b5152524b30896048de805}
       \strng{nameafullhashraw}{1c2bc9e6e9b5152524b30896048de805}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Sensors}
@@ -269,8 +521,8 @@
       \strng{nameanamehash}{6f32e3b11339af1bb361315c3dab066c}
       \strng{nameafullhash}{6f32e3b11339af1bb361315c3dab066c}
       \strng{nameafullhashraw}{6f32e3b11339af1bb361315c3dab066c}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Acta Acustica}
@@ -318,8 +570,8 @@
       \strng{nameanamehash}{cbe861997e3c71dac2458f8531c1795d}
       \strng{nameafullhash}{cbe861997e3c71dac2458f8531c1795d}
       \strng{nameafullhashraw}{cbe861997e3c71dac2458f8531c1795d}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{arXiv preprint arXiv:2510.22947}
@@ -374,8 +626,8 @@
       \strng{nameanamehash}{5f25f909d6f4f90749bdf04ea7b5cedd}
       \strng{nameafullhash}{4ce1a09d03323f51fa8839fc5734c7fc}
       \strng{nameafullhashraw}{4ce1a09d03323f51fa8839fc5734c7fc}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Earth Observation and Geomatics Engineering}
@@ -450,8 +702,8 @@
       \strng{nameanamehash}{f1f28b852dfc493e558722b4c464d54f}
       \strng{nameafullhash}{ec21238f09659604896c6cb5fc9d9dd9}
       \strng{nameafullhashraw}{ec21238f09659604896c6cb5fc9d9dd9}
-      \field{sortinit}{7}
-      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{NeurIPS}
@@ -559,8 +811,8 @@
       \strng{nameafullhash}{908aaefa526448b7e01742f7d9819aba}
       \strng{nameafullhashraw}{908aaefa526448b7e01742f7d9819aba}
       \field{extraname}{1}
-      \field{sortinit}{8}
-      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{ECCV}
@@ -637,8 +889,8 @@
       \strng{nameanamehash}{69e7e0b2f8dc0c9df924ff7825e06989}
       \strng{nameafullhash}{3c0fed394e11e5ddc893e9a1fc58df92}
       \strng{nameafullhashraw}{3c0fed394e11e5ddc893e9a1fc58df92}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{CVPR}
@@ -681,8 +933,8 @@
       \strng{nameanamehash}{88f069848482a556e416f713d2819905}
       \strng{nameafullhash}{88f069848482a556e416f713d2819905}
       \strng{nameafullhashraw}{88f069848482a556e416f713d2819905}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{\url{https://github.com/ultralytics/yolov5}}
@@ -747,8 +999,8 @@
       \strng{nameanamehash}{988722af31219640c3fd30204f902571}
       \strng{nameafullhash}{5ac3f3f31291bcdd8b72bfc9e7778e7b}
       \strng{nameafullhashraw}{5ac3f3f31291bcdd8b72bfc9e7778e7b}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{\url{https://github.com/ultralytics/ultralytics}}
@@ -1105,8 +1357,8 @@
       \strng{nameanamehash}{01294c059d9cd70d43772db4695cc11b}
       \strng{nameafullhash}{71a2c05813e886da05ca95232518ab9a}
       \strng{nameafullhashraw}{71a2c05813e886da05ca95232518ab9a}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{ICASSP}
@@ -1193,8 +1445,8 @@
       \strng{nameanamehash}{43cf08168455f20d4a5389a9d2823d92}
       \strng{nameafullhash}{8aefa0488a165ca3266dd7ee9a0242c9}
       \strng{nameafullhashraw}{8aefa0488a165ca3266dd7ee9a0242c9}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Heliyon}
@@ -1273,8 +1525,8 @@
       \strng{nameanamehash}{07ffe1cc5f6538373aaacbc25b1262ea}
       \strng{nameafullhash}{5b2772e107b793f5e095b6ad0b27f63d}
       \strng{nameafullhashraw}{5b2772e107b793f5e095b6ad0b27f63d}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Frontiers in Plant Science}
@@ -1319,8 +1571,8 @@
       \strng{nameanamehash}{cc26c16fb7f8141f30ea6850790183cd}
       \strng{nameafullhash}{cc26c16fb7f8141f30ea6850790183cd}
       \strng{nameafullhashraw}{cc26c16fb7f8141f30ea6850790183cd}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{arXiv preprint arXiv:2205.12740}
@@ -1388,8 +1640,8 @@
       \strng{nameanamehash}{adf392e5e6f3be2f22819a9c51335732}
       \strng{nameafullhash}{3171b80ced254250992686d95a0c07f5}
       \strng{nameafullhashraw}{3171b80ced254250992686d95a0c07f5}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{arXiv preprint}
@@ -1675,8 +1927,8 @@
       \strng{nameanamehash}{1315145d2bca2de53e03d01adbae6cd8}
       \strng{nameafullhash}{c726642d76a755bc7bca2df8594d1cf8}
       \strng{nameafullhashraw}{c726642d76a755bc7bca2df8594d1cf8}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{ICIP}
@@ -1743,8 +1995,8 @@
       \strng{nameanamehash}{1d29cc1755c0fdd1b72f42cbd3622034}
       \strng{nameafullhash}{8827b995bf15a98599e9a6ba819b4e97}
       \strng{nameafullhashraw}{8827b995bf15a98599e9a6ba819b4e97}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{ICIP}
@@ -1791,8 +2043,8 @@
       \strng{nameanamehash}{2bdc83bc7a4c09a9020f492d9e1b5c92}
       \strng{nameafullhash}{2bdc83bc7a4c09a9020f492d9e1b5c92}
       \strng{nameafullhashraw}{2bdc83bc7a4c09a9020f492d9e1b5c92}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Journal of Basic Engineering}
@@ -2170,8 +2422,8 @@
       \strng{nameanamehash}{5ee5d3d5470ac29a2e7c8df70ed54725}
       \strng{nameafullhash}{5ee5d3d5470ac29a2e7c8df70ed54725}
       \strng{nameafullhashraw}{5ee5d3d5470ac29a2e7c8df70ed54725}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence}

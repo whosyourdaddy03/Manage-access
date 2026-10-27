@@ -1,13 +1,12 @@
-%% 第二章 相关理论与关键技术
-\chapter{相关理论与关键技术}
+\chapter{相关理论与数据基础}
 
-本章介绍本文系统所依赖的理论与技术基础，包括目标检测与卷积神经网络、YOLOv8 的网络结构、注意力机制、卡尔曼滤波、针孔相机模型、PX4 与 jMAVSim 仿真框架，以及 PySide6 与网络通信等内容。理解这些基础有助于把握后续章节中各项设计选择的依据。
+一套视觉反无人机系统要从论文走到能运行的代码，所涉及的内容可分为两类：一类回答“为什么这样做”，是方法与模型的理论依据；另一类回答“拿什么来训练和验证”，是数据及其工程处理。本章把这两样放在一处交代，读起来会更连贯。理论上，本文只挑与后续设计直接相关的那几支：卷积网络与特征金字塔、YOLOv8 的骨干与头部、EMA 注意力、卡尔曼滤波与 Sage-Husa 噪声估计、针孔成像与张正友标定，再往外延伸到 PX4、jMAVSim 这套仿真工具链，以及 PySide6、TCP/UDP 这些实现手段；数据上则是 Det-Fly、自建 AprilTag 与 450 帧仿真自动标注三套材料，连同划分、增强与评测口径。这样安排，是为了让后面每一处设计选择都有出处可查，而非凭空而来。
 
 \section{目标检测基础}
 
 \subsection{卷积神经网络}
 
-卷积神经网络（Convolutional Neural Network，CNN）通过局部连接、权值共享与空间池化三种机制，从图像中逐层提取由低级到高级的特征。设第 $l$ 层的输入特征图为 $\mathbf{X}^{l-1}\in\mathbb{R}^{H_{l-1}\times W_{l-1}\times C_{l-1}}$，卷积核为 $\mathbf{W}^{l}\in\mathbb{R}^{k\times k\times C_{l-1}\times C_l}$，则第 $l$ 层的输出为
+卷积网络之所以能替代手工特征，靠的是三个很朴素的约束：局部连接、权值共享与空间池化。它们把图像的平移不变性先验写进了结构里，特征因此可以一层层从边缘、纹理堆到部件与整体。设第 $l$ 层的输入特征图为 $\mathbf{X}^{l-1}\in\mathbb{R}^{H_{l-1}\times W_{l-1}\times C_{l-1}}$，卷积核为 $\mathbf{W}^{l}\in\mathbb{R}^{k\times k\times C_{l-1}\times C_l}$，则第 $l$ 层的输出为
 
 \begin{equation}
 \mathbf{X}^{l}_{i,j,c} = \sigma\left(\sum_{u=0}^{k-1}\sum_{v=0}^{k-1}\sum_{c'=0}^{C_{l-1}-1}
@@ -15,16 +14,16 @@
 \label{eq:conv}
 \end{equation}
 
-其中 $k$ 为卷积核尺寸，$b^l_c$ 为偏置，$\sigma(\cdot)$ 为非线性激活函数。现代检测网络普遍采用 SiLU（Swish）激活：
+其中 $k$ 为卷积核尺寸，$b^l_c$ 为偏置，$\sigma(\cdot)$ 为非线性激活函数。本文所依托的检测网络一律采用 SiLU（Swish），而不是更常见的 ReLU：
 
 \begin{equation}
 \mathrm{SiLU}(x) = x\cdot \mathrm{sigmoid}(x) = \frac{x}{1+e^{-x}}.
 \label{eq:silu}
 \end{equation}
 
-与 ReLU 相比，SiLU 在负半轴保留小幅非零梯度，有助于缓解小目标训练中的梯度消失。
+选它的理由在负半轴。ReLU 在 $x<0$ 处梯度恒为零，小目标本来响应就弱，一旦落进去就再也拉不回来；SiLU 在负半轴留了一小段非零梯度，小目标即便暂时落进负区，也还有机会被拉回来。这一点在后面的小目标实验里体现得很直接。
 
-批归一化（Batch Normalization，BN）在每个小批量内对通道维度做标准化，使各层输入分布保持稳定，从而允许更大的学习率与更快的收敛：
+批归一化（Batch Normalization，BN）按小批量统计量对每个通道做标准化，各层输入分布因此稳定下来，学习率可以放大，收敛也快：
 
 \begin{equation}
 \hat{x} = \frac{x-\mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2+\epsilon}},\qquad
@@ -32,9 +31,11 @@ y = \gamma\hat{x}+\beta.
 \label{eq:bn}
 \end{equation}
 
+式中 $\mu_{\mathcal{B}}$ 与 $\sigma_{\mathcal{B}}^2$ 为当前批次的均值与方差，$\gamma$、$\beta$ 为可学习的缩放与平移，$\epsilon$ 用来防止除零。
+
 \subsection{特征金字塔与多尺度检测}
 
-目标在图像中的尺度差异极大，单一尺度的特征图难以同时兼顾大小目标。特征金字塔网络（Feature Pyramid Network，FPN）\cite{fpn} 通过自顶向下的路径将深层语义特征与浅层高分辨率特征融合，使每一层都同时具备较强的语义与空间信息。PANet\cite{panet} 在 FPN 基础上增加自底向上的路径，进一步缩短浅层特征到检测头的传播距离。YOLOv8 的颈部即采用 PAN-FPN 结构。
+目标的尺度跨度是检测器最头疼的事：同一张图里可能既有几十像素的飞机，也有上千像素的近景目标，单一尺度的特征图顾此失彼。FPN\cite{fpn} 的办法是用自顶向下的通路把深层语义送到浅层，让每一层都兼有语义与分辨率；PANet\cite{panet} 再补一条自底向上的通路，缩短浅层特征到检测头的距离。本文的颈部直接沿用 YOLOv8 的 PAN-FPN，没有另起炉灶——原因在 P2 一节还会提到：多接一条高分辨率支路，比重新设计整个颈部划算得多。
 
 设骨干网络输出的特征图为 $C_3,C_4,C_5$，分别对应 stride 8、16、32；FPN 的融合过程可写为
 
@@ -43,57 +44,59 @@ P_l = \mathrm{Conv}\left(\mathrm{Upsample}(P_{l+1}) \oplus \mathrm{Conv}(C_l)\ri
 \label{eq:fpn}
 \end{equation}
 
-其中 $\oplus$ 表示逐元素相加，$\mathrm{Conv}$ 通常为 $1\times1$ 卷积（用于通道对齐）加 $3\times3$ 卷积（用于消除上采样混叠）。PAN 路径则从 $P_3$ 向 $P_5$ 做下采样融合。最终检测头分别接在 $P_3,P_4,P_5$ 上，对应的下采样倍数越大，感受野越大，适合检测大目标；倍数越小，空间分辨率越高，适合检测小目标。
+其中 $\oplus$ 表示逐元素相加，$\mathrm{Conv}$ 通常为 $1\times1$ 卷积（用于通道对齐）加 $3\times3$ 卷积（用于消除上采样混叠）。PAN 路径则从 $P_3$ 向 $P_5$ 做下采样融合。最终检测头分别接在 $P_3,P_4,P_5$ 上：下采样倍数越大，感受野越大，越适合大目标；倍数越小，空间分辨率越高，越适合小目标。也正因为这条规律，想再往下够一层，就只能自己补一个 P2。
 
 \subsection{检测头的预测形式与损失函数}
 
-YOLOv8 采用无锚框（anchor-free）的检测头，每个网格位置直接预测目标中心相对网格的偏移量、宽高以及类别概率。对于分类分支，使用二元交叉熵（BCE）损失：
+YOLOv8 的头部不带锚框，每个网格位置直接预测目标中心相对网格的偏移量、宽高以及类别概率，锚框聚类与按 IoU 匹配正负样本那一套都省掉了。分类分支使用二元交叉熵（BCE）损失：
 
 \begin{equation}
 L_{cls} = -\frac{1}{N_{pos}}\sum_{i}\left[y_i\log p_i + (1-y_i)\log(1-p_i)\right].
 \label{eq:bce}
 \end{equation}
 
-对于边框回归，YOLOv8 使用分布焦点损失（Distribution Focal Loss，DFL）与 CIoU 损失的组合。DFL 将边框回归建模为离散概率分布，使网络能够学习边界的不确定性：
+式中 $N_{pos}$ 为正样本数，$y_i$ 为类别标签，$p_i$ 为预测概率；除以 $N_{pos}$ 是为了让不同批量、不同目标数下的损失量级可比。
+
+边框回归这边，YOLOv8 把分布焦点损失（Distribution Focal Loss，DFL）与 CIoU 损失拼在一起用。DFL 将边框回归建模为离散概率分布，网络学到的就不只是一个数，还有边界的不确定程度：
 
 \begin{equation}
 L_{DFL} = -\sum_{i}\left((y_{i+1}-y)\log p_i + (y-y_i)\log p_{i+1}\right).
 \label{eq:dfl}
 \end{equation}
 
-CIoU 同时考虑重叠面积、中心点距离与宽高比一致性：
+CIoU 则同时考虑重叠面积、中心点距离与宽高比一致性：
 
 \begin{equation}
 L_{CIoU} = 1 - \mathrm{IoU} + \frac{\rho^2(\mathbf{b},\mathbf{b}^{gt})}{c^2} + \alpha v,
 \label{eq:ciou}
 \end{equation}
 
-其中 $\rho(\cdot)$ 为欧氏距离，$c$ 为最小外接矩形对角线长度，$v$ 为宽高比一致性项，$\alpha$ 为权重系数。
+其中 $\rho(\cdot)$ 为欧氏距离，$c$ 为最小外接矩形对角线长度，$v$ 衡量宽高比的一致性，$\alpha$ 为权重系数。本文没有动这套损失，目的仍是与基线保持可比。
 
 \subsection{评测指标}
 
-目标检测的常用指标包括 IoU、Precision、Recall、AP 与 mAP。交并比（IoU）定义为预测框与真值框交集面积与并集面积之比：
+检测结果好不好，需要一套大家都认的尺子。最基础的是交并比（IoU），即预测框与真值框的交集面积除以并集面积：
 
 \begin{equation}
 \mathrm{IoU} = \frac{|\mathcal{B}_{pred}\cap\mathcal{B}_{gt}|}{|\mathcal{B}_{pred}\cup\mathcal{B}_{gt}|}.
 \label{eq:iou}
 \end{equation}
 
-在某一 IoU 阈值下，将预测按置信度降序排列，逐点计算 Precision 与 Recall，可得到 P-R 曲线，其下面积即为该类别在该阈值下的平均精度 AP。对所有类别取平均得到 mAP。COCO 评测协议以 IoU 从 0.50 到 0.95、步长 0.05 的十个阈值取平均，记为 mAP50-95；mAP50 则只取 IoU=0.50。
+在某个 IoU 阈值下把预测按置信度降序排开，逐点计算 Precision 与 Recall，可得 P-R 曲线，曲线下面积就是该类别在该阈值下的平均精度 AP；对所有类别再取平均，便是 mAP。COCO 评测协议把 IoU 从 0.50 到 0.95 按步长 0.05 切成十档取平均，记作 mAP50-95；mAP50 只看 IoU=0.50 这一档。
 
-COCO 还按目标框面积将目标划分为小、中、大三类：面积小于 $32^2$ 像素为 small，介于 $32^2$ 与 $96^2$ 之间为 medium，大于 $96^2$ 为 large。对于反无人机任务，small 子集上的 AP（本文记为 AP\_small）是最具参考价值的指标，因为远距离目标大多落在该区间。需要强调的是，检测框面积与目标实际物理尺寸无关，同一架无人机在不同距离下会落入不同的分桶，因此 AP\_small 反映的是"模型在多远距离上仍能检出"的综合能力。
+COCO 还按目标框面积把目标分成小、中、大三档：面积小于 $32^2$ 像素为 small，介于 $32^2$ 与 $96^2$ 之间为 medium，大于 $96^2$ 为 large。反无人机任务里，small 子集上的 AP（本文记作 AP\_small）最值得看，因为远距离目标大多落在这个区间。这里有个容易混淆的地方：框面积与目标的物理尺寸并不是一回事，同一架无人机飞远飞近，会在三个桶之间来回跳，所以 AP\_small 量的是“模型在多远处仍能检出”，而不是“模型认不认得出小东西”。
 
-速度指标通常以 FPS（Frames Per Second）衡量。由于不同实现的预处理、后处理与显存拷贝开销差异很大，FPS 必须注明测量条件。本文统一采用 batch=1、帧预载内存、包含预处理与后处理的口径，以保证不同模型之间的可比性。
+速度指标通常以 FPS（Frames Per Second）衡量。不同实现的预处理、后处理与显存拷贝开销差异很大，不注明条件的 FPS 没有比较意义。本文统一采用 batch=1、帧预载内存、包含预处理与后处理的口径，保证模型之间横向可比。
 
 \section{YOLOv8 网络结构}
 
 \subsection{整体结构}
 
-YOLOv8 由骨干（Backbone）、颈部（Neck）与头部（Head）三部分组成。骨干采用改进的 CSPDarknet，通过 C2f 模块在保持梯度流动的同时减少计算量；颈部采用 PAN-FPN，实现多尺度特征的双向融合；头部采用解耦结构，将分类与回归分支分离，避免两个任务的特征相互干扰。YOLOv8n 是五种规模中最小的一种，参数量约 3.0\,M，在 640$\times$640 输入下的计算量约 8.7\,GFLOPs。
+YOLOv8 由骨干（Backbone）、颈部（Neck）与头部（Head）三部分组成。骨干是改进的 CSPDarknet，靠 C2f 模块在保持梯度流动的同时把计算量压下来；颈部是 PAN-FPN，做多尺度特征的双向融合；头部走解耦路线，分类与回归各用一条分支，免得两个任务的特征相互干扰。YOLOv8n 是五种规模里最小的一种，参数量约 3.0\,M，在 640$\times$640 输入下的计算量约 8.7\,GFLOPs。
 
 \subsection{C2f 模块}
 
-C2f（CSP Bottleneck with 2 convolutions and f fused outputs）模块是 YOLOv8 的核心组件。其结构可以概括为：输入先经过 $1\times1$ 卷积降维，然后分为两支，一支直接短路，另一支经过若干个 Bottleneck 后逐级拼接，最后再经过 $1\times1$ 卷积融合。与 YOLOv5 的 C3 模块相比，C2f 保留了更多的梯度流分支，使浅层特征能够更直接地传递到检测头，这对小目标检测尤为重要。
+C2f（CSP Bottleneck with 2 convolutions and f fused outputs）模块是 YOLOv8 的核心组件，结构可以这么理解：输入先用 $1\times1$ 卷积降维，随后分成两路，一路直接短路，另一路串若干 Bottleneck 后逐级拼接，再由 $1\times1$ 卷积融合输出。与 YOLOv5 的 C3 模块相比，C2f 留出的梯度流分支更多，浅层特征能更直接地送到检测头——对小目标来说，这一点比省下那点算量更重要。
 
 设输入为 $\mathbf{X}$，C2f 的输出可写为
 
@@ -103,17 +106,17 @@ C2f（CSP Bottleneck with 2 convolutions and f fused outputs）模块是 YOLOv8 
 \label{eq:c2f}
 \end{equation}
 
-其中 $\mathcal{B}_i$ 表示第 $i$ 个 Bottleneck，$\mathbf{X}_i$ 为前一层输出。由于每个 Bottleneck 的输出都参与最终拼接，网络实际上获得了多感受野的特征组合。
+其中 $\mathcal{B}_i$ 表示第 $i$ 个 Bottleneck，$\mathbf{X}_i$ 为前一层输出。每个 Bottleneck 的输出都参与最终拼接，网络实际得到的是多种感受野的组合，而不是单一尺度的特征。
 
 \subsection{SPPF 与解耦头}
 
-SPPF（Spatial Pyramid Pooling - Fast）通过串联多个不同尺寸的最大池化层，在不显著增加计算量的前提下扩大感受野，增强模型对目标整体结构的感知。解耦头则将分类与回归分别送入两条独立的卷积分支，分类分支输出 $C$ 个类别的概率，回归分支输出 4 个边框参数与 16 个分布参数。解耦设计减少了任务间的负迁移，是 YOLOv8 相比前代的重要改进之一。
+SPPF（Spatial Pyramid Pooling - Fast）把几个不同尺寸的最大池化层串联起来，感受野扩大了，计算量却没怎么涨，模型对目标整体结构的感知因此更强。解耦头把分类与回归分到两条独立的卷积分支上：分类支输出 $C$ 个类别的概率，回归支输出 4 个边框参数与 16 个分布参数。两件事分开做，任务间的负迁移少了，这也是 YOLOv8 相对前代比较实在的一处改动。
 
 \section{注意力机制}
 
 \subsection{从 SE 到 CBAM}
 
-Squeeze-and-Excitation（SE）模块通过全局平均池化获得通道描述子，再经两层全连接网络生成通道权重：
+注意力模块的家族不算小，本文只取其中一支，这里把来龙去脉交代清楚。SE 模块先用全局平均池化拿到通道描述子，再经两层全连接网络生成通道权重：
 
 \begin{equation}
 \mathbf{s} = \sigma\left(\mathbf{W}_2\,\delta\left(\mathbf{W}_1\,\mathrm{GAP}(\mathbf{X})\right)\right),\qquad
@@ -121,23 +124,23 @@ Squeeze-and-Excitation（SE）模块通过全局平均池化获得通道描述�
 \label{eq:se}
 \end{equation}
 
-CBAM\cite{cbam} 在通道注意力之后串联空间注意力，空间分支对通道维度做最大池化与平均池化，再经 $7\times7$ 卷积生成空间权重图。二者的共同点是"先压缩、再激励"，但都只在一个维度上建模，且空间分支的感受野有限。
+CBAM\cite{cbam} 在通道注意力之后又串联了一级空间注意力，空间分支对通道维度做最大池化与平均池化，再经 $7\times7$ 卷积生成空间权重图。SE 与 CBAM 的思路都是“先压缩、再激励”，但两者都只在一个维度上建模，空间分支的感受野也有限。本文没有采用 CBAM，倒不是它无效，而是其通道与空间两级串联在 P2 这种高分辨率特征图上开销偏大，且两个维度分开计算，对细窄条带目标的响应不够集中；相比之下，EMA 在这一点上更合算。
 
 \subsection{EMA 高效多尺度注意力}
 
-EMA（Efficient Multi-scale Attention）\cite{ema} 的核心思想是\textbf{分组并行 + 跨空间学习}。设输入特征图为 $\mathbf{X}\in\mathbb{R}^{C\times H\times W}$，EMA 首先沿通道维度将其分为 $G$ 组，每组独立进行如下处理：
+EMA（Efficient Multi-scale Attention）\cite{ema} 的着眼点是\textbf{分组并行 + 跨空间学习}。设输入特征图为 $\mathbf{X}\in\mathbb{R}^{C\times H\times W}$，EMA 先沿通道维度把它切成 $G$ 组，每组各自走一遍下面的流程：
 
-（1）对组内特征分别沿水平与垂直方向做一维池化，得到两组方向感知的描述子；
+（1）组内特征分别沿水平与垂直方向做一维池化，得到两组带方向信息的描述子；
 
-（2）对描述子做一维卷积，建模局部跨通道交互；
+（2）对描述子做一维卷积，建模局部的跨通道交互；
 
-（3）将两组描述子通过 sigmoid 归一化后与原始特征逐元素相乘，得到方向注意力增强的特征；
+（3）两组描述子经 sigmoid 归一化后与原始特征逐元素相乘，得到方向注意力增强后的特征；
 
-（4）对增强后的特征做全局平均池化，并通过 softmax 生成跨空间的注意力权重；
+（4）对增强特征做全局平均池化，再通过 softmax 生成跨空间的注意力权重；
 
-（5）将两组权重与原始输入相乘后相加，输出最终特征。
+（5）两组权重与原始输入相乘后相加，输出最终特征。
 
-与 CBAM 相比，EMA 的优势在于：分组并行降低了大通道数下的计算量；一维方向卷积以极小的参数量建模长程依赖；跨空间学习使不同组之间能够交换信息，避免分组造成的特征割裂。对于小目标而言，这种"方向感知 + 跨组交互"的机制能够在复杂背景中更准确地定位目标所在的条带区域。
+与 CBAM 摆在一起看，EMA 省在两个地方。分组并行把大通道数下的计算量摊薄了；一维方向卷积用极小的参数量就建起了长程依赖；跨空间学习又让组与组之间能够交换信息，分组带来的特征割裂被补了回来。小目标在复杂背景里常常只是一条细窄的响应带，这种“方向感知 + 跨组交互”恰好对路。
 
 \section{卡尔曼滤波}
 
@@ -151,7 +154,7 @@ EMA（Efficient Multi-scale Attention）\cite{ema} 的核心思想是\textbf{分
 \label{eq:state_space}
 \end{equation}
 
-其中 $\mathbf{w}_k\sim\mathcal{N}(\mathbf{0},\mathbf{Q}_k)$ 为过程噪声，$\mathbf{v}_k\sim\mathcal{N}(\mathbf{0},\mathbf{R}_k)$ 为量测噪声，二者相互独立。卡尔曼滤波分为预测与更新两步。
+其中 $\mathbf{w}_k\sim\mathcal{N}(\mathbf{0},\mathbf{Q}_k)$ 为过程噪声，$\mathbf{v}_k\sim\mathcal{N}(\mathbf{0},\mathbf{R}_k)$ 为量测噪声，二者相互独立。整个滤波只有两拍：预测与更新。
 
 预测步：
 
@@ -182,25 +185,25 @@ EMA（Efficient Multi-scale Attention）\cite{ema} 的核心思想是\textbf{分
 \label{eq:kf_cov}
 \end{equation}
 
-增益矩阵 $\mathbf{K}_k$ 的物理含义是"在预测与量测之间分配信任"：当量测噪声 $\mathbf{R}$ 较大时，增益变小，滤波器更信任预测；当预测不确定度 $\mathbf{P}$ 较大时，增益变大，滤波器更信任量测。
+增益矩阵 $\mathbf{K}_k$ 说的是“预测与量测之间该信谁”：量测噪声 $\mathbf{R}$ 大，增益就小，滤波器偏向预测；预测不确定度 $\mathbf{P}$ 大，增益就大，滤波器偏向量测。后面自适应滤波要动的，正是这个 $\mathbf{R}$。
 
 \subsection{自适应噪声估计}
 
-标准卡尔曼滤波要求 $\mathbf{Q}$ 与 $\mathbf{R}$ 已知且恒定。在视觉跟踪中，检测框的抖动程度随目标距离、光照与背景而变化，固定 $\mathbf{R}$ 难以适应。Sage-Husa 自适应滤波\cite{sagehusa} 利用新息（innovation）序列在线估计噪声统计特性。新息定义为
+标准卡尔曼滤波要求 $\mathbf{Q}$ 与 $\mathbf{R}$ 已知且恒定。视觉跟踪里这条假设很难成立：检测框抖多少，跟着目标距离、光照与背景一起变，固定的 $\mathbf{R}$ 顾此失彼。Sage-Husa 自适应滤波\cite{sagehusa} 利用新息（innovation）序列在线估计噪声统计特性。新息定义为
 
 \begin{equation}
 \boldsymbol{\nu}_k = \mathbf{z}_k - \mathbf{H}_k\hat{\mathbf{x}}_{k|k-1}.
 \label{eq:innovation}
 \end{equation}
 
-在理论噪声统计下，新息应为零均值白噪声，其协方差为
+若噪声统计与假设一致，新息应为零均值白噪声，其协方差为
 
 \begin{equation}
 \mathbf{S}_k = \mathbf{H}_k\mathbf{P}_{k|k-1}\mathbf{H}_k^{T}+\mathbf{R}_k.
 \label{eq:innovation_cov}
 \end{equation}
 
-通过对新息协方差做滑动平均，可以反解出 $\mathbf{R}_k$ 的估计：
+对新息协方差做滑动平均，可以反解出 $\mathbf{R}_k$ 的估计：
 
 \begin{equation}
 \hat{\mathbf{R}}_k = \frac{1}{M}\sum_{i=k-M+1}^{k}\left(\boldsymbol{\nu}_i\boldsymbol{\nu}_i^{T}
@@ -208,17 +211,17 @@ EMA（Efficient Multi-scale Attention）\cite{ema} 的核心思想是\textbf{分
 \label{eq:sage_husa}
 \end{equation}
 
-其中 $M$ 为滑动窗口长度。实际实现中通常对 $\hat{\mathbf{R}}_k$ 做下界约束与对角化处理，以避免数值不稳定。本文在第六章给出具体的实现细节。
+其中 $M$ 为滑动窗口长度。实际实现中还得给 $\hat{\mathbf{R}}_k$ 加下界约束并做对角化处理，否则数值容易发散。本文的具体实现放在第四章。
 
 \subsection{滤波的收敛性与可观测性}
 
-卡尔曼滤波的估计误差协方差在系统一致可观测的条件下收敛。对于本文的六维状态（位置与速度），量测只包含位置，速度通过位置的时间差分间接观测。若目标长时间匀速直线运动，速度的可观测性较弱，滤波收敛较慢；若目标做机动，位置的变化会提供额外的速度信息。工程上通常通过增大过程噪声 $\mathbf{Q}$ 中的速度项来加快收敛，但代价是稳态抖动增大。本文在参数整定中对二者做了折中。
+卡尔曼滤波的估计误差协方差，在系统一致可观测的条件下才会收敛。本文的状态是六维（位置与速度），量测只给位置，速度只能通过位置差分间接估计。目标长时间匀速直线运动时，速度的可观测性就弱，滤波收敛慢；一旦出现机动，位置变化反而提供了额外的速度信息。工程上常用的办法是把过程噪声 $\mathbf{Q}$ 中的速度项调大，收敛快一些，代价是稳态抖动变大。本文在参数整定时对两者取折中，没有一味求快。
 
 \section{针孔相机模型与标定}
 
 \subsection{坐标系定义}
 
-本文涉及四个坐标系：世界坐标系、相机坐标系、图像坐标系与像素坐标系。世界坐标系采用北—东—地（North-East-Down，NED）约定，$x$ 轴指向北，$y$ 轴指向东，$z$ 轴指向地心，地面上 $z=0$，高度越大 $z$ 越小。相机坐标系以光心为原点，$z_c$ 轴沿光轴指向景物，$x_c$ 轴向右，$y_c$ 轴向下。图像坐标系以主点为原点、以物理尺寸为单位；像素坐标系以图像左上角为原点、以像素为单位。
+本文涉及四个坐标系：世界坐标系、相机坐标系、图像坐标系与像素坐标系。世界坐标系采用北—东—地（North-East-Down，NED）约定，$x$ 轴指向北，$y$ 轴指向东，$z$ 轴指向地心，地面上 $z=0$，高度越大 $z$ 越小。相机坐标系以光心为原点，$z_c$ 轴沿光轴指向景物，$x_c$ 轴向右，$y_c$ 轴向下。图像坐标系以主点为原点、以物理尺寸为单位；像素坐标系以图像左上角为原点、以像素为单位。四者之间的换算关系必须一次定死，后面测距与角度解算全靠它。
 
 设世界坐标系到相机坐标系的旋转矩阵为 $\mathbf{R}$、平移向量为 $\mathbf{t}$，则点 $P_w$ 在相机坐标系下的坐标为
 
@@ -229,7 +232,7 @@ EMA（Efficient Multi-scale Attention）\cite{ema} 的核心思想是\textbf{分
 
 \subsection{投影模型}
 
-针孔模型将三维点投影到归一化像平面，再经内参矩阵映射到像素坐标：
+针孔模型先把三维点投影到归一化像平面，再经内参矩阵映射到像素坐标：
 
 \begin{equation}
 s\begin{bmatrix}u\\v\\1\end{bmatrix}
@@ -239,7 +242,7 @@ s\begin{bmatrix}u\\v\\1\end{bmatrix}
 \label{eq:projection}
 \end{equation}
 
-其中 $s=Z_c$ 为深度，$f_x,f_y$ 为以像素为单位的焦距，$(c_x,c_y)$ 为主点。若只考虑相机坐标系下的点，则
+其中 $s=Z_c$ 为深度，$f_x,f_y$ 为以像素为单位的焦距，$(c_x,c_y)$ 为主点。若只考虑相机坐标系下的点，式子可以简化成
 
 \begin{equation}
 u = f_x\frac{X_c}{Z_c}+c_x,\qquad v = f_y\frac{Y_c}{Z_c}+c_y.
@@ -256,11 +259,11 @@ y_d &= y(1+k_1r^2+k_2r^4+k_3r^6)+p_1(r^2+2y^2)+2p_2xy,
 \label{eq:distortion}
 \end{equation}
 
-其中 $(x,y)$ 为归一化无畸变坐标，$r^2=x^2+y^2$，$k_1,k_2,k_3$ 为径向畸变系数，$p_1,p_2$ 为切向畸变系数。本文仿真相机无畸变，实拍相机在标定后按上述模型去畸变。
+其中 $(x,y)$ 为归一化无畸变坐标，$r^2=x^2+y^2$，$k_1,k_2,k_3$ 为径向畸变系数，$p_1,p_2$ 为切向畸变系数。本文的仿真相机不带畸变，实拍相机则在标定后按上述模型去畸变——这一步省不得，否则画面边角处的目标会被系统性地拉偏。
 
 \subsection{张正友标定法}
 
-张正友标定法\cite{zhang_calib} 利用平面棋盘格在不同位姿下的多幅图像，通过单应性矩阵约束求解内参。设棋盘格平面为 $Z_w=0$，则式~\eqref{eq:projection} 退化为单应变换：
+内参从哪里来？棋盘格标定是成本最低的一条路，本文用的是张正友标定法\cite{zhang_calib}：拿平面棋盘格在不同位姿下拍若干幅图像，靠单应性矩阵的约束解内参。设棋盘格平面为 $Z_w=0$，则式~\eqref{eq:projection} 退化为单应变换：
 
 \begin{equation}
 s\begin{bmatrix}u\\v\\1\end{bmatrix}
@@ -270,7 +273,7 @@ s\begin{bmatrix}u\\v\\1\end{bmatrix}
 \label{eq:homography}
 \end{equation}
 
-利用旋转向量正交约束 $\mathbf{r}_1^{T}\mathbf{r}_2=0$、$\|\mathbf{r}_1\|=\|\mathbf{r}_2\|=1$，可以构造关于 $\mathbf{K}$ 的线性方程组，至少三幅不同位姿的图像即可求解。随后用最大似然估计优化重投影误差：
+利用旋转向量正交约束 $\mathbf{r}_1^{T}\mathbf{r}_2=0$、$\|\mathbf{r}_1\|=\|\mathbf{r}_2\|=1$，可以构造出关于 $\mathbf{K}$ 的线性方程组，至少三幅不同位姿的图像即可求解。随后用最大似然估计优化重投影误差：
 
 \begin{equation}
 \min_{\mathbf{K},\mathbf{k},\{\mathbf{R}_i,\mathbf{t}_i\}}\sum_{i}\sum_{j}
@@ -278,58 +281,262 @@ s\begin{bmatrix}u\\v\\1\end{bmatrix}
 \label{eq:reproj}
 \end{equation}
 
-本文在自建数据采集环节使用 9$\times$6、方格边长 25\,mm 的棋盘格完成内参标定，标定结果用于评估单目定位的绝对精度。
+本文在自建数据采集环节使用 9$\times$6、方格边长 25\,mm 的棋盘格完成内参标定，标定结果直接用于评估单目定位的绝对精度。
 
 \section{PX4 与 jMAVSim 仿真框架}
 
 \subsection{PX4 Autopilot 与 SITL}
 
-PX4\cite{px4} 是一款开源飞控固件，支持多旋翼、固定翼、垂直起降等多种机型。其软件在环（SITL）模式将飞控固件编译为可在普通 PC 上运行的进程，通过 MAVLink\cite{mavlink} 协议与仿真器交换传感器数据与执行器指令。SITL 的优势在于：无需真实飞控硬件即可验证控制逻辑、航点任务与失效保护；可以与多种仿真器（jMAVSim、Gazebo、AirSim）组合；支持 lockstep 模式，使仿真时间与飞控时间严格同步，保证实验结果可复现。
+PX4\cite{px4} 是一款开源飞控固件，多旋翼、固定翼、垂直起降都撑得住。其软件在环（SITL）模式把飞控固件编译成可在普通 PC 上运行的进程，通过 MAVLink\cite{mavlink} 协议与仿真器交换传感器数据与执行器指令。选 SITL 的理由很直接：不用真实飞控硬件就能验证控制逻辑、航点任务与失效保护；可以跟 jMAVSim、Gazebo、AirSim 等多种仿真器组合；支持 lockstep 模式，仿真时间与飞控时间严格同步，实验才谈得上可复现。
 
-在 lockstep 模式下，仿真器每推进一步都等待飞控完成相应的控制计算，二者以相同的仿真时间前进。这使得"仿真 60 秒"与"飞控内部 60 秒"完全一致，避免了因计算速度差异导致的时间漂移。本文的所有闭环实验均启用 lockstep。
+在 lockstep 模式下，仿真器每推进一步都要等待飞控完成相应的控制计算，二者按同一个仿真时间前进。“仿真 60 秒”与“飞控内部 60 秒”因此完全对得上，不会因为两边算力不同而漂移。本文的所有闭环实验均启用 lockstep。
 
 \subsection{jMAVSim 架构}
 
-jMAVSim\cite{jmavsim} 是 PX4 自带的轻量级仿真器，使用 Java 与 Java3D 构建。其核心类包括：
+jMAVSim\cite{jmavsim} 是 PX4 自带的轻量级仿真器，用 Java 与 Java3D 构建。核心类不多，分工却很清楚：
 
 （1）\texttt{Simulator}：仿真主循环，负责解析命令行参数、创建世界、启动物理步进与网络通信；
 
 （2）\texttt{World}：物理世界容器，管理所有 \texttt{KinematicObject}，每个仿真步调用各对象的 \texttt{update} 方法；
 
-（3）\texttt{KinematicObject}：所有可运动对象的基类，提供位置、速度、姿态接口；
+（3）\texttt{KinematicObject}：所有可运动对象的基类，提供位置、速度与姿态接口；
 
 （4）\texttt{Vehicle}：多旋翼动力学模型，接收 MAVLink 指令并积分运动方程；
 
 （5）\texttt{Visualizer3D}：基于 Java3D 的三维渲染器，负责场景构建、相机视角与画面输出；
 
-（6）\texttt{MAVLinkInterface}：与 PX4 的 MAVLink 通信接口。
+（6）\texttt{MAVLinkInterface}：与 PX4 通信的 MAVLink 接口。
 
-jMAVSim 的坐标约定与 PX4 一致，采用 NED：$x$ 向北、$y$ 向东、$z$ 向下。场景中的地面位于 $z=0$，飞行器高度为负值。本文在改造 jMAVSim 时严格遵循这一约定，并在真值广播中加入坐标转换说明，避免与算法端的相机坐标系混淆。
+jMAVSim 的坐标约定与 PX4 一致，同样采用 NED：$x$ 向北、$y$ 向东、$z$ 向下。场景中的地面位于 $z=0$，飞行器高度为负值。改造 jMAVSim 时本文严格遵循这一约定，并在真值广播中加入坐标转换说明，免得与算法端的相机坐标系混淆。
 
 \subsection{离屏渲染与帧流}
 
-jMAVSim 默认依赖窗口系统显示三维画面。在无头服务器或 WSL 环境中，窗口系统可能不可用或不稳定，本文因此实现了纯离屏渲染模式：关闭 Java3D 的窗口画布，改用离屏 \texttt{Canvas3D} 渲染到缓冲区，再将帧编码为 JPEG 通过 TCP 推送。该模式避免了图形界面依赖，使仿真可以在后台长时间稳定运行。具体实现将在第七章详细介绍。
+jMAVSim 默认依赖窗口系统显示三维画面。放到无头服务器或 WSL 环境中，窗口系统要么没有，要么不稳定，本文为此实现了纯离屏渲染模式：关闭 Java3D 的窗口画布，改用离屏 \texttt{Canvas3D} 渲染到缓冲区，再将帧编码为 JPEG 通过 TCP 推送。图形界面的依赖一去，仿真就能在后台长时间稳定运行。具体实现将在第五章详细介绍。
 
 \section{系统开发技术}
 
 \subsection{PySide6 与 QtWebEngine}
 
-PySide6 是 Qt 6 的官方 Python 绑定，提供窗口、控件、绘图、定时器、网络与多媒体等完整能力。本文使用其 \texttt{QWidget} 体系构建主界面，使用 \texttt{QPainter} 自绘仪表与罗盘，使用 \texttt{QPixmap} 显示视频帧，使用 \texttt{QSettings} 的替代方案（JSON 文件）持久化配置。
+PySide6 是 Qt 6 的官方 Python 绑定，窗口、控件、绘图、定时器、网络与多媒体能力都齐全。本文用 \texttt{QWidget} 体系搭建主界面，用 \texttt{QPainter} 自绘仪表与罗盘，用 \texttt{QPixmap} 显示视频帧，配置持久化则绕开 \texttt{QSettings}，改用 JSON 文件——后者便于人工查看，也方便纳入版本管理。
 
-地图部分使用 QtWebEngine 嵌入 Leaflet\cite{leaflet} 页面。Leaflet 是一个轻量级开源地图库，支持瓦片图层、标记、折线、多边形与自定义覆盖物，能够在本地 HTML 中加载 Esri 卫星影像。Python 端通过 \texttt{QWebChannel} 或 JavaScript 注入向页面推送目标位置，实现地图标记的实时更新。
+地图部分使用 QtWebEngine 嵌入 Leaflet\cite{leaflet} 页面。Leaflet 是一个轻量级开源地图库，瓦片图层、标记、折线、多边形与自定义覆盖物都支持，能在本地 HTML 中加载 Esri 卫星影像。Python 端通过 \texttt{QWebChannel} 或 JavaScript 注入向页面推送目标位置，地图标记随之实时更新。
 
 \subsection{OpenCV 与 PyTorch}
 
-OpenCV 负责图像解码、颜色空间转换、几何绘制与视频读写。本文使用 \texttt{cv2.VideoCapture} 读取离线视频与摄像头，使用 \texttt{cv2.imencode} 将帧编码为 JPEG，使用 \texttt{cv2.line}、\texttt{cv2.rectangle}、\texttt{cv2.putText} 绘制检测叠加层。
+图像解码、颜色空间转换、几何绘制与视频读写交给 OpenCV。本文使用 \texttt{cv2.VideoCapture} 读取离线视频与摄像头，使用 \texttt{cv2.imencode} 将帧编码为 JPEG，用 \texttt{cv2.line}、\texttt{cv2.rectangle}、\texttt{cv2.putText} 绘制检测叠加层。
 
-PyTorch 与 Ultralytics 负责模型加载与推理。YOLOv8 模型可直接通过 \texttt{YOLO("best.pt")} 加载，调用 \texttt{model.predict} 获得检测框、置信度与类别。为降低端到端延迟，本文在推理时关闭冗余的日志与可视化，并将输入尺寸固定为 640$\times$640。
+模型加载与推理交给 PyTorch 与 Ultralytics。YOLOv8 模型通过 \texttt{YOLO("best.pt")} 直接加载，调用 \texttt{model.predict} 获得检测框、置信度与类别。为了压低端到端延迟，推理时把冗余的日志与可视化关掉，输入尺寸固定为 640$\times$640。
 
 \subsection{TCP 与 UDP 通信}
 
-系统涉及两类网络通信。视频帧流使用 TCP：TCP 提供可靠、有序的字节流，适合体积较大的 JPEG 帧；协议为"一行文本头 + 二进制数据"，头部包含帧序号、时间戳、宽度、高度与字节数，接收端按字节数精确读取，避免粘包。真值广播与结果输出使用 UDP：UDP 无连接、开销小，适合高频小报文；本文的真值广播频率为 50\,Hz，结果输出频率与处理帧率一致。
+系统中的网络通信分两类。视频帧流走 TCP：TCP 提供可靠、有序的字节流，适合体积较大的 JPEG 帧；协议为“一行文本头 + 二进制数据”，头部包含帧序号、时间戳、宽度、高度与字节数，接收端按字节数精确读取，粘包问题就没了。真值广播与结果输出走 UDP：无连接、开销小，适合高频小报文；真值广播频率为 50\,Hz，结果输出频率与处理帧率一致。
 
-需要说明的是，UDP 不保证送达，因此在结果输出中本文采用"最新值覆盖"策略：显示端只关心当前状态，丢失个别报文不会影响整体显示；同时通过序号字段检测丢包率，用于评估链路质量。
+UDP 不保证送达，所以结果输出采用“最新值覆盖”策略：显示端只关心当前状态，丢失个别报文不影响整体显示；丢包率则通过序号字段统计，用来判断链路质量。
 
-\section{本章小结}
 
-本章介绍了本文所依赖的理论与技术基础。在检测方面，说明了卷积网络、特征金字塔、检测头预测形式与评测指标；在模型方面，剖析了 YOLOv8 的 C2f、SPPF 与解耦头结构；在注意力方面，对比了 SE、CBAM 与 EMA 的建模方式；在滤波方面，给出了卡尔曼滤波的预测—更新方程与 Sage-Husa 自适应噪声估计；在定位方面，建立了针孔相机模型与张正友标定法；在仿真方面，介绍了 PX4 SITL、jMAVSim 的类结构与 NED 坐标约定；在系统方面，概述了 PySide6、Leaflet、OpenCV、PyTorch 与 TCP/UDP 的使用方式。这些内容为后续章节的设计与实验提供了共同的语言基础。
+\section{数据集构建与数据工程}
+
+理论之外，另一半工作是数据。检测模型最终能到什么水平，很大程度上由数据决定。本文用到三类材料：公开的 Det-Fly 无人机检测数据集、自建的 AprilTag 标定与定位评测数据集，以及仿真域自动标注数据集。下面分别交代来源、格式转换、划分策略、统计特性与评测口径，顺带讨论数据泄漏、类别不平衡与尺度分布这几个容易被略过的问题。
+
+\subsection{Det-Fly 数据集}
+
+\subsubsection{数据集来源与内容}
+
+Det-Fly\cite{detfly} 是反无人机视觉检测领域常用的公开数据集，由多段无人机飞行视频帧组成，标注格式为 YOLO 文本格式，类别只有 UAV 一个。数据覆盖多种背景（天空、树林、建筑、山地）、多种机型与多种飞行状态（悬停、平飞、盘旋、远近变化）。各序列的拍摄设备与图像分辨率并不统一，整体以中远距离拍摄为主，目标在画面中的占比普遍偏小。
+
+与 COCO 等通用数据集相比，Det-Fly 最突出的特点是\textbf{目标尺度分布极度偏向小目标}。本文对转换后的 13271 个标注框做了统计，结果如表~\ref{tab:detfly_stats} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{Det-Fly 数据集标注统计}
+\label{tab:detfly_stats}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{统计项} & \textbf{数值} & \textbf{占比} \\
+\midrule
+标注文件数 & 13271 & -- \\
+标注框总数 & 13270 & 100\% \\
+类别数 & 1（UAV） & 100\% \\
+\midrule
+small（$<32^2$\,px） & 1490 & 11.2\% \\
+medium（$32^2\sim96^2$\,px） & 8067 & 60.8\% \\
+large（$>96^2$\,px） & 3713 & 28.0\% \\
+\midrule
+目标框面积最小值 & 0.0013\% 画面面积 & -- \\
+目标框面积中位数 & 0.0554\% 画面面积 & -- \\
+目标框面积 $<1\%$ 画面 & -- & 99.1\% \\
+目标框面积 $<5\%$ 画面 & -- & 100.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表里能读出两层意思。按 COCO 的面积口径，只有 11.2\% 的框属于 small，可那是相对于各图像自身分辨率算出来的；一旦统一折算到 1280$\times$720 的推理分辨率，绝大多数目标在画面中的面积不足 1\%。通用检测模型在这个数据集上 AP\_small 极低，根子就在这里；增加高分辨率检测层的必要性，也在这里。
+
+\subsubsection{格式转换}
+
+原始数据以视频帧与独立标注文件的形式组织，本文编写了转换脚本，将其整理为 YOLO 训练所需的目录结构：
+
+\begin{verbatim}
+dataset/
+  images/
+    train/  val/
+  labels/
+    train/  val/
+  data.yaml
+\end{verbatim}
+
+每张图像对应一个同名 \texttt{.txt} 标注文件，每行格式为
+
+\begin{verbatim}
+<class_id> <x_center> <y_center> <width> <height>
+\end{verbatim}
+
+其中后四项均为相对图像宽高的归一化值，取值范围 $[0,1]$。转换过程中做了三项校验：坐标越界裁剪、零面积框剔除、图像与标注一一对应检查。最终保留 13270 个有效标注框。
+
+\subsubsection{序列级划分与数据泄漏}
+
+数据怎么划，直接影响评测的可信度。若随机按帧划分，同一段视频的相邻帧可能同时进入训练集与验证集，由于相邻帧在背景、光照、目标姿态上高度相似，模型实际上“见过”验证样本，指标自然虚高。这种数据泄漏在小目标检测中格外严重，因为模型很可能记住的是背景纹理，而不是目标本身。
+
+本文按\textbf{序列}划分：以序列编号中的 010 与 020 为界，010 序列全部用于训练，020 序列全部用于验证。验证集中的背景、光照与飞行场景在训练阶段都没有出现过，评出来的数更接近真实部署时的泛化性能。划分比例约为 8:2，与常用实践一致。
+
+序列级划分得到的指标通常低于随机划分，这不是模型变差了，而是评测变诚实了。本文在报告中统一注明“序列级划分”，免得读者误读指标含义。
+
+\subsubsection{数据增强}
+
+训练阶段采用 Ultralytics 默认的数据增强策略，包括：
+
+（1）\textbf{Mosaic}：将四张图像随机拼接为一张，增加目标在不同位置、不同尺度下出现的概率，同时变相扩大了批量大小；
+
+（2）\textbf{HSV 扰动}：随机调整色调、饱和度与明度，提升模型对光照变化的适应能力；
+
+（3）\textbf{随机翻转与平移}：水平翻转概率 0.5，平移比例 0.1；
+
+（4）\textbf{尺度缩放}：随机缩放比例 0.5，模拟目标由远及近的变化。
+
+到了仿真域微调阶段，本文\textbf{关闭 Mosaic}。仿真数据的尺度分布是按距离分层精心排过的，Mosaic 一拼接，近距离大目标被缩小、远距离小目标被放大，分布随之被打乱，微调对死区的针对性也就没了。
+
+\subsection{自建 AprilTag 数据集}
+
+\subsubsection{采集目的}
+
+公开数据集与本文的相机、镜头、安装方式对不上，拿去评估单目定位的绝对精度没有意义。为此，本文自建了一套基于 AprilTag 的评测数据集，用途有四：
+
+（1）标定相机内参，获得 $f_x,f_y,c_x,c_y$ 与畸变系数；
+
+（2）在已知距离下评估测距误差；
+
+（3）在已知角度下评估方位角与俯仰角误差；
+
+（4）验证状态机在目标静止、缓慢移动与遮挡条件下的行为。
+
+\subsubsection{硬件与采集流程}
+
+采集使用普通 USB 相机，分辨率 1920$\times$1080，水平视场角约 60\textdegree。标定板为 9$\times$6 的棋盘格，方格边长 25\,mm，打印后粘贴在硬质平板上以保证平整。AprilTag 采用 36h11 家族、ID 为 0、边长 16\,cm 的标签，打印后粘贴在无人机机身侧面。
+
+采集分四步：
+
+（1）\textbf{内参标定}：手持相机从不同角度拍摄棋盘格 30 余张，画面中心与四角、不同倾角、不同距离都要覆盖，使用 OpenCV 的 \texttt{calibrateCamera} 求解内参与畸变系数，重投影误差控制在 0.5\,px 以内；
+
+（2）\textbf{距离评测}：将 AprilTag 固定在无人机上，用卷尺量取相机到目标的真实距离，分别在 2、3、4、5、6、8、10\,m 处采集静止图像，每个距离采集 20 帧；
+
+（3）\textbf{角度评测}：保持距离不变，将目标沿水平方向与垂直方向移动到画面不同位置，按几何关系计算真实角度，每个角度采集 10 帧；
+
+（4）\textbf{动态评测}：手持目标缓慢移动，模拟真实飞行，采集连续视频用于状态机与滤波测试。
+
+所有采集场景记录在 \texttt{meta.json} 中，时间、距离、角度、光照条件与备注一项不落，便于事后复核。
+
+\subsubsection{真值精度分析}
+
+卷尺量距的读数误差约为 $\pm1$\,cm，在 10\,m 处相对误差约 0.1\%，远小于单目测距本身的误差，作为真值足够。角度真值由目标中心在画面中的几何位置与实测距离反算，误差主要来自目标中心的人工标注，约 $\pm2$\,px，折合 0.1\textdegree 上下，同样小于算法误差。还有一处需要补偿：AprilTag 的检测中心与无人机几何中心并不重合，两者存在小幅偏移，本文在评测中把这一部分扣掉了。
+
+\subsection{仿真域自动标注数据集}
+
+\subsubsection{构建动机}
+
+如第一章所述，直接用 Det-Fly 训练的模型在仿真画面中会出现严重死区。为通过微调消除死区，需要一批“仿真画面 + 真值标注”的数据。450 帧全靠人工标注，成本不低，框的边界一致性也难保证。仿真环境的好处是可控，本文索性设计了一套零人工标注的自动构建流程。
+
+\subsubsection{自动标注原理}
+
+jMAVSim 的护航相机通过 \texttt{setViewerTargetObject} 接口始终注视目标机，目标中心在画面中的位置因此近似等于图像中心：
+
+\begin{equation}
+c_x \approx c_{x0},\qquad c_y \approx c_{y0}+\Delta_y,
+\label{eq:autolabel_center}
+\end{equation}
+
+其中 $c_{x0},c_{y0}$ 为图像中心，$\Delta_y$ 为标定得到的纵向偏移（本文实测约 $-17$\,px，源于相机安装角与投影中心的偏差）。
+
+目标框的高度由真值距离与等效尺寸反算：
+
+\begin{equation}
+h_{px} = \frac{f\cdot D}{Z_{true}},
+\label{eq:autolabel_h}
+\end{equation}
+
+其中 $f$ 为以像素为单位的焦距，$D$ 为无人机等效尺寸，$Z_{true}$ 为真值距离。框宽按目标长宽比 $r_w$ 放大：
+
+\begin{equation}
+w_{px} = r_w\cdot h_{px},\qquad r_w \approx 2.62.
+\label{eq:autolabel_w}
+\end{equation}
+
+框贴得太紧，训练时目标容易被裁掉，因此本文对框做了 1.15 倍的尺度放大，把旋翼与起落架也包进去。最终标注框为
+
+\begin{equation}
+\left(c_x-\frac{w_{px}}{2},\,c_y-\frac{h_{px}}{2},\,c_x+\frac{w_{px}}{2},\,c_y+\frac{h_{px}}{2}\right).
+\label{eq:autolabel_box}
+\end{equation}
+
+\subsubsection{距离分层采样}
+
+死区分处两端：一端是近距离的大尺度，一端是远距离的小尺度，采样必须覆盖整个距离段。本文按表~\ref{tab:sim_sampling} 进行分层采样。
+
+\begin{table}[htbp]
+\centering
+\caption{仿真微调数据距离分层采样}
+\label{tab:sim_sampling}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{距离区间(m)} & \textbf{帧数} & \textbf{采样目的} & \textbf{对应问题} \\
+\midrule
+3--6 & 150 & 近距离大尺度 & 训练分布外（OOD） \\
+6--7 & 80 & 过渡区 & 死区边缘 \\
+7--9 & 100 & 原有效窗口 & 保持既有能力 \\
+9--12 & 120 & 远距离小尺度 & 低于初锁门限 \\
+\midrule
+合计 & 450 & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+采集时由脚本控制目标机按预设航线飞行，TCP 帧与 UDP 真值同步记录，标注按上述规则实时生成。训练集与验证集按 360:90 划分，同一段连续飞行不跨集，泄漏就这样避开了。
+
+\subsubsection{数据质量核验}
+
+自动标注能不能用，取决于三项假设：目标中心在光轴附近、等效尺寸准确、真值时间戳与帧对齐。本文逐条核验。
+
+（1）\textbf{中心假设}：抽取 50 帧人工检查，目标中心与标注中心的水平偏差中位数为 3\,px，垂直偏差中位数为 5\,px，均在框高的一半以内，假设成立。
+
+（2）\textbf{尺寸假设}：等效尺寸由真值距离与实测框高反算，本文在 3--10\,m 范围内做了 20 组测量，反算尺寸的变异系数小于 5\%，说明尺寸关系稳定。
+
+（3）\textbf{时间对齐}：真值广播频率为 50\,Hz，帧率为 30\,fps，同一帧对应的时间戳误差小于 20\,ms；目标速度 2\,m/s 时位移不到 4\,cm，对框位置的影响可以忽略。
+
+\subsection{评测口径与可复现性}
+
+不同实验之间的指标要能比，口径就得先统一。本文定了五条。
+
+（1）\textbf{检测指标}：mAP50、mAP50-95、Precision、Recall 采用 Ultralytics 官方验证协议，取验证集上 mAP50-95 最优的 epoch 报告；AP\_small/medium/large 按 COCO 面积口径、IoU=0.5、101 点插值，由独立脚本计算。
+
+（2）\textbf{速度指标}：FPS 统一在 RTX 4060、batch=1、帧预载内存、包含预处理与后处理的条件下测量；不同模型的测量脚本与输入尺寸完全一致。
+
+（3）\textbf{闭环指标}：检出率为检出帧数除以全部处理帧数（含搜索帧），而不是只统计锁定后的帧；测距 RMSE 在检出帧上计算；稳态口径取连续检出不少于 5 帧后的样本，看的是滤波收敛之后的性能。
+
+（4）\textbf{角度指标}：采用视轴偏角口径，即目标相对相机光轴的角度误差，而非世界坐标系下的绝对方位。这一区分在仿真中尤为重要：护航相机会自动注视目标，世界系方位角随相机偏航而变化，两种口径一混，就会得出错误的“19\textdegree 误差”结论。
+
+（5）\textbf{随机性控制}：训练使用固定随机种子；仿真航迹由种子化随机数生成；所有实验重复至少两次，报告取中位数或均值。
+
+\subsection{本章小结}
+
+这一章把理论和数据两摊事并到了一处。理论上，本文有意识地收窄了范围：卷积网络与特征金字塔只讲到支撑 P2 检测头够用为止，YOLOv8 的结构拆解落在 C2f、SPPF 与解耦头上，注意力机制沿 SE—CBAM—EMA 这条线走到 EMA 就停，卡尔曼滤波则从线性高斯模型一路推到 Sage-Husa 的自适应噪声估计；相机部分定死四个坐标系与投影、畸变模型，工具链部分交代了 PX4 SITL、jMAVSim 的类结构与离屏渲染，以及 PySide6、OpenCV、PyTorch 和 TCP/UDP 这些实现手段。数据方面，Det-Fly 是检测模型的主训练集，目标尺度极度偏小，必须按序列划分才能避免数据泄漏；自建 AprilTag 数据补上了公开数据集给不了的绝对真值，用于相机标定与定位精度评估；仿真自动标注数据借护航相机的注视特性做到零人工标注，再用距离分层采样把死区两端都覆盖住。检测、速度、闭环与角度四类口径的统一，则为后面各章的实验结果留了一把共用的尺子。
