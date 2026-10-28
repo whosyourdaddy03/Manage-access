@@ -512,7 +512,7 @@ U D C &：& \ustb@UDCNumber & 密级 &: & \ustb@SecurityLevel \\
 \vskip16.5pt
 }%
 {%\vskip1em
-\noindent {\bfseries\zihao{-4} 关键词：}\ustb@ChineseKeywords \cleardoublepage}
+\ifx\ustb@ChineseKeywords\@empty\else\noindent {\bfseries\zihao{-4} 关键词：}\ustb@ChineseKeywords\fi \cleardoublepage}
 
 \ProvideDocumentEnvironment{EnglishAbstract}{}%
 {\cleardoublepage
@@ -536,7 +536,7 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
 %\vskip16.5pt
 
 %\vskip1em
-\noindent {\bfseries\zihao{-4} Key Words: } \ustb@EnglishKeywords \cleardoublepage
+\ifx\ustb@EnglishKeywords\@empty\else\noindent {\bfseries\zihao{-4} Key Words: } \ustb@EnglishKeywords\fi \cleardoublepage
 }
 
 %% 序言
