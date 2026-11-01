@@ -134,7 +134,7 @@ class DroneDetector:
           LOCKED: 取距上一目标中心最近的候选, 像素跳变 < 140 才采用,
                   测距突变超 1.4 倍的量测被 Z_GATE 拒绝(连续拒绝触发
                   滤波器重置或放弃航迹);
-          COAST : 丢帧后仅做 AKF 外推, 预算 0.6s, 超时回 SEARCH。
+          COAST : 丢帧后仅做 AKF 外推, 预算 COAST_SEC(1.0s), 超时回 SEARCH。
         """
         # 幂等: 未加载则在此(工作线程内)加载; 后台预热在途则等其完成
         self.load_model()
@@ -208,7 +208,7 @@ class DroneDetector:
             self.state = "LOCKED"
             self._draw_overlay(overlay, data)
         elif self.last_box is not None and self.miss_sec + dt_wall <= COAST_SEC + 1e-6:
-            # COAST: 无有效量测且本帧仍在 0.6s 外推预算内
+            # COAST: 无有效量测且本帧仍在 COAST_SEC(1.0s) 外推预算内
             self._handle_coast(data, dt_wall)
             self.state = "COAST"
             self._draw_coast(overlay, data)

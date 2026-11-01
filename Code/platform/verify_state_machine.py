@@ -77,16 +77,16 @@ det.model.script.append(([box(370,240,30)], [0.80]))
 _, d = det.detect(FRAME)
 check("外推期目标回来->LOCKED", d["status"]=="LOCKED")
 
-# 帧6-7: 连续空帧, 模拟时间快进超过0.6s -> 回 SEARCH
+# 帧6-7: 连续空帧, 模拟时间快进超过1.0s -> 回 SEARCH
 orig_time = pd_mod.time.time
-t = {"v": orig_time() + 0.3}  # 先快进0.3s
+t = {"v": orig_time() + 0.5}  # 先快进0.5s
 det.model.script += [None, None]
 pd_mod.time.time = lambda: t["v"]
-_, d1 = det.detect(FRAME)                      # miss 0.3s -> COAST
-check("丢帧0.3s内COAST", d1["status"]=="COAST")
-t["v"] += 0.5
-_, d2 = det.detect(FRAME)                      # 累计0.8s -> SEARCH
-check("丢帧超0.6s回SEARCH", d2["status"]=="SEARCHING" and det.last_box is None)
+_, d1 = det.detect(FRAME)                      # miss 0.5s -> COAST
+check("丢帧0.5s内COAST", d1["status"]=="COAST")
+t["v"] += 0.6
+_, d2 = det.detect(FRAME)                      # 累计1.1s -> SEARCH
+check("丢帧超1.0s回SEARCH", d2["status"]=="SEARCHING" and det.last_box is None)
 pd_mod.time.time = orig_time
 det._t_prev = None
 
