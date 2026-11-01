@@ -2991,11 +2991,11 @@
     <bcf:citekey order="47" intorder="1">jmavsim</bcf:citekey>
     <bcf:citekey order="48" intorder="1">leaflet</bcf:citekey>
     <bcf:citekey order="49" intorder="1">detfly</bcf:citekey>
-    <bcf:citekey order="50" intorder="1">faster_rcnn</bcf:citekey>
-    <bcf:citekey order="51" intorder="1">ssd</bcf:citekey>
-    <bcf:citekey order="52" intorder="1">rt_detr</bcf:citekey>
-    <bcf:citekey order="53" intorder="1">sort</bcf:citekey>
-    <bcf:citekey order="54" intorder="1">deepsort</bcf:citekey>
+    <bcf:citekey order="50" intorder="1">sort</bcf:citekey>
+    <bcf:citekey order="51" intorder="1">deepsort</bcf:citekey>
+    <bcf:citekey order="52" intorder="1">faster_rcnn</bcf:citekey>
+    <bcf:citekey order="53" intorder="1">ssd</bcf:citekey>
+    <bcf:citekey order="54" intorder="1">rt_detr</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

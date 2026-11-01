@@ -1,19 +1,94 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {\bfseries  6\hspace  {.3em}}总结与展望}{97}{chapter.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {\bfseries  6\hspace  {.3em}}小目标检测模型与仿真域微调}{73}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lof2}{\addvspace {10\p@ }}
 \@writefile{lot2}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}全文总结}{97}{section.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}主要创新点}{98}{section.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}不足与展望}{99}{section.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}存在的不足}{99}{subsection.6.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}未来工作}{99}{subsection.6.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.4}结语}{100}{section.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}基础模型选型}{73}{section.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}规模选择}{73}{subsection.6.1.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6{}-1}{\ignorespaces YOLOv8 各规模模型对比}}{73}{table.caption.29}\protected@file@percent }
+\newlabel{tab:model_scale}{{6{}-1}{73}{YOLOv8 各规模模型对比}{table.caption.29}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}标准结构的局限}{74}{subsection.6.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}P2 小目标检测头}{74}{section.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}结构设计}{74}{subsection.6.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6{}-2}{\ignorespaces 各检测层特征图尺寸与网格占用（640$\times $640 输入）}}{74}{table.caption.30}\protected@file@percent }
+\newlabel{tab:p2_shapes}{{6{}-2}{74}{各检测层特征图尺寸与网格占用（640$\times $640 输入）}{table.caption.30}{}}
+\newlabel{eq:p2_fusion}{{6-1}{75}{结构设计}{equation.6.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}检测头配置}{75}{subsection.6.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}计算量与参数分析}{75}{subsection.6.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.4}正负样本分配}{75}{subsection.6.2.4}\protected@file@percent }
+\newlabel{eq:align_metric}{{6-2}{75}{正负样本分配}{equation.6.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}EMA 注意力机制集成}{76}{section.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}插入位置}{76}{subsection.6.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}模块结构}{76}{subsection.6.3.2}\protected@file@percent }
+\newlabel{eq:ema_fusion}{{6-3}{76}{模块结构}{equation.6.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.3}计算开销}{76}{subsection.6.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.4}训练配置}{77}{section.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.1}数据集与划分}{77}{subsection.6.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.2}超参数}{77}{subsection.6.4.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6{}-3}{\ignorespaces 检测模型训练超参数}}{77}{table.caption.31}\protected@file@percent }
+\newlabel{tab:train_hp}{{6{}-3}{77}{检测模型训练超参数}{table.caption.31}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.3}训练过程}{77}{subsection.6.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6{}-1}{\ignorespaces 训练损失与验证指标曲线}}{78}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:training_curves}{{6{}-1}{78}{训练损失与验证指标曲线}{figure.caption.32}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {基线 YOLOv8n}}}{78}{subfigure.1.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {YOLOv8n-P2-EMA}}}{78}{subfigure.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.5}消融实验}{78}{section.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.1}实验设置}{78}{subsection.6.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.2}实验结果}{78}{subsection.6.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6{}-4}{\ignorespaces 检测模型消融实验（Det-Fly 验证集，imgsz=640）}}{78}{table.caption.33}\protected@file@percent }
+\newlabel{tab:ablation}{{6{}-4}{78}{检测模型消融实验（Det-Fly 验证集，imgsz=640）}{table.caption.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.3}结果分析}{78}{subsection.6.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.4}混淆矩阵与 P-R 曲线}{79}{subsection.6.5.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6{}-2}{\ignorespaces 验证集混淆矩阵}}{80}{figure.caption.34}\protected@file@percent }
+\newlabel{fig:confusion}{{6{}-2}{80}{验证集混淆矩阵}{figure.caption.34}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {基线 YOLOv8n}}}{80}{subfigure.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {YOLOv8n-P2-EMA}}}{80}{subfigure.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6{}-3}{\ignorespaces YOLOv8n-P2-EMA 的 P-R 与 F1 曲线}}{80}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:pr_f1}{{6{}-3}{80}{YOLOv8n-P2-EMA 的 P-R 与 F1 曲线}{figure.caption.35}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {P-R 曲线}}}{80}{subfigure.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {F1-置信度曲线}}}{80}{subfigure.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.5}检测效果可视化}{81}{subsection.6.5.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6{}-4}{\ignorespaces 验证集批量预测结果（绿框为真值，红框为预测）}}{81}{figure.caption.36}\protected@file@percent }
+\newlabel{fig:val_predictions}{{6{}-4}{81}{验证集批量预测结果（绿框为真值，红框为预测）}{figure.caption.36}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6{}-5}{\ignorespaces 基线与本文模型的典型帧对比}}{81}{figure.caption.37}\protected@file@percent }
+\newlabel{fig:compare}{{6{}-5}{81}{基线与本文模型的典型帧对比}{figure.caption.37}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {样本一}}}{81}{subfigure.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {样本二}}}{81}{subfigure.5.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {样本三}}}{81}{subfigure.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {样本四}}}{81}{subfigure.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.6}与非 YOLO 方法的横向讨论}{82}{section.6.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.7}有效工作范围与失效模式}{82}{section.6.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7.1}置信度与目标尺度的关系}{82}{subsection.6.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7.2}典型失效模式}{82}{subsection.6.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7.3}检测死区的发现}{83}{subsection.6.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{初期现象}{83}{subsection.6.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{距离分层统计}{83}{subsection.6.7.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6{}-5}{\ignorespaces 微调前检测死区的距离分布（2228 帧）}}{83}{table.caption.38}\protected@file@percent }
+\newlabel{tab:deadzone}{{6{}-5}{83}{微调前检测死区的距离分布（2228 帧）}{table.caption.38}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6{}-6}{\ignorespaces 死区帧与有效帧对比}}{84}{figure.caption.39}\protected@file@percent }
+\newlabel{fig:deadzone_frames}{{6{}-6}{84}{死区帧与有效帧对比}{figure.caption.39}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {近距离盲区帧（目标占画面比例大）}}}{84}{subfigure.6.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {有效窗口帧}}}{84}{subfigure.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{排除视角假设}{84}{figure.caption.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{尺度分布解释}{84}{figure.caption.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{对系统设计的影响}{85}{figure.caption.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7.4}仿真域微调}{85}{subsection.6.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{数据采集与自动标注}{85}{subsection.6.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{微调配置}{85}{subsection.6.7.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6{}-6}{\ignorespaces 仿真域微调超参数}}{85}{table.caption.40}\protected@file@percent }
+\newlabel{tab:finetune_hp}{{6{}-6}{85}{仿真域微调超参数}{table.caption.40}{}}
+\@writefile{toc}{\contentsline {subsubsection}{微调结果}{86}{table.caption.40}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6{}-7}{\ignorespaces 仿真域微调前后对比}}{86}{table.caption.41}\protected@file@percent }
+\newlabel{tab:finetune_result}{{6{}-7}{86}{仿真域微调前后对比}{table.caption.41}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6{}-7}{\ignorespaces 微调前后的检测死区对比}}{86}{figure.caption.42}\protected@file@percent }
+\newlabel{fig:deadzone_ba}{{6{}-7}{86}{微调前后的检测死区对比}{figure.caption.42}{}}
+\@writefile{toc}{\contentsline {subsubsection}{域适应的机理讨论}{87}{figure.caption.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.8}本章小结}{87}{section.6.8}\protected@file@percent }
 \@setckpt{contents/chap6}{
-\setcounter{page}{101}
-\setcounter{equation}{0}
+\setcounter{page}{88}
+\setcounter{equation}{3}
 \setcounter{enumi}{0}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
@@ -22,18 +97,18 @@
 \setcounter{mpfootnote}{0}
 \setcounter{part}{0}
 \setcounter{chapter}{6}
-\setcounter{section}{4}
+\setcounter{section}{8}
 \setcounter{subsection}{0}
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{0}
-\setcounter{table}{0}
+\setcounter{figure}{7}
+\setcounter{table}{7}
 \setcounter{section@level}{0}
 \setcounter{Item}{0}
 \setcounter{Hfootnote}{0}
 \setcounter{Hy@AnnotLevel}{0}
-\setcounter{bookmark@seq@number}{173}
+\setcounter{bookmark@seq@number}{158}
 \setcounter{nlinenum}{0}
 \setcounter{LT@tables}{0}
 \setcounter{LT@chunks}{0}
@@ -173,7 +248,7 @@
 \setcounter{gbbiblocalcase}{0}
 \setcounter{lanordernum}{0}
 \setcounter{cbx@tempcnta}{0}
-\setcounter{cbx@tempcntb}{29}
+\setcounter{cbx@tempcntb}{18}
 \setcounter{cbx@tempcntc}{0}
 \setcounter{cbx@tempcntd}{-1}
 \setcounter{gbrefcompress}{2}

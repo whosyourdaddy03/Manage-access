@@ -1,7 +1,7 @@
 \contentsline {chapter}{摘要}{I}{chapter*.1}%
 \contentsline {chapter}{ABSTRACT}{III}{chapter*.1}%
 \contentsline {chapter}{目录}{VII}{chapter*.2}%
-\contentsline {chapter}{\numberline {\bfseries 1\hspace {.3em}}绪论}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {\bfseries 1\hspace {.3em}}引言}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}研究背景}{1}{section.1.1}%
 \contentsline {subsection}{\numberline {1.1.1}低空经济发展与无人机规模化应用}{1}{subsection.1.1.1}%
 \contentsline {subsection}{\numberline {1.1.2}反无人机系统的典型环节与技术路线}{2}{subsection.1.1.2}%
@@ -18,7 +18,7 @@
 \contentsline {section}{\numberline {1.4}现有方案的不足与本文切入点}{7}{section.1.4}%
 \contentsline {section}{\numberline {1.5}本文主要研究内容}{8}{section.1.5}%
 \contentsline {section}{\numberline {1.6}论文组织结构}{9}{section.1.6}%
-\contentsline {chapter}{\numberline {\bfseries 2\hspace {.3em}}相关理论与数据基础}{11}{chapter.2}%
+\contentsline {chapter}{\numberline {\bfseries 2\hspace {.3em}}相关工作与技术}{11}{chapter.2}%
 \contentsline {section}{\numberline {2.1}目标检测基础}{11}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}卷积神经网络}{11}{subsection.2.1.1}%
 \contentsline {subsection}{\numberline {2.1.2}特征金字塔与多尺度检测}{12}{subsection.2.1.2}%
@@ -64,198 +64,200 @@
 \contentsline {subsubsection}{数据质量核验}{27}{table.caption.5}%
 \contentsline {subsection}{\numberline {2.8.4}评测口径与可复现性}{27}{subsection.2.8.4}%
 \contentsline {subsection}{\numberline {2.8.5}本章小结}{28}{subsection.2.8.5}%
-\contentsline {chapter}{\numberline {\bfseries 3\hspace {.3em}}小目标检测模型与仿真域微调}{29}{chapter.3}%
-\contentsline {section}{\numberline {3.1}基础模型选型}{29}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}规模选择}{29}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}标准结构的局限}{30}{subsection.3.1.2}%
-\contentsline {section}{\numberline {3.2}P2 小目标检测头}{30}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}结构设计}{30}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}检测头配置}{31}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}计算量与参数分析}{31}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}正负样本分配}{31}{subsection.3.2.4}%
-\contentsline {section}{\numberline {3.3}EMA 注意力机制集成}{32}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}插入位置}{32}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}模块结构}{32}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}计算开销}{32}{subsection.3.3.3}%
-\contentsline {section}{\numberline {3.4}训练配置}{33}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}数据集与划分}{33}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}超参数}{33}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}训练过程}{33}{subsection.3.4.3}%
-\contentsline {section}{\numberline {3.5}消融实验}{34}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}实验设置}{34}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}实验结果}{34}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}结果分析}{34}{subsection.3.5.3}%
-\contentsline {subsection}{\numberline {3.5.4}混淆矩阵与 P-R 曲线}{35}{subsection.3.5.4}%
-\contentsline {subsection}{\numberline {3.5.5}检测效果可视化}{37}{subsection.3.5.5}%
-\contentsline {section}{\numberline {3.6}与非 YOLO 方法的横向讨论}{38}{section.3.6}%
-\contentsline {section}{\numberline {3.7}有效工作范围与失效模式}{38}{section.3.7}%
-\contentsline {subsection}{\numberline {3.7.1}置信度与目标尺度的关系}{38}{subsection.3.7.1}%
-\contentsline {subsection}{\numberline {3.7.2}典型失效模式}{38}{subsection.3.7.2}%
-\contentsline {subsection}{\numberline {3.7.3}检测死区的发现}{39}{subsection.3.7.3}%
-\contentsline {subsubsection}{初期现象}{39}{subsection.3.7.3}%
-\contentsline {subsubsection}{距离分层统计}{39}{subsection.3.7.3}%
-\contentsline {subsubsection}{排除视角假设}{40}{figure.caption.16}%
-\contentsline {subsubsection}{尺度分布解释}{40}{figure.caption.16}%
-\contentsline {subsubsection}{对系统设计的影响}{41}{figure.caption.16}%
-\contentsline {subsection}{\numberline {3.7.4}仿真域微调}{41}{subsection.3.7.4}%
-\contentsline {subsubsection}{数据采集与自动标注}{41}{subsection.3.7.4}%
-\contentsline {subsubsection}{微调配置}{41}{subsection.3.7.4}%
-\contentsline {subsubsection}{微调结果}{42}{table.caption.17}%
-\contentsline {subsubsection}{域适应的机理讨论}{43}{figure.caption.19}%
-\contentsline {section}{\numberline {3.8}本章小结}{43}{section.3.8}%
-\contentsline {chapter}{\numberline {\bfseries 4\hspace {.3em}}三态跟踪与单目定位}{45}{chapter.4}%
-\contentsline {section}{\numberline {4.1}问题描述}{45}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}误检}{45}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}身份跳变}{46}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}遮挡中断}{46}{subsection.4.1.3}%
-\contentsline {section}{\numberline {4.2}状态定义与总体流程}{46}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}状态定义}{46}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}总体流程}{47}{subsection.4.2.2}%
-\contentsline {section}{\numberline {4.3}SEARCH 状态}{47}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}双门限策略}{47}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}初锁判定}{48}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}先验空间约束}{49}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}首锁时延}{49}{subsection.4.3.4}%
-\contentsline {section}{\numberline {4.4}LOCKED 状态}{49}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}候选框收集}{49}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}空间门限关联}{49}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}卡尔曼滤波更新}{50}{subsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.4.4}丢失判定}{50}{subsection.4.4.4}%
-\contentsline {subsection}{\numberline {4.4.5}框尺寸的平滑}{51}{subsection.4.4.5}%
-\contentsline {section}{\numberline {4.5}COAST 状态}{51}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}预测步}{51}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}超时与恢复}{51}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}预测质量}{52}{subsection.4.5.3}%
-\contentsline {section}{\numberline {4.6}算法描述与复杂度}{52}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}伪代码}{52}{subsection.4.6.1}%
-\contentsline {subsection}{\numberline {4.6.2}复杂度分析}{52}{subsection.4.6.2}%
-\contentsline {subsection}{\numberline {4.6.3}参数汇总}{52}{subsection.4.6.3}%
-\contentsline {section}{\numberline {4.7}实验验证}{54}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}门限敏感性}{54}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}遮挡场景}{54}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}真实场景录像}{55}{subsection.4.7.3}%
-\contentsline {section}{\numberline {4.8}设计讨论}{55}{section.4.8}%
-\contentsline {subsection}{\numberline {4.8.1}为什么不用多目标跟踪框架}{55}{subsection.4.8.1}%
-\contentsline {subsection}{\numberline {4.8.2}为什么用状态机而不是有限状态自动机的形式化方法}{55}{subsection.4.8.2}%
-\contentsline {subsection}{\numberline {4.8.3}失效边界}{56}{subsection.4.8.3}%
-\contentsline {section}{\numberline {4.9}单目定位与自适应卡尔曼滤波}{56}{section.4.9}%
-\contentsline {subsection}{\numberline {4.9.1}坐标系与符号约定}{56}{subsection.4.9.1}%
-\contentsline {subsection}{\numberline {4.9.2}方位角与俯仰角}{57}{subsection.4.9.2}%
-\contentsline {subsubsection}{像素直算法}{57}{subsection.4.9.2}%
-\contentsline {subsubsection}{角度误差传播}{57}{equation.4.10}%
-\contentsline {subsubsection}{与滤波角度法的对比}{57}{equation.4.11}%
-\contentsline {subsubsection}{真值口径问题}{58}{equation.4.12}%
-\contentsline {subsection}{\numberline {4.9.3}距离解算}{58}{subsection.4.9.3}%
-\contentsline {subsubsection}{相似三角形原理}{58}{subsection.4.9.3}%
-\contentsline {subsubsection}{等效尺寸标定}{59}{equation.4.13}%
-\contentsline {subsubsection}{误差传播}{59}{table.caption.28}%
-\contentsline {subsubsection}{框高抖动的影响}{60}{equation.4.17}%
-\contentsline {subsection}{\numberline {4.9.4}自适应卡尔曼滤波器设计}{60}{subsection.4.9.4}%
-\contentsline {subsubsection}{状态与量测}{60}{subsection.4.9.4}%
-\contentsline {subsubsection}{过程噪声}{61}{equation.4.20}%
-\contentsline {subsubsection}{量测噪声与自适应估计}{61}{equation.4.22}%
-\contentsline {subsubsection}{初始化的注意事项}{62}{equation.4.24}%
-\contentsline {subsection}{\numberline {4.9.5}定位精度评估}{62}{subsection.4.9.5}%
-\contentsline {subsubsection}{仿真闭环评估}{62}{subsection.4.9.5}%
-\contentsline {subsubsection}{实拍视频评估}{63}{figure.caption.30}%
-\contentsline {subsubsection}{短期预测精度}{64}{table.caption.31}%
-\contentsline {subsubsection}{角度精度}{64}{table.caption.32}%
-\contentsline {subsection}{\numberline {4.9.6}误差来源与改进方向}{64}{subsection.4.9.6}%
-\contentsline {subsubsection}{主要误差来源}{64}{subsection.4.9.6}%
-\contentsline {subsubsection}{改进方向}{65}{table.caption.34}%
-\contentsline {section}{\numberline {4.10}本章小结}{65}{section.4.10}%
-\contentsline {chapter}{\numberline {\bfseries 5\hspace {.3em}}仿真闭环与系统平台}{67}{chapter.5}%
-\contentsline {section}{\numberline {5.1}仿真闭环总体架构}{67}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}进程与数据流}{67}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}lockstep 同步}{68}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3}启动流程}{68}{subsection.5.1.3}%
-\contentsline {section}{\numberline {5.2}jMAVSim 改造}{69}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}改造需求}{69}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}脚本目标机}{69}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3}护航相机}{70}{subsection.5.2.3}%
-\contentsline {subsection}{\numberline {5.2.4}真值广播}{70}{subsection.5.2.4}%
-\contentsline {subsection}{\numberline {5.2.5}离屏渲染与帧流}{70}{subsection.5.2.5}%
-\contentsline {subsection}{\numberline {5.2.6}场景构建}{71}{subsection.5.2.6}%
-\contentsline {section}{\numberline {5.3}编队巡游与尾随相机}{71}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}设计目标}{71}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}目标机航迹与加减速}{72}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}尾随相机动力学}{72}{subsection.5.3.3}%
-\contentsline {subsection}{\numberline {5.3.4}瞄准点滞后}{73}{subsection.5.3.4}%
-\contentsline {subsection}{\numberline {5.3.5}验证结果}{73}{subsection.5.3.5}%
-\contentsline {subsection}{\numberline {5.3.6}设计约束}{74}{subsection.5.3.6}%
-\contentsline {section}{\numberline {5.4}系统设计与实现}{74}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}需求分析}{75}{subsection.5.4.1}%
-\contentsline {subsubsection}{功能需求}{75}{subsection.5.4.1}%
-\contentsline {subsubsection}{非功能需求}{75}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}总体架构}{76}{subsection.5.4.2}%
-\contentsline {subsubsection}{双进程结构}{76}{subsection.5.4.2}%
-\contentsline {subsubsection}{线程模型}{76}{figure.caption.37}%
-\contentsline {subsubsection}{数据模型}{77}{figure.caption.37}%
-\contentsline {subsection}{\numberline {5.4.3}算法端实现}{77}{subsection.5.4.3}%
-\contentsline {subsubsection}{视频源抽象}{77}{subsection.5.4.3}%
-\contentsline {subsubsection}{检测模块}{78}{subsection.5.4.3}%
-\contentsline {subsubsection}{状态机与滤波}{78}{subsection.5.4.3}%
-\contentsline {subsubsection}{数据记录}{79}{subsection.5.4.3}%
-\contentsline {subsubsection}{结果输出}{79}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4}显示端实现}{79}{subsection.5.4.4}%
-\contentsline {subsubsection}{界面布局}{79}{subsection.5.4.4}%
-\contentsline {subsubsection}{地图实现}{80}{figure.caption.39}%
-\contentsline {subsubsection}{光电画面}{81}{equation.5.11}%
-\contentsline {subsubsection}{仪表与告警}{81}{equation.5.11}%
-\contentsline {subsubsection}{回放页与设置页}{81}{equation.5.12}%
-\contentsline {subsection}{\numberline {5.4.5}通信协议}{82}{subsection.5.4.5}%
-\contentsline {subsubsection}{视频帧协议}{82}{subsection.5.4.5}%
-\contentsline {subsubsection}{真值协议}{83}{subsection.5.4.5}%
-\contentsline {subsubsection}{结果协议}{83}{subsection.5.4.5}%
-\contentsline {subsection}{\numberline {5.4.6}配置与持久化}{83}{subsection.5.4.6}%
-\contentsline {subsection}{\numberline {5.4.7}回放与自动化测试}{83}{subsection.5.4.7}%
-\contentsline {subsubsection}{14 用例测试框架}{83}{subsection.5.4.7}%
-\contentsline {subsubsection}{测试结果}{84}{subsection.5.4.7}%
-\contentsline {subsection}{\numberline {5.4.8}部署与运行维护}{84}{subsection.5.4.8}%
-\contentsline {subsubsection}{运行环境}{84}{subsection.5.4.8}%
-\contentsline {subsubsection}{启动脚本}{84}{subsection.5.4.8}%
-\contentsline {subsubsection}{常见问题与处理}{85}{subsection.5.4.8}%
-\contentsline {section}{\numberline {5.5}实验与结果分析}{85}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}实验环境与评测口径}{85}{subsection.5.5.1}%
-\contentsline {subsubsection}{硬件与软件环境}{85}{subsection.5.5.1}%
-\contentsline {subsubsection}{评测口径}{85}{table.caption.43}%
-\contentsline {subsection}{\numberline {5.5.2}检测模型性能}{86}{subsection.5.5.2}%
-\contentsline {subsubsection}{消融结果}{86}{subsection.5.5.2}%
-\contentsline {subsubsection}{指标解读}{86}{table.caption.44}%
-\contentsline {subsubsection}{与已有工作的比较}{87}{table.caption.44}%
-\contentsline {subsection}{\numberline {5.5.3}仿真闭环定位精度}{87}{subsection.5.5.3}%
-\contentsline {subsubsection}{实验设置}{87}{subsection.5.5.3}%
-\contentsline {subsubsection}{结果}{87}{subsection.5.5.3}%
-\contentsline {subsubsection}{微调前后对比}{88}{subsection.5.5.3}%
-\contentsline {subsection}{\numberline {5.5.4}实拍视频定位精度}{88}{subsection.5.5.4}%
-\contentsline {subsubsection}{数据集与设置}{88}{subsection.5.5.4}%
-\contentsline {subsubsection}{结果分析}{89}{subsection.5.5.4}%
-\contentsline {subsubsection}{预测精度}{89}{subsection.5.5.4}%
-\contentsline {subsection}{\numberline {5.5.5}退化条件下的鲁棒性}{89}{subsection.5.5.5}%
-\contentsline {subsubsection}{实验设计}{89}{subsection.5.5.5}%
-\contentsline {subsubsection}{结果}{89}{figure.caption.46}%
-\contentsline {subsubsection}{分析}{91}{table.caption.47}%
-\contentsline {subsection}{\numberline {5.5.6}14 用例自动化回归测试}{91}{subsection.5.5.6}%
-\contentsline {subsubsection}{结果汇总}{91}{subsection.5.5.6}%
-\contentsline {subsubsection}{结果解读}{91}{table.caption.48}%
-\contentsline {subsection}{\numberline {5.5.7}运行性能}{93}{subsection.5.5.7}%
-\contentsline {subsubsection}{端到端延迟分解}{93}{subsection.5.5.7}%
-\contentsline {subsubsection}{资源占用}{93}{table.caption.50}%
-\contentsline {subsection}{\numberline {5.5.8}讨论}{93}{subsection.5.5.8}%
-\contentsline {subsubsection}{能力边界}{93}{subsection.5.5.8}%
-\contentsline {subsubsection}{失败案例}{94}{subsection.5.5.8}%
-\contentsline {subsubsection}{有效性威胁}{94}{subsection.5.5.8}%
-\contentsline {section}{\numberline {5.6}本章小结}{95}{section.5.6}%
-\contentsline {chapter}{\numberline {\bfseries 6\hspace {.3em}}总结与展望}{97}{chapter.6}%
-\contentsline {section}{\numberline {6.1}全文总结}{97}{section.6.1}%
-\contentsline {section}{\numberline {6.2}主要创新点}{98}{section.6.2}%
-\contentsline {section}{\numberline {6.3}不足与展望}{99}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}存在的不足}{99}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}未来工作}{99}{subsection.6.3.2}%
-\contentsline {section}{\numberline {6.4}结语}{100}{section.6.4}%
-\contentsline {chapter}{参考文献}{101}{chapter*.51}%
-\contentsline {chapter}{致谢}{105}{chapter*.52}%
-\contentsline {chapter}{独创性说明}{107}{chapter*.53}%
-\contentsline {chapter}{关于论文使用授权的说明}{109}{chapter*.54}%
-\contentsline {chapter}{学位论文数据集}{111}{chapter*.55}%
+\contentsline {chapter}{\numberline {\bfseries 3\hspace {.3em}}系统需求与架构分析}{29}{chapter.3}%
+\contentsline {section}{\numberline {3.1}仿真闭环总体架构}{29}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}进程与数据流}{29}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}lockstep 同步}{29}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}启动流程}{30}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}需求分析}{30}{section.3.2}%
+\contentsline {subsubsection}{功能需求}{30}{section.3.2}%
+\contentsline {subsubsection}{非功能需求}{31}{section.3.2}%
+\contentsline {section}{\numberline {3.3}总体架构}{31}{section.3.3}%
+\contentsline {subsubsection}{双进程结构}{31}{section.3.3}%
+\contentsline {subsubsection}{线程模型}{32}{figure.caption.7}%
+\contentsline {subsubsection}{数据模型}{33}{figure.caption.7}%
+\contentsline {section}{\numberline {3.4}本章小结}{33}{section.3.4}%
+\contentsline {chapter}{\numberline {\bfseries 4\hspace {.3em}}系统构建与技术实现}{35}{chapter.4}%
+\contentsline {section}{\numberline {4.1}jMAVSim 改造}{35}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}改造需求}{35}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}脚本目标机}{35}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}护航相机}{36}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}真值广播}{36}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}离屏渲染与帧流}{37}{subsection.4.1.5}%
+\contentsline {subsection}{\numberline {4.1.6}场景构建}{37}{subsection.4.1.6}%
+\contentsline {section}{\numberline {4.2}编队巡游与尾随相机}{38}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}设计目标}{38}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}目标机航迹与加减速}{38}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}尾随相机动力学}{39}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}瞄准点滞后}{39}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}验证结果}{40}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.2.6}设计约束}{40}{subsection.4.2.6}%
+\contentsline {section}{\numberline {4.3}算法端实现}{41}{section.4.3}%
+\contentsline {subsubsection}{视频源抽象}{41}{section.4.3}%
+\contentsline {subsubsection}{检测模块}{41}{section.4.3}%
+\contentsline {subsubsection}{状态机与滤波}{42}{section.4.3}%
+\contentsline {subsubsection}{数据记录}{42}{section.4.3}%
+\contentsline {subsubsection}{结果输出}{42}{section.4.3}%
+\contentsline {section}{\numberline {4.4}显示端实现}{43}{section.4.4}%
+\contentsline {subsubsection}{界面布局}{43}{section.4.4}%
+\contentsline {subsubsection}{地图实现}{43}{figure.caption.10}%
+\contentsline {subsubsection}{光电画面}{44}{equation.4.11}%
+\contentsline {subsubsection}{仪表与告警}{44}{equation.4.11}%
+\contentsline {subsubsection}{回放页与设置页}{45}{equation.4.12}%
+\contentsline {section}{\numberline {4.5}通信协议}{46}{section.4.5}%
+\contentsline {subsubsection}{视频帧协议}{46}{section.4.5}%
+\contentsline {subsubsection}{真值协议}{46}{section.4.5}%
+\contentsline {subsubsection}{结果协议}{46}{section.4.5}%
+\contentsline {section}{\numberline {4.6}配置与持久化}{46}{section.4.6}%
+\contentsline {section}{\numberline {4.7}回放与自动化测试}{47}{section.4.7}%
+\contentsline {subsubsection}{14 用例测试框架}{47}{section.4.7}%
+\contentsline {subsubsection}{测试结果}{48}{section.4.7}%
+\contentsline {section}{\numberline {4.8}部署与运行维护}{48}{section.4.8}%
+\contentsline {subsubsection}{运行环境}{48}{section.4.8}%
+\contentsline {subsubsection}{启动脚本}{48}{section.4.8}%
+\contentsline {subsubsection}{常见问题与处理}{48}{section.4.8}%
+\contentsline {section}{\numberline {4.9}本章小结}{48}{section.4.9}%
+\contentsline {chapter}{\numberline {\bfseries 5\hspace {.3em}}三态跟踪与单目定位}{51}{chapter.5}%
+\contentsline {section}{\numberline {5.1}问题描述}{51}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}误检}{51}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}身份跳变}{52}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}遮挡中断}{52}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.2}状态定义与总体流程}{52}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}状态定义}{52}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}总体流程}{53}{subsection.5.2.2}%
+\contentsline {section}{\numberline {5.3}SEARCH 状态}{53}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}双门限策略}{53}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}初锁判定}{54}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}先验空间约束}{55}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}首锁时延}{55}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}LOCKED 状态}{55}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}候选框收集}{55}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}空间门限关联}{55}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}卡尔曼滤波更新}{56}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}丢失判定}{56}{subsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.4.5}框尺寸的平滑}{57}{subsection.5.4.5}%
+\contentsline {section}{\numberline {5.5}COAST 状态}{57}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}预测步}{57}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}超时与恢复}{57}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}预测质量}{58}{subsection.5.5.3}%
+\contentsline {section}{\numberline {5.6}算法描述与复杂度}{58}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}伪代码}{58}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}复杂度分析}{58}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}参数汇总}{58}{subsection.5.6.3}%
+\contentsline {section}{\numberline {5.7}实验验证}{60}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}门限敏感性}{60}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}遮挡场景}{60}{subsection.5.7.2}%
+\contentsline {subsection}{\numberline {5.7.3}真实场景录像}{61}{subsection.5.7.3}%
+\contentsline {section}{\numberline {5.8}设计讨论}{61}{section.5.8}%
+\contentsline {subsection}{\numberline {5.8.1}为什么不用多目标跟踪框架}{61}{subsection.5.8.1}%
+\contentsline {subsection}{\numberline {5.8.2}为什么用状态机而不是有限状态自动机的形式化方法}{62}{subsection.5.8.2}%
+\contentsline {subsection}{\numberline {5.8.3}失效边界}{62}{subsection.5.8.3}%
+\contentsline {section}{\numberline {5.9}单目定位与自适应卡尔曼滤波}{62}{section.5.9}%
+\contentsline {subsection}{\numberline {5.9.1}坐标系与符号约定}{62}{subsection.5.9.1}%
+\contentsline {subsection}{\numberline {5.9.2}方位角与俯仰角}{63}{subsection.5.9.2}%
+\contentsline {subsubsection}{像素直算法}{63}{subsection.5.9.2}%
+\contentsline {subsubsection}{角度误差传播}{63}{equation.5.10}%
+\contentsline {subsubsection}{与滤波角度法的对比}{64}{equation.5.11}%
+\contentsline {subsubsection}{真值口径问题}{64}{equation.5.12}%
+\contentsline {subsection}{\numberline {5.9.3}距离解算}{64}{subsection.5.9.3}%
+\contentsline {subsubsection}{相似三角形原理}{64}{subsection.5.9.3}%
+\contentsline {subsubsection}{等效尺寸标定}{65}{equation.5.13}%
+\contentsline {subsubsection}{误差传播}{65}{table.caption.22}%
+\contentsline {subsubsection}{框高抖动的影响}{66}{equation.5.17}%
+\contentsline {subsection}{\numberline {5.9.4}自适应卡尔曼滤波器设计}{66}{subsection.5.9.4}%
+\contentsline {subsubsection}{状态与量测}{66}{subsection.5.9.4}%
+\contentsline {subsubsection}{过程噪声}{67}{equation.5.20}%
+\contentsline {subsubsection}{量测噪声与自适应估计}{67}{equation.5.22}%
+\contentsline {subsubsection}{初始化的注意事项}{68}{equation.5.24}%
+\contentsline {subsection}{\numberline {5.9.5}定位精度评估}{68}{subsection.5.9.5}%
+\contentsline {subsubsection}{仿真闭环评估}{68}{subsection.5.9.5}%
+\contentsline {subsubsection}{实拍视频评估}{70}{figure.caption.24}%
+\contentsline {subsubsection}{短期预测精度}{70}{table.caption.25}%
+\contentsline {subsubsection}{角度精度}{70}{table.caption.26}%
+\contentsline {subsection}{\numberline {5.9.6}误差来源与改进方向}{71}{subsection.5.9.6}%
+\contentsline {subsubsection}{主要误差来源}{71}{subsection.5.9.6}%
+\contentsline {subsubsection}{改进方向}{71}{table.caption.28}%
+\contentsline {section}{\numberline {5.10}本章小结}{72}{section.5.10}%
+\contentsline {chapter}{\numberline {\bfseries 6\hspace {.3em}}小目标检测模型与仿真域微调}{73}{chapter.6}%
+\contentsline {section}{\numberline {6.1}基础模型选型}{73}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}规模选择}{73}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}标准结构的局限}{74}{subsection.6.1.2}%
+\contentsline {section}{\numberline {6.2}P2 小目标检测头}{74}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}结构设计}{74}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}检测头配置}{75}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}计算量与参数分析}{75}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}正负样本分配}{75}{subsection.6.2.4}%
+\contentsline {section}{\numberline {6.3}EMA 注意力机制集成}{76}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}插入位置}{76}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}模块结构}{76}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}计算开销}{76}{subsection.6.3.3}%
+\contentsline {section}{\numberline {6.4}训练配置}{77}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}数据集与划分}{77}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}超参数}{77}{subsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.4.3}训练过程}{77}{subsection.6.4.3}%
+\contentsline {section}{\numberline {6.5}消融实验}{78}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}实验设置}{78}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}实验结果}{78}{subsection.6.5.2}%
+\contentsline {subsection}{\numberline {6.5.3}结果分析}{78}{subsection.6.5.3}%
+\contentsline {subsection}{\numberline {6.5.4}混淆矩阵与 P-R 曲线}{79}{subsection.6.5.4}%
+\contentsline {subsection}{\numberline {6.5.5}检测效果可视化}{81}{subsection.6.5.5}%
+\contentsline {section}{\numberline {6.6}与非 YOLO 方法的横向讨论}{82}{section.6.6}%
+\contentsline {section}{\numberline {6.7}有效工作范围与失效模式}{82}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}置信度与目标尺度的关系}{82}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}典型失效模式}{82}{subsection.6.7.2}%
+\contentsline {subsection}{\numberline {6.7.3}检测死区的发现}{83}{subsection.6.7.3}%
+\contentsline {subsubsection}{初期现象}{83}{subsection.6.7.3}%
+\contentsline {subsubsection}{距离分层统计}{83}{subsection.6.7.3}%
+\contentsline {subsubsection}{排除视角假设}{84}{figure.caption.39}%
+\contentsline {subsubsection}{尺度分布解释}{84}{figure.caption.39}%
+\contentsline {subsubsection}{对系统设计的影响}{85}{figure.caption.39}%
+\contentsline {subsection}{\numberline {6.7.4}仿真域微调}{85}{subsection.6.7.4}%
+\contentsline {subsubsection}{数据采集与自动标注}{85}{subsection.6.7.4}%
+\contentsline {subsubsection}{微调配置}{85}{subsection.6.7.4}%
+\contentsline {subsubsection}{微调结果}{86}{table.caption.40}%
+\contentsline {subsubsection}{域适应的机理讨论}{87}{figure.caption.42}%
+\contentsline {section}{\numberline {6.8}本章小结}{87}{section.6.8}%
+\contentsline {chapter}{\numberline {\bfseries 7\hspace {.3em}}实验与结果分析}{89}{chapter.7}%
+\contentsline {subsection}{\numberline {7.0.1}实验环境与评测口径}{89}{subsection.7.0.1}%
+\contentsline {subsubsection}{硬件与软件环境}{89}{subsection.7.0.1}%
+\contentsline {subsubsection}{评测口径}{89}{table.caption.43}%
+\contentsline {subsection}{\numberline {7.0.2}检测模型性能}{90}{subsection.7.0.2}%
+\contentsline {subsubsection}{消融结果}{90}{subsection.7.0.2}%
+\contentsline {subsubsection}{指标解读}{90}{table.caption.44}%
+\contentsline {subsubsection}{与已有工作的比较}{91}{table.caption.44}%
+\contentsline {subsection}{\numberline {7.0.3}仿真闭环定位精度}{91}{subsection.7.0.3}%
+\contentsline {subsubsection}{实验设置}{91}{subsection.7.0.3}%
+\contentsline {subsubsection}{结果}{91}{subsection.7.0.3}%
+\contentsline {subsubsection}{微调前后对比}{91}{subsection.7.0.3}%
+\contentsline {subsection}{\numberline {7.0.4}实拍视频定位精度}{92}{subsection.7.0.4}%
+\contentsline {subsubsection}{数据集与设置}{92}{subsection.7.0.4}%
+\contentsline {subsubsection}{结果分析}{92}{subsection.7.0.4}%
+\contentsline {subsubsection}{预测精度}{93}{subsection.7.0.4}%
+\contentsline {subsection}{\numberline {7.0.5}退化条件下的鲁棒性}{93}{subsection.7.0.5}%
+\contentsline {subsubsection}{实验设计}{93}{subsection.7.0.5}%
+\contentsline {subsubsection}{结果}{93}{figure.caption.46}%
+\contentsline {subsubsection}{分析}{94}{table.caption.47}%
+\contentsline {subsection}{\numberline {7.0.6}14 用例自动化回归测试}{95}{subsection.7.0.6}%
+\contentsline {subsubsection}{结果汇总}{95}{subsection.7.0.6}%
+\contentsline {subsubsection}{结果解读}{95}{table.caption.48}%
+\contentsline {subsection}{\numberline {7.0.7}运行性能}{96}{subsection.7.0.7}%
+\contentsline {subsubsection}{端到端延迟分解}{96}{subsection.7.0.7}%
+\contentsline {subsubsection}{资源占用}{97}{table.caption.50}%
+\contentsline {subsection}{\numberline {7.0.8}讨论}{97}{subsection.7.0.8}%
+\contentsline {subsubsection}{能力边界}{97}{subsection.7.0.8}%
+\contentsline {subsubsection}{失败案例}{97}{subsection.7.0.8}%
+\contentsline {subsubsection}{有效性威胁}{98}{subsection.7.0.8}%
+\contentsline {section}{\numberline {7.1}本章小结}{98}{section.7.1}%
+\contentsline {subsubsection}{总结与展望}{99}{section.7.1}%
+\contentsline {subsubsection}{全文总结}{99}{section.7.1}%
+\contentsline {subsubsection}{主要创新点}{100}{section.7.1}%
+\contentsline {subsubsection}{不足与展望}{101}{section.7.1}%
+\contentsline {subsubsection}{存在的不足}{101}{section.7.1}%
+\contentsline {subsubsection}{未来工作}{101}{section.7.1}%
+\contentsline {subsubsection}{结语}{102}{section.7.1}%
+\contentsline {chapter}{参考文献}{103}{chapter*.51}%
+\contentsline {chapter}{致谢}{107}{chapter*.52}%
+\contentsline {chapter}{独创性说明}{109}{chapter*.53}%
+\contentsline {chapter}{关于论文使用授权的说明}{111}{chapter*.54}%
+\contentsline {chapter}{学位论文数据集}{113}{chapter*.55}%
 \contentsfinish 
