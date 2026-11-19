@@ -28,9 +28,25 @@
   \setlength{\tabcolsep}{6pt}%
 }
 
+% 盲审匿名只改这一处：\anontrue 为匿名稿，\anonfalse 为正式稿。
+\newif\ifanon
+\anonfalse
+
 % 封面信息：学号请在提交前补全。
-\Author{梁 辰}
-\EnglishAuthor{Liang Chen}
+\ifanon
+  \Author{}
+  \EnglishAuthor{}
+  \StudentCode{}
+  \Supervisor{}
+  \EnglishSupervisor{}
+  \hypersetup{pdfauthor={}}
+\else
+  \Author{梁 辰}
+  \EnglishAuthor{Liang Chen}
+  \StudentCode{M202440106}
+  \Supervisor{段世红}
+  \EnglishSupervisor{Shihong Duan}
+\fi
 \Title{面向反无人机场景的无人机识别与定位系统设计与实现}
 \EnglishTitle{Design and Implementation of a UAV Recognition and Localization System}
 \Date{2026年11月16日}
@@ -46,13 +62,10 @@
 \EnglishCity{Beijing}
 \Country{中国}
 \EnglishCountry{P.R.CHINA}
-\StudentCode{M202440106}
 \Major{软件工程}
 \EnglishMajor{Software Engineering}
 \Direction{计算机视觉方向}
 \EnglishDirection{Computer Vision}
-\Supervisor{段世红}
-\EnglishSupervisor{Shihong Duan}
 \DegreeType{学术型}
 \EnglishDegreeType{Science}
 \CLCNumber{TP391}
@@ -88,8 +101,10 @@
 \nocite{*}
 \printbibliography[heading=none]
 
-\include{contents/thanks}
-\include{contents/mresume}
+\ifanon\else
+  \include{contents/thanks}
+  \include{contents/mresume}
+\fi
 \postDeclarations
 \include{contents/dataset}
 
