@@ -1,135 +1,96 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {\bfseries  5\hspace  {.3em}}三态跟踪与单目定位}{51}{chapter.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {\bfseries  5\hspace  {.3em}}小目标检测模型与结果分析}{37}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lof2}{\addvspace {10\p@ }}
 \@writefile{lot2}{\addvspace {10\p@ }}
-\newlabel{chap:sm}{{\bfseries  5}{51}{三态跟踪与单目定位}{chapter.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}问题描述}{51}{section.5.1}\protected@file@percent }
-\newlabel{eq:det_set}{{5-1}{51}{问题描述}{equation.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}误检}{51}{subsection.5.1.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-1}{\ignorespaces 典型误检来源与置信度分布}}{52}{table.caption.14}\protected@file@percent }
-\newlabel{tab:false_positive}{{5{}-1}{52}{典型误检来源与置信度分布}{table.caption.14}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}身份跳变}{52}{subsection.5.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.3}遮挡中断}{52}{subsection.5.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}状态定义与总体流程}{52}{section.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}状态定义}{52}{subsection.5.2.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5{}-1}{\ignorespaces 三态跟踪状态机转移关系}}{53}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:state_machine}{{5{}-1}{53}{三态跟踪状态机转移关系}{figure.caption.15}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}总体流程}{53}{subsection.5.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}SEARCH 状态}{53}{section.5.3}\protected@file@percent }
-\newlabel{sec:search}{{5.3}{53}{SEARCH 状态}{section.5.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}双门限策略}{53}{subsection.5.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5{}-2}{\ignorespaces 置信度门限扫描结果}}{54}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:threshold_scan}{{5{}-2}{54}{置信度门限扫描结果}{figure.caption.16}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}初锁判定}{54}{subsection.5.3.2}\protected@file@percent }
-\newlabel{eq:filtered_set}{{5-2}{54}{初锁判定}{equation.5.2}{}}
-\newlabel{eq:argmax}{{5-3}{54}{初锁判定}{equation.5.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}先验空间约束}{55}{subsection.5.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.4}首锁时延}{55}{subsection.5.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.4}LOCKED 状态}{55}{section.5.4}\protected@file@percent }
-\newlabel{sec:locked}{{5.4}{55}{LOCKED 状态}{section.5.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}候选框收集}{55}{subsection.5.4.1}\protected@file@percent }
-\newlabel{eq:locked_candidates}{{5-4}{55}{候选框收集}{equation.5.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}空间门限关联}{55}{subsection.5.4.2}\protected@file@percent }
-\newlabel{eq:assoc_cost}{{5-5}{55}{空间门限关联}{equation.5.5}{}}
-\newlabel{eq:assoc_argmin}{{5-6}{56}{空间门限关联}{equation.5.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}卡尔曼滤波更新}{56}{subsection.5.4.3}\protected@file@percent }
-\newlabel{eq:meas_vec}{{5-7}{56}{卡尔曼滤波更新}{equation.5.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}丢失判定}{56}{subsection.5.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.5}框尺寸的平滑}{57}{subsection.5.4.5}\protected@file@percent }
-\newlabel{eq:box_smooth}{{5-8}{57}{框尺寸的平滑}{equation.5.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.5}COAST 状态}{57}{section.5.5}\protected@file@percent }
-\newlabel{sec:coast}{{5.5}{57}{COAST 状态}{section.5.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}预测步}{57}{subsection.5.5.1}\protected@file@percent }
-\newlabel{eq:coast_predict}{{5-9}{57}{预测步}{equation.5.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}超时与恢复}{57}{subsection.5.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.3}预测质量}{58}{subsection.5.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.6}算法描述与复杂度}{58}{section.5.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}伪代码}{58}{subsection.5.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}复杂度分析}{58}{subsection.5.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}参数汇总}{58}{subsection.5.6.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-2}{\ignorespaces 三态状态机参数汇总}}{58}{table.caption.17}\protected@file@percent }
-\newlabel{tab:sm_params}{{5{}-2}{58}{三态状态机参数汇总}{table.caption.17}{}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces 三态跟踪状态机单帧处理}}{59}{algorithm.1}\protected@file@percent }
-\newlabel{alg:state_machine}{{1}{59}{三态跟踪状态机单帧处理}{algorithm.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.7}实验验证}{60}{section.5.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.1}门限敏感性}{60}{subsection.5.7.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-3}{\ignorespaces 置信度门限扫描详细结果（仿真录像，900 帧）}}{60}{table.caption.18}\protected@file@percent }
-\newlabel{tab:threshold_detail}{{5{}-3}{60}{置信度门限扫描详细结果（仿真录像，900 帧）}{table.caption.18}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.2}遮挡场景}{60}{subsection.5.7.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-4}{\ignorespaces TCP 遮挡用例结果}}{60}{table.caption.19}\protected@file@percent }
-\newlabel{tab:coast_result}{{5{}-4}{60}{TCP 遮挡用例结果}{table.caption.19}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5{}-3}{\ignorespaces TCP 遮挡用例的状态时序与持续时间分布}}{61}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:coast_timeline}{{5{}-3}{61}{TCP 遮挡用例的状态时序与持续时间分布}{figure.caption.20}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.3}真实场景录像}{61}{subsection.5.7.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.8}设计讨论}{61}{section.5.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.8.1}为什么不用多目标跟踪框架}{61}{subsection.5.8.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.8.2}为什么用状态机而不是有限状态自动机的形式化方法}{62}{subsection.5.8.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.8.3}失效边界}{62}{subsection.5.8.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.9}单目定位与自适应卡尔曼滤波}{62}{section.5.9}\protected@file@percent }
-\newlabel{chap:loc}{{5.9}{62}{单目定位与自适应卡尔曼滤波}{section.5.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.9.1}坐标系与符号约定}{62}{subsection.5.9.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-5}{\ignorespaces 坐标系与符号约定}}{63}{table.caption.21}\protected@file@percent }
-\newlabel{tab:coord_symbol}{{5{}-5}{63}{坐标系与符号约定}{table.caption.21}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.9.2}方位角与俯仰角}{63}{subsection.5.9.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{像素直算法}{63}{subsection.5.9.2}\protected@file@percent }
-\newlabel{eq:angle_direct}{{5-10}{63}{像素直算法}{equation.5.10}{}}
-\@writefile{toc}{\contentsline {subsubsection}{角度误差传播}{63}{equation.5.10}\protected@file@percent }
-\newlabel{eq:angle_err}{{5-11}{63}{角度误差传播}{equation.5.11}{}}
-\@writefile{toc}{\contentsline {subsubsection}{与滤波角度法的对比}{64}{equation.5.11}\protected@file@percent }
-\newlabel{eq:angle_kf}{{5-12}{64}{与滤波角度法的对比}{equation.5.12}{}}
-\@writefile{toc}{\contentsline {subsubsection}{真值口径问题}{64}{equation.5.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.9.3}距离解算}{64}{subsection.5.9.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{相似三角形原理}{64}{subsection.5.9.3}\protected@file@percent }
-\newlabel{eq:range_est}{{5-13}{65}{相似三角形原理}{equation.5.13}{}}
-\@writefile{toc}{\contentsline {subsubsection}{等效尺寸标定}{65}{equation.5.13}\protected@file@percent }
-\newlabel{eq:size_calib}{{5-14}{65}{等效尺寸标定}{equation.5.14}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-6}{\ignorespaces 等效尺寸标定结果}}{65}{table.caption.22}\protected@file@percent }
-\newlabel{tab:size_calib}{{5{}-6}{65}{等效尺寸标定结果}{table.caption.22}{}}
-\@writefile{toc}{\contentsline {subsubsection}{误差传播}{65}{table.caption.22}\protected@file@percent }
-\newlabel{eq:range_err_rel}{{5-15}{65}{误差传播}{equation.5.15}{}}
-\newlabel{eq:range_err_abs}{{5-16}{66}{误差传播}{equation.5.16}{}}
-\newlabel{eq:range_err_square}{{5-17}{66}{误差传播}{equation.5.17}{}}
-\@writefile{toc}{\contentsline {subsubsection}{框高抖动的影响}{66}{equation.5.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.9.4}自适应卡尔曼滤波器设计}{66}{subsection.5.9.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{状态与量测}{66}{subsection.5.9.4}\protected@file@percent }
-\newlabel{eq:state6}{{5-18}{66}{状态与量测}{equation.5.18}{}}
-\newlabel{eq:meas3}{{5-19}{66}{状态与量测}{equation.5.19}{}}
-\newlabel{eq:F_H}{{5-20}{67}{状态与量测}{equation.5.20}{}}
-\@writefile{toc}{\contentsline {subsubsection}{过程噪声}{67}{equation.5.20}\protected@file@percent }
-\newlabel{eq:Q}{{5-21}{67}{过程噪声}{equation.5.21}{}}
-\newlabel{eq:Q_diag}{{5-22}{67}{过程噪声}{equation.5.22}{}}
-\@writefile{toc}{\contentsline {subsubsection}{量测噪声与自适应估计}{67}{equation.5.22}\protected@file@percent }
-\newlabel{eq:R0}{{5-23}{67}{量测噪声与自适应估计}{equation.5.23}{}}
-\newlabel{eq:R_ema}{{5-24}{68}{量测噪声与自适应估计}{equation.5.24}{}}
-\@writefile{toc}{\contentsline {subsubsection}{初始化的注意事项}{68}{equation.5.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.9.5}定位精度评估}{68}{subsection.5.9.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{仿真闭环评估}{68}{subsection.5.9.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-7}{\ignorespaces 仿真闭环定位精度（微调后模型，2818 帧）}}{69}{table.caption.23}\protected@file@percent }
-\newlabel{tab:esim}{{5{}-7}{69}{仿真闭环定位精度（微调后模型，2818 帧）}{table.caption.23}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5{}-4}{\ignorespaces 仿真闭环四联分析图（距离、误差、角度与状态分布）}}{69}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:sim_analysis}{{5{}-4}{69}{仿真闭环四联分析图（距离、误差、角度与状态分布）}{figure.caption.24}{}}
-\@writefile{toc}{\contentsline {subsubsection}{实拍视频评估}{70}{figure.caption.24}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-8}{\ignorespaces 实拍视频定位精度（E3）}}{70}{table.caption.25}\protected@file@percent }
-\newlabel{tab:e3}{{5{}-8}{70}{实拍视频定位精度（E3）}{table.caption.25}{}}
-\@writefile{toc}{\contentsline {subsubsection}{短期预测精度}{70}{table.caption.25}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-9}{\ignorespaces 短期预测精度（ADE，伪真值=离线检测距离）}}{70}{table.caption.26}\protected@file@percent }
-\newlabel{tab:e3b}{{5{}-9}{70}{短期预测精度（ADE，伪真值=离线检测距离）}{table.caption.26}{}}
-\@writefile{toc}{\contentsline {subsubsection}{角度精度}{70}{table.caption.26}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-10}{\ignorespaces 角度精度（稳态段中位绝对偏差）}}{71}{table.caption.27}\protected@file@percent }
-\newlabel{tab:e3c}{{5{}-10}{71}{角度精度（稳态段中位绝对偏差）}{table.caption.27}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.9.6}误差来源与改进方向}{71}{subsection.5.9.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{主要误差来源}{71}{subsection.5.9.6}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5{}-11}{\ignorespaces 单目定位误差来源与量级}}{71}{table.caption.28}\protected@file@percent }
-\newlabel{tab:error_sources}{{5{}-11}{71}{单目定位误差来源与量级}{table.caption.28}{}}
-\@writefile{toc}{\contentsline {subsubsection}{改进方向}{71}{table.caption.28}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.10}本章小结}{72}{section.5.10}\protected@file@percent }
+\newlabel{chap:detection}{{\bfseries  5}{37}{小目标检测模型与结果分析}{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}问题描述}{37}{section.5.1}\protected@file@percent }
+\newlabel{sec:ch5_problem}{{5.1}{37}{问题描述}{section.5.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}面向小目标的检测模型改进}{38}{section.5.2}\protected@file@percent }
+\newlabel{sec:ch5_architecture}{{5.2}{38}{面向小目标的检测模型改进}{section.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}高分辨率检测层：保留小目标细节}{38}{subsection.5.2.1}\protected@file@percent }
+\newlabel{subsec:ch5_p2}{{5.2.1}{38}{高分辨率检测层：保留小目标细节}{subsection.5.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}注意力特征增强：减少背景干扰}{39}{subsection.5.2.2}\protected@file@percent }
+\newlabel{subsec:ch5_ema}{{5.2.2}{39}{注意力特征增强：减少背景干扰}{subsection.5.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}协同检测模型：两项改进的配合}{39}{subsection.5.2.3}\protected@file@percent }
+\newlabel{subsec:ch5_combined}{{5.2.3}{39}{协同检测模型：两项改进的配合}{subsection.5.2.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-1}{\ignorespaces 协同检测网络结构}}{40}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:ch5_network}{{5{}-1}{40}{协同检测网络结构}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}仿真环境检测失效的诊断与处理}{40}{section.5.3}\protected@file@percent }
+\newlabel{sec:ch5_domain}{{5.3}{40}{仿真环境检测失效的诊断与处理}{section.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}仿真画面中的检测失效表现}{40}{subsection.5.3.1}\protected@file@percent }
+\newlabel{subsec:ch5_failure}{{5.3.1}{40}{仿真画面中的检测失效表现}{subsection.5.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}按距离分析检测不稳定的原因}{41}{subsection.5.3.2}\protected@file@percent }
+\newlabel{subsec:ch5_mechanism}{{5.3.2}{41}{按距离分析检测不稳定的原因}{subsection.5.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}按距离补充仿真样本并自动标注}{41}{subsection.5.3.3}\protected@file@percent }
+\newlabel{subsec:ch5_autolabel}{{5.3.3}{41}{按距离补充仿真样本并自动标注}{subsection.5.3.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-1}{\ignorespaces 仿真失效分析与距离分层采样设计}}{42}{table.caption.18}\protected@file@percent }
+\newlabel{tab:ch5_sampling}{{5{}-1}{42}{仿真失效分析与距离分层采样设计}{table.caption.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.4}适度微调并验证适应能力}{42}{subsection.5.3.4}\protected@file@percent }
+\newlabel{subsec:ch5_strategy}{{5.3.4}{42}{适度微调并验证适应能力}{subsection.5.3.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}模型实现}{43}{section.5.4}\protected@file@percent }
+\newlabel{sec:ch5_implementation}{{5.4}{43}{模型实现}{section.5.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}模型构建与检查}{43}{subsection.5.4.1}\protected@file@percent }
+\newlabel{subsec:ch5_build}{{5.4.1}{43}{模型构建与检查}{subsection.5.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}数据集训练}{43}{subsection.5.4.2}\protected@file@percent }
+\newlabel{subsec:ch5_train}{{5.4.2}{43}{数据集训练}{subsection.5.4.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-2}{\ignorespaces \textcolor {black}{公开数据集}检测模型训练配置}}{44}{table.caption.19}\protected@file@percent }
+\newlabel{tab:ch5_train_config}{{5{}-2}{44}{\textcolor {black}{公开数据集}检测模型训练配置}{table.caption.19}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces 组合改进模型构建与公开数据训练}}{45}{algorithm.2}\protected@file@percent }
+\newlabel{alg:ch5-train}{{2}{45}{组合改进模型构建与公开数据训练}{algorithm.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}仿真样本处理与微调训练}{45}{subsection.5.4.3}\protected@file@percent }
+\newlabel{subsec:ch5_finetune_impl}{{5.4.3}{45}{仿真样本处理与微调训练}{subsection.5.4.3}{}}
+\newlabel{eq:ch5_autobox}{{5-1}{45}{仿真样本处理与微调训练}{equation.5.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-2}{\ignorespaces \textcolor {black}{组合改进模型在公开数据集上的训练过程曲线}}}{46}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:ch5_training}{{5{}-2}{46}{\textcolor {black}{组合改进模型在公开数据集上的训练过程曲线}}{figure.caption.20}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-3}{\ignorespaces 仿真微调训练配置}}{47}{table.caption.21}\protected@file@percent }
+\newlabel{tab:ch5_finetune_config}{{5{}-3}{47}{仿真微调训练配置}{table.caption.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}模型推理及检测结果输出}{47}{subsection.5.4.4}\protected@file@percent }
+\newlabel{subsec:ch5_inference}{{5.4.4}{47}{模型推理及检测结果输出}{subsection.5.4.4}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces 仿真样本自动标注与适度微调}}{48}{algorithm.3}\protected@file@percent }
+\newlabel{alg:ch5-finetune}{{3}{48}{仿真样本自动标注与适度微调}{algorithm.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}实验验证}{48}{section.5.5}\protected@file@percent }
+\newlabel{sec:ch5_experiments}{{5.5}{48}{实验验证}{section.5.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-3}{\ignorespaces 基线与协同模型的典型检测样本对比（绿框为无人机检测结果）}}{49}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:ch5_compare}{{5{}-3}{49}{基线与协同模型的典型检测样本对比（绿框为无人机检测结果）}{figure.caption.22}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {样本一：基线模型}}}{49}{subfigure.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {样本一：协同模型}}}{49}{subfigure.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-3}{\ignorespaces 基线与协同模型的典型检测样本对比（续；绿框为无人机检测结果）}}{50}{figure.caption.23}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {样本二：基线模型}}}{50}{subfigure.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {样本二：协同模型}}}{50}{subfigure.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}实验设置与评价指标}{51}{subsection.5.5.1}\protected@file@percent }
+\newlabel{subsec:ch5_metrics}{{5.5.1}{51}{实验设置与评价指标}{subsection.5.5.1}{}}
+\newlabel{eq:ch5_pr}{{5-2}{51}{实验设置与评价指标}{equation.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}消融实验}{52}{subsection.5.5.2}\protected@file@percent }
+\newlabel{subsec:ch5_ablation}{{5.5.2}{52}{消融实验}{subsection.5.5.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-4}{\ignorespaces 检测模型消融实验结果（\textcolor {black}{公开数据集}验证集，输入尺寸为$640\times 640$）}}{52}{table.caption.24}\protected@file@percent }
+\newlabel{tab:ch5_ablation}{{5{}-4}{52}{检测模型消融实验结果（\textcolor {black}{公开数据集}验证集，输入尺寸为$640\times 640$）}{table.caption.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-4}{\ignorespaces \textcolor {black}{组合改进模型在公开数据集验证集上的}精确率—召回率曲线}}{53}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:ch5_pr}{{5{}-4}{53}{\textcolor {black}{组合改进模型在公开数据集验证集上的}精确率—召回率曲线}{figure.caption.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-5}{\ignorespaces \textcolor {black}{组合改进模型在公开数据集验证集上的归一化混淆矩阵}}}{53}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:ch5_cm}{{5{}-5}{53}{\textcolor {black}{组合改进模型在公开数据集验证集上的归一化混淆矩阵}}{figure.caption.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.3}主流检测模型对比}{55}{subsection.5.5.3}\protected@file@percent }
+\newlabel{subsec:ch5_mainstream}{{5.5.3}{55}{主流检测模型对比}{subsection.5.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.4}仿真微调前后对比}{55}{subsection.5.5.4}\protected@file@percent }
+\newlabel{subsec:ch5_finetune_result}{{5.5.4}{55}{仿真微调前后对比}{subsection.5.5.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-5}{\ignorespaces 仿真微调前后仿真检测结果}}{56}{table.caption.27}\protected@file@percent }
+\newlabel{tab:ch5_finetune_result}{{5{}-5}{56}{仿真微调前后仿真检测结果}{table.caption.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.5}不同距离区间的检测结果}{56}{subsection.5.5.5}\protected@file@percent }
+\newlabel{subsec:ch5_distance}{{5.5.5}{56}{不同距离区间的检测结果}{subsection.5.5.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-6}{\ignorespaces 仿真微调前后检测死区现象对比}}{57}{figure.caption.28}\protected@file@percent }
+\newlabel{fig:ch5_deadzone}{{5{}-6}{57}{仿真微调前后检测死区现象对比}{figure.caption.28}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5{}-7}{\ignorespaces 微调后仿真角度误差分析}}{57}{figure.caption.29}\protected@file@percent }
+\newlabel{fig:ch5_sim_analysis}{{5{}-7}{57}{微调后仿真角度误差分析}{figure.caption.29}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5{}-6}{\ignorespaces 微调前后逐距离样本数与检出率}}{58}{table.caption.30}\protected@file@percent }
+\newlabel{tab:ch5_distance}{{5{}-6}{58}{微调前后逐距离样本数与检出率}{table.caption.30}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.6}结果分析}{58}{section.5.6}\protected@file@percent }
+\newlabel{sec:ch5_discussion}{{5.6}{58}{结果分析}{section.5.6}{}}
 \@setckpt{contents/chap5}{
-\setcounter{page}{73}
-\setcounter{equation}{24}
-\setcounter{enumi}{0}
+\setcounter{page}{62}
+\setcounter{equation}{2}
+\setcounter{enumi}{5}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
 \setcounter{enumiv}{0}
@@ -137,18 +98,18 @@
 \setcounter{mpfootnote}{0}
 \setcounter{part}{0}
 \setcounter{chapter}{5}
-\setcounter{section}{10}
+\setcounter{section}{6}
 \setcounter{subsection}{0}
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{4}
-\setcounter{table}{11}
+\setcounter{figure}{7}
+\setcounter{table}{6}
 \setcounter{section@level}{0}
-\setcounter{Item}{0}
+\setcounter{Item}{5}
 \setcounter{Hfootnote}{0}
 \setcounter{Hy@AnnotLevel}{0}
-\setcounter{bookmark@seq@number}{128}
+\setcounter{bookmark@seq@number}{79}
 \setcounter{nlinenum}{0}
 \setcounter{LT@tables}{0}
 \setcounter{LT@chunks}{0}
@@ -163,9 +124,9 @@
 \setcounter{proposition}{0}
 \setcounter{assumption}{0}
 \setcounter{float@type}{8}
-\setcounter{algorithm}{1}
-\setcounter{ALC@unique}{35}
-\setcounter{ALC@line}{35}
+\setcounter{algorithm}{3}
+\setcounter{ALC@unique}{82}
+\setcounter{ALC@line}{17}
 \setcounter{ALC@rem}{0}
 \setcounter{ALC@depth}{0}
 \setcounter{tabx@nest}{0}
@@ -177,7 +138,7 @@
 \setcounter{citetotal}{0}
 \setcounter{multicitecount}{0}
 \setcounter{multicitetotal}{0}
-\setcounter{instcount}{56}
+\setcounter{instcount}{25}
 \setcounter{maxnames}{1}
 \setcounter{minnames}{1}
 \setcounter{maxitems}{1}
@@ -288,14 +249,14 @@
 \setcounter{gbbiblocalcase}{0}
 \setcounter{lanordernum}{0}
 \setcounter{cbx@tempcnta}{0}
-\setcounter{cbx@tempcntb}{29}
+\setcounter{cbx@tempcntb}{17}
 \setcounter{cbx@tempcntc}{0}
 \setcounter{cbx@tempcntd}{-1}
 \setcounter{gbrefcompress}{2}
 \setcounter{parentequation}{0}
 \setcounter{KVtest}{1}
 \setcounter{subfigure}{0}
-\setcounter{subfigure@save}{0}
+\setcounter{subfigure@save}{4}
 \setcounter{lofdepth}{1}
 \setcounter{subtable}{0}
 \setcounter{subtable@save}{0}

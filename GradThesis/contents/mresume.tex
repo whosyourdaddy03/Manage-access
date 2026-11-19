@@ -1,1 +1,30 @@
 %% 作者简历及在学研究成果
+% 本章局部沿用参考模板的页面与标题间距，结束后恢复当前论文设置。
+\newgeometry{left=3cm,right=3cm,top=3cm,bottom=2cm,bindingoffset=1cm}
+\global\setlength{\headwidth}{\textwidth}
+\begingroup
+\setlength{\parskip}{0.1em plus .1ex minus .1ex}
+\linespread{1.3}\selectfont
+\ctexset{chapter/afterskip=16.5pt}
+\titlespacing{\section}{0pt}{10pt}{10pt}
+
+\chapter*{作者简历及在学研究成果}\addcontentsline{toc}{chapter}{作者简历及在学研究成果}
+
+\section*{一、主要教育经历/工作经历（从大学起，到硕士入学止）}
+
+\noindent\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+  \hline
+  起止年月 & 学习或工作单位 & 备注 \\\hline
+  2017年09月至2021年06月 & 在安康学院数学与统计学院攻读学士学位 & \\\hline
+\end{tabularx}
+
+\section*{二、在学期间从事的科研工作}
+
+\section*{三、在学期间所获的科研奖励}
+
+\section*{四、在学期间发表的论文}
+
+\pagestyle{empty}
+\endgroup
+\restoregeometry
+\global\setlength{\headwidth}{\textwidth}
