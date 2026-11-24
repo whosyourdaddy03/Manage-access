@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.10.19)  23 NOV 2026 23:50
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.10.19)  25 NOV 2026 00:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1854,44 +1854,48 @@ Package fontspec Info:
 (fontspec)             <->"FangSong/OT:script=hani;language=dflt;mapping=tex-te
 xt;"
 
- [9] [10] [11] [12]) [13]
+ [9]
+Underfull \vbox (badness 7168) has occurred while \output is active []
+
+ [10]
+[11] [12]) [13] [14]
 \openout2 = `contents/chap3.aux'.
 
  (contents/chap3.tex
 \bfseries 3
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 8151) has occurred while \output is active []
 
- [14
+ [15
 
 
 
 
 ]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 5787) has occurred while \output is active []
 
- [15]
-[16] [17]
+ [16]
+[17] [18]
 File: images/pictures/system_arch_print.pdf Graphic file (type pdf)
 <use images/pictures/system_arch_print.pdf>
- [18] [19]
+ [19] [20]
 File: images/pictures/sim_angle_error_2panel.pdf Graphic file (type pdf)
 <use images/pictures/sim_angle_error_2panel.pdf>
-) [20]
+) [21]
 \openout2 = `contents/chap4.aux'.
 
  (contents/chap4.tex
 \bfseries 4
-[21
+[22
 
 
 
 
-] [22] [23]
+] [23]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [24]
-[25]
+[25] [26]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 134.
 File: images/pictures/dashboard_statemachine.png Graphic file (type bmp)
@@ -1899,15 +1903,15 @@ File: images/pictures/dashboard_statemachine.png Graphic file (type bmp)
 
 Underfull \vbox (badness 2050) has occurred while \output is active []
 
- [26]
-[27] [28] [29]
+ [27]
+[28] [29] [30]
 File: images/pictures/sim_angle_error_2panel.pdf Graphic file (type pdf)
 <use images/pictures/sim_angle_error_2panel.pdf>
 
 Underfull \vbox (badness 1320) has occurred while \output is active []
 
- [30]
-[31] [32] [33] [34]
+ [31]
+[32] [33] [34] [35]
 File: images/pictures/chart_threshold.png Graphic file (type bmp)
 <images/pictures/chart_threshold.png>
 File: images/pictures/chart_size.png Graphic file (type bmp)
@@ -1915,13 +1919,13 @@ File: images/pictures/chart_size.png Graphic file (type bmp)
 
 Underfull \vbox (badness 1194) has occurred while \output is active []
 
- [35])
-[36]
+ [36])
+[37]
 \openout2 = `contents/chap5.aux'.
 
  (contents/chap5.tex
 \bfseries 5
-[37
+[38
 
 
 
@@ -1929,14 +1933,14 @@ Underfull \vbox (badness 1194) has occurred while \output is active []
 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [38]
+ [39]
 File: images/pictures/network_arch.pdf Graphic file (type pdf)
 <use images/pictures/network_arch.pdf>
 
-[39] [40] [41] [42] [43] [44]
+[40] [41] [42] [43] [44] [45]
 File: images/pictures/training_curves_p2ema.pdf Graphic file (type pdf)
 <use images/pictures/training_curves_p2ema.pdf>
- [45] [46] [47]
+ [46] [47] [48]
 File: images/pictures/compare_01_baseline.png Graphic file (type bmp)
 <images/pictures/compare_01_baseline.png>
 File: images/pictures/compare_01_combined.png Graphic file (type bmp)
@@ -1945,45 +1949,45 @@ File: images/pictures/compare_02_baseline.png Graphic file (type bmp)
 <images/pictures/compare_02_baseline.png>
 File: images/pictures/compare_02_combined.png Graphic file (type bmp)
 <images/pictures/compare_02_combined.png>
- [48] [49] [50] [51] [52]
+ [49] [50] [51] [52] [53]
 File: images/pictures/pr_curve_p2ema.png Graphic file (type bmp)
 <images/pictures/pr_curve_p2ema.png>
 File: images/pictures/confusion_matrix_p2ema.png Graphic file (type bmp)
 <images/pictures/confusion_matrix_p2ema.png>
- [53]
+ [54]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [54]
-[55]
+ [55]
+[56]
 File: images/pictures/deadzone_before_after.pdf Graphic file (type pdf)
 <use images/pictures/deadzone_before_after.pdf>
 File: images/pictures/sim_angle_error_2panel.pdf Graphic file (type pdf)
 <use images/pictures/sim_angle_error_2panel.pdf>
- [56] [57] [58]
+ [57] [58] [59]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [59]
+ [60]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [60])
-[61]
+ [61])
+[62]
 \openout2 = `contents/chap6.aux'.
 
  (contents/chap6.tex
 \bfseries 6
-) [62
+) [63
 
 
 
 
-] [63
+] [64
 
 
 
-] [64] [65] [66] [67
+] [65] [66] [67] [68
 
 
-] [68
+] [69
 
 
 ]
@@ -2023,7 +2027,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
- [69
+ [70
 
 
 
@@ -2048,10 +2052,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  32922 strings out of 402987
  703224 string characters out of 5448523
- 1735084 words of memory out of 5000000
+ 1734084 words of memory out of 5000000
  61133 multiletter control sequences out of 15000+600000
  644066 words of font info for 168 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  107i,14n,125p,1199b,5215s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (78 pages).
+Output written on main.pdf (79 pages).

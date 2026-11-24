@@ -22,64 +22,64 @@
 \contentsline {section}{\numberline {2.5}卡尔曼滤波与噪声估计}{12}{section.2.5}%
 \contentsline {subsection}{\numberline {2.5.1}状态预测与量测更新}{12}{subsection.2.5.1}%
 \contentsline {subsection}{\numberline {2.5.2}过程噪声与量测噪声}{13}{subsection.2.5.2}%
-\contentsline {chapter}{\numberline {\bfseries 3\hspace {.3em}}系统需求与技术实现}{14}{chapter.3}%
-\contentsline {section}{\numberline {3.1}需求分析}{14}{section.3.1}%
-\contentsline {section}{\numberline {3.2}无人机飞行仿真环境构建}{15}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}仿真环境组成}{15}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}目标航迹与飞行场景}{15}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}相机跟随与仿真数据输出}{16}{subsection.3.2.3}%
-\contentsline {section}{\numberline {3.3}可视化平台构建}{16}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}界面布局与参数设置}{16}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}光电画面与地图航迹}{16}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}状态告警与历史回放}{17}{subsection.3.3.3}%
-\contentsline {section}{\numberline {3.4}多源数据接入与目标处理}{18}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}多源数据输入}{18}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}目标检测与三态跟踪}{18}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}单目定位与轨迹预测}{19}{subsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.4.4}数据记录与结果输出}{19}{subsection.3.4.4}%
-\contentsline {chapter}{\numberline {\bfseries 4\hspace {.3em}}三态目标跟踪与结果分析}{21}{chapter.4}%
-\contentsline {section}{\numberline {4.1}问题描述}{21}{section.4.1}%
-\contentsline {section}{\numberline {4.2}跟踪与定位方法设计}{21}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}目标锁定}{21}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}三态状态机及转换条件}{22}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}距离估计与空间定位}{23}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}遮挡处理}{25}{subsection.4.2.4}%
-\contentsline {section}{\numberline {4.3}算法实现}{26}{section.4.3}%
-\contentsline {section}{\numberline {4.4}实验验证}{29}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}基础设置与评价指标}{29}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}三态跟踪与滤波带来的改善}{29}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}状态转换与遮挡可靠性}{31}{subsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.4.4}未来轨迹预测效果}{32}{subsection.4.4.4}%
-\contentsline {section}{\numberline {4.5}结果分析}{33}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}滤波前后测距误差对比}{33}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}方位误差及轨迹预测误差分析}{34}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}关键参数影响及适用条件}{34}{subsection.4.5.3}%
-\contentsline {chapter}{\numberline {\bfseries 5\hspace {.3em}}小目标检测模型与结果分析}{37}{chapter.5}%
-\contentsline {section}{\numberline {5.1}问题描述}{37}{section.5.1}%
-\contentsline {section}{\numberline {5.2}面向小目标的检测模型改进}{38}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}高分辨率检测层：保留小目标细节}{38}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}注意力特征增强：减少背景干扰}{39}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3}协同检测模型：两项改进的配合}{39}{subsection.5.2.3}%
-\contentsline {section}{\numberline {5.3}仿真环境检测失效的诊断与处理}{40}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}仿真画面中的检测失效表现}{40}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}按距离分析检测不稳定的原因}{41}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}按距离补充仿真样本并自动标注}{41}{subsection.5.3.3}%
-\contentsline {subsection}{\numberline {5.3.4}适度微调并验证适应能力}{42}{subsection.5.3.4}%
-\contentsline {section}{\numberline {5.4}模型实现}{43}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}模型构建与检查}{43}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}数据集训练}{43}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}仿真样本处理与微调训练}{45}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4}模型推理及检测结果输出}{47}{subsection.5.4.4}%
-\contentsline {section}{\numberline {5.5}实验验证}{48}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}实验设置与评价指标}{51}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}消融实验}{52}{subsection.5.5.2}%
-\contentsline {subsection}{\numberline {5.5.3}主流检测模型对比}{55}{subsection.5.5.3}%
-\contentsline {subsection}{\numberline {5.5.4}仿真微调前后对比}{55}{subsection.5.5.4}%
-\contentsline {subsection}{\numberline {5.5.5}不同距离区间的检测结果}{56}{subsection.5.5.5}%
-\contentsline {section}{\numberline {5.6}结果分析}{58}{section.5.6}%
-\contentsline {chapter}{\numberline {\bfseries 6\hspace {.3em}}总结与展望}{62}{chapter.6}%
-\contentsline {chapter}{参考文献}{63}{chapter*.31}%
-\contentsline {chapter}{独创性说明}{67}{chapter*.32}%
-\contentsline {chapter}{关于论文使用授权的说明}{68}{chapter*.33}%
-\contentsline {chapter}{学位论文数据集}{69}{chapter*.34}%
+\contentsline {chapter}{\numberline {\bfseries 3\hspace {.3em}}系统需求与技术实现}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}需求分析}{15}{section.3.1}%
+\contentsline {section}{\numberline {3.2}无人机飞行仿真环境构建}{16}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}仿真环境组成}{16}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}目标航迹与飞行场景}{16}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}相机跟随与仿真数据输出}{17}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}可视化平台构建}{17}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}界面布局与参数设置}{17}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}光电画面与地图航迹}{17}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}状态告警与历史回放}{18}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}多源数据接入与目标处理}{19}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}多源数据输入}{19}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}目标检测与三态跟踪}{19}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}单目定位与轨迹预测}{20}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}数据记录与结果输出}{20}{subsection.3.4.4}%
+\contentsline {chapter}{\numberline {\bfseries 4\hspace {.3em}}三态目标跟踪与结果分析}{22}{chapter.4}%
+\contentsline {section}{\numberline {4.1}问题描述}{22}{section.4.1}%
+\contentsline {section}{\numberline {4.2}跟踪与定位方法设计}{22}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}目标锁定}{22}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}三态状态机及转换条件}{23}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}距离估计与空间定位}{25}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}遮挡处理}{26}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}算法实现}{27}{section.4.3}%
+\contentsline {section}{\numberline {4.4}实验验证}{30}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}基础设置与评价指标}{30}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}三态跟踪与滤波带来的改善}{30}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}状态转换与遮挡可靠性}{32}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}未来轨迹预测效果}{33}{subsection.4.4.4}%
+\contentsline {section}{\numberline {4.5}结果分析}{34}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}滤波前后测距误差对比}{34}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}方位误差及轨迹预测误差分析}{35}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}关键参数影响及适用条件}{35}{subsection.4.5.3}%
+\contentsline {chapter}{\numberline {\bfseries 5\hspace {.3em}}小目标检测模型与结果分析}{38}{chapter.5}%
+\contentsline {section}{\numberline {5.1}问题描述}{38}{section.5.1}%
+\contentsline {section}{\numberline {5.2}面向小目标的检测模型改进}{39}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}高分辨率检测层：保留小目标细节}{39}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}注意力特征增强：减少背景干扰}{40}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}协同检测模型：两项改进的配合}{40}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}仿真环境检测失效的诊断与处理}{41}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}仿真画面中的检测失效表现}{41}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}按距离分析检测不稳定的原因}{42}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}按距离补充仿真样本并自动标注}{42}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}适度微调并验证适应能力}{43}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}模型实现}{44}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}模型构建与检查}{44}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}数据集训练}{44}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}仿真样本处理与微调训练}{46}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}模型推理及检测结果输出}{48}{subsection.5.4.4}%
+\contentsline {section}{\numberline {5.5}实验验证}{49}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}实验设置与评价指标}{52}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}消融实验}{53}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}主流检测模型对比}{56}{subsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.5.4}仿真微调前后对比}{56}{subsection.5.5.4}%
+\contentsline {subsection}{\numberline {5.5.5}不同距离区间的检测结果}{57}{subsection.5.5.5}%
+\contentsline {section}{\numberline {5.6}结果分析}{59}{section.5.6}%
+\contentsline {chapter}{\numberline {\bfseries 6\hspace {.3em}}总结与展望}{63}{chapter.6}%
+\contentsline {chapter}{参考文献}{64}{chapter*.31}%
+\contentsline {chapter}{独创性说明}{68}{chapter*.32}%
+\contentsline {chapter}{关于论文使用授权的说明}{69}{chapter*.33}%
+\contentsline {chapter}{学位论文数据集}{70}{chapter*.34}%
 \contentsfinish 
