@@ -1,0 +1,17 @@
+std_msgs/Header header
+string vehicle_id
+string source
+string flight_state
+bool connected
+bool armed
+float32 battery_percent
+float32 link_quality_percent
+float64 latitude_deg
+float64 longitude_deg
+float32 relative_altitude_m
+float32 roll_deg
+float32 pitch_deg
+float32 yaw_deg
+float32 ground_speed_m_s
+string active_control_source
+string[] warnings

@@ -1,0 +1,15 @@
+vehicle_id: px4-sitl
+simulation_mode: true
+
+# Conservative placeholders. Calibrate all values in SITL before real flight.
+limits:
+  minimum_arm_battery_percent: 30.0
+  maximum_horizontal_speed_m_s: 2.0
+  maximum_vertical_speed_m_s: 1.0
+  maximum_yaw_rate_deg_s: 45.0
+  minimum_altitude_m: 0.5
+  maximum_altitude_m: 10.0
+  command_ttl_ms: 250
+  telemetry_timeout_ms: 1000
+  target_lost_timeout_ms: 500
+  target_recovery_timeout_ms: 5000
