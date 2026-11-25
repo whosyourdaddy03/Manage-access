@@ -510,7 +510,7 @@ U D C &：& \ustb@UDCNumber & 密级 &: & \ustb@SecurityLevel \\
 \chapter*{\bfseries 摘\quad 要}\addcontentsline{toc}{chapter}{摘要}
 \vskip16.5pt
 }%
-{%\vskip1em
+{\vskip0.8em
 \noindent {\bfseries\zihao{-4} 关键词：}\ustb@ChineseKeywords \clearpage}
 
 \ProvideDocumentEnvironment{EnglishAbstract}{}%
@@ -534,8 +534,8 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
 %\centerline{\bfseries\zihao{3}\linespread{2.41} Abstract}
 %\vskip16.5pt
 
-%\vskip1em
-\noindent {\bfseries\zihao{-4} Key Words: } \ustb@EnglishKeywords \clearpage
+\vskip0.8em
+\noindent {\bfseries\zihao{-4} Key Words:} \ustb@EnglishKeywords \clearpage
 }
 
 %% 序言
