@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.10.19)  25 NOV 2026 00:24
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.10.19)  25 NOV 2026 14:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1854,11 +1854,7 @@ Package fontspec Info:
 (fontspec)             <->"FangSong/OT:script=hani;language=dflt;mapping=tex-te
 xt;"
 
- [9]
-Underfull \vbox (badness 7168) has occurred while \output is active []
-
- [10]
-[11] [12]) [13] [14]
+ [9] [10] [11] [12]) [13] [14]
 \openout2 = `contents/chap3.aux'.
 
  (contents/chap3.tex
@@ -1931,7 +1927,7 @@ Underfull \vbox (badness 1194) has occurred while \output is active []
 
 
 ]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 4779) has occurred while \output is active []
 
  [39]
 File: images/pictures/network_arch.pdf Graphic file (type pdf)
@@ -1963,7 +1959,11 @@ File: images/pictures/deadzone_before_after.pdf Graphic file (type pdf)
 <use images/pictures/deadzone_before_after.pdf>
 File: images/pictures/sim_angle_error_2panel.pdf Graphic file (type pdf)
 <use images/pictures/sim_angle_error_2panel.pdf>
- [57] [58] [59]
+
+Underfull \vbox (badness 1776) has occurred while \output is active []
+
+ [57]
+[58] [59]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [60]
@@ -2050,10 +2050,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 32922 strings out of 402987
- 703224 string characters out of 5448523
+ 32913 strings out of 402987
+ 702625 string characters out of 5448523
  1734084 words of memory out of 5000000
- 61133 multiletter control sequences out of 15000+600000
+ 61124 multiletter control sequences out of 15000+600000
  644066 words of font info for 168 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  107i,14n,125p,1199b,5215s stack positions out of 10000i,1000n,20000p,200000b,200000s
