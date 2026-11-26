@@ -21,8 +21,7 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{Q}{>{\centering\arraybackslash}X}
 \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
-% 统一多行公式的行间距，公式字号与正文保持一致。
-\setlength{\jot}{5pt}
+% 多行公式行间距使用模板默认值（\jot = 3pt）。
 \AtBeginEnvironment{table}{%
   \renewcommand{\arraystretch}{1.4}%
   \setlength{\tabcolsep}{6pt}%

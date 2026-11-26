@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.10.19)  25 NOV 2026 21:00
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.10.19)  26 NOV 2026 09:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1540,7 +1540,7 @@ Package: subfig 2005/06/28 ver: 1.3 subfig package
 )
 \symCJKmath=\mathgroup255
 LaTeX Font Info:    Overwriting symbol font `CJKmath' in version `bold'
-(Font)                  TU/SimSun(0)/m/n --> TU/SimSun(0)/b/n on input line 79.
+(Font)                  TU/SimSun(0)/m/n --> TU/SimSun(0)/b/n on input line 78.
 
 \@quotelevel=\count535
 \@quotereset=\count536
@@ -1550,26 +1550,26 @@ LaTeX Font Info:    Overwriting symbol font `CJKmath' in version `bold'
 (contents/chap6.aux) (contents/dataset.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
 
 Package fontspec Info: 
 (fontspec)             Adjusting the maths setup (use [no-math] to avoid
@@ -1577,64 +1577,64 @@ Package fontspec Info:
 
 \symlegacymaths=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 79.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 79.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 79.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 79.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 79.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 79.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 79.
-LaTeX Font Info:    Redeclaring math accent \check on input line 79.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 79.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 79.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 79.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 79.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 79.
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 78.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 78.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 78.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 78.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 78.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 78.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 78.
+LaTeX Font Info:    Redeclaring math accent \check on input line 78.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 78.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 78.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 78.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 78.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 79.
+(Font)              `operators' in the math version `normal' on input line 78.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> TU/TimesNewRoman(0)/m/n on input line 7
-9.
+8.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 79.
+(Font)              `operators' in the math version `bold' on input line 78.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/m/n on input line 
-79.
+78.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/m/n on 
-input line 79.
+input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/cmr/m/it --> TU/TimesNewRoman(0)/m/it on input line
- 79.
+ 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/b/n on input line 
-79.
+78.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 79.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 79.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 78.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/b/n on 
-input line 79.
+input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> TU/TimesNewRoman(0)/b/it on input lin
-e 79.
+e 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 79.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 79.
-Package hyperref Info: Link coloring OFF on input line 79.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 78.
+Package hyperref Info: Link coloring OFF on input line 78.
  (main.out) (main.out)
 \@outlinefile=\write4
 \openout4 = `main.out'.
@@ -1678,7 +1678,7 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package bicaption Info: Main language is not set on input line 79.
+Package bicaption Info: Main language is not set on input line 78.
 Package newfloat Info: Trying Plan B...
 Package newfloat Info: `float' package detected.
 Package biblatex Info: Trying to load language 'english'...
@@ -1697,15 +1697,15 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
  (main.bbl)
-Package biblatex Info: Reference section=0 on input line 79.
-Package biblatex Info: Reference segment=0 on input line 79.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 81.
+Package biblatex Info: Reference section=0 on input line 78.
+Package biblatex Info: Reference segment=0 on input line 78.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 80.
 
 
 (C:\Users\liang\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 81.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 80.
 
 
 (C:\Users\liang\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
@@ -1715,8 +1715,11 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] [2
 
-
 ] [3
+
+] [4
+
+] [5] [6
 
 ]
 \openout2 = `contents/abstract.aux'.
@@ -1758,11 +1761,13 @@ LaTeX Font Warning: Font shape `TU/SimHei(0)/b/n' undefined
 
 
 
-
 ] [2
 
+] [3
 
-] [3]) (main.toc
+] [4
+
+]) (main.toc
 
 Package fontspec Info: 
 (fontspec)             Could not resolve font "SimSun/BI" (it probably doesn't
@@ -1790,17 +1795,18 @@ Package fontspec Info:
 (fontspec)             <->"SimSun/OT:script=hani;language=dflt;mapping=tex-text
 ;"
 
- [4
+ [5
 
 
 
 
-
-] [5])
+] [6])
 \tf@toc=\write5
 \openout5 = `main.toc'.
 
- [6]
+ [7] [8
+
+]
 \openout2 = `contents/chap1.aux'.
 
  (contents/chap1.tex
@@ -1814,19 +1820,32 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-
 ]
-[2] [3]) [4]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [2]
+Underfull \vbox (badness 1436) has occurred while \output is active []
+
+ [3])
+[4]
 \openout2 = `contents/chap2.aux'.
 
  (contents/chap2.tex
 \bfseries 2
-[5
+
+Underfull \vbox (badness 1092) has occurred while \output is active []
+
+ [5
 
 
 
 
-] [6] [7] [8]
+]
+[6]
+Underfull \vbox (badness 7030) has occurred while \output is active []
+
+ [7]
+[8]
 
 Package fontspec Info: 
 (fontspec)             Could not resolve font "FangSong/BI" (it probably
@@ -1854,89 +1873,133 @@ Package fontspec Info:
 (fontspec)             <->"FangSong/OT:script=hani;language=dflt;mapping=tex-te
 xt;"
 
- [9] [10] [11] [12]) [13]
-\openout2 = `contents/chap3.aux'.
-
- (contents/chap3.tex
-\bfseries 3
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [14
+ [9]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10]
+Underfull \vbox (badness 3118) has occurred while \output is active []
+
+ [11]
+Underfull \vbox (badness 1231) has occurred while \output is active []
+
+ [12])
+[13]
+\openout2 = `contents/chap3.aux'.
+
+ (contents/chap3.tex [14
 
 
 
 
 ]
-Underfull \vbox (badness 5787) has occurred while \output is active []
+\bfseries 3
 
- [15]
-[16] [17]
-File: images/pictures/system_arch_print.pdf Graphic file (type pdf)
-<use images/pictures/system_arch_print.pdf>
- [18] [19]
-File: images/pictures/sim_angle_error_2panel.pdf Graphic file (type pdf)
-<use images/pictures/sim_angle_error_2panel.pdf>
-) [20]
-\openout2 = `contents/chap4.aux'.
-
- (contents/chap4.tex
-\bfseries 4
-[21
-
-
-
-
-] [22]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
+ [15]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [16]
+[17]
+Underfull \vbox (badness 4217) has occurred while \output is active []
+
+ [18]
+File: images/pictures/system_arch_print.pdf Graphic file (type pdf)
+<use images/pictures/system_arch_print.pdf>
+
+[19] [20]
+File: images/pictures/sim_angle_error_2panel.pdf Graphic file (type pdf)
+<use images/pictures/sim_angle_error_2panel.pdf>
+) [21]
+\openout2 = `contents/chap4.aux'.
+
+ (contents/chap4.tex [22
+
+
+
+
+]
+\bfseries 4
+
+Underfull \vbox (badness 1603) has occurred while \output is active []
+
  [23]
-[24] [25]
+Underfull \vbox (badness 2837) has occurred while \output is active []
+
+ [24]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [25]
+Underfull \vbox (badness 4967) has occurred while \output is active []
+
+ [26]
+[27]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 134.
 File: images/pictures/dashboard_statemachine.png Graphic file (type bmp)
 <images/pictures/dashboard_statemachine.png>
 
-Underfull \vbox (badness 2050) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [26]
-[27] [28] [29]
+ [28]
+[29] [30] [31]
 File: images/pictures/sim_angle_error_2panel.pdf Graphic file (type pdf)
 <use images/pictures/sim_angle_error_2panel.pdf>
+ [32] [33] [34]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-Underfull \vbox (badness 1320) has occurred while \output is active []
+ [35]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [30]
-[31] [32] [33] [34]
+ [36]
 File: images/pictures/chart_threshold.png Graphic file (type bmp)
 <images/pictures/chart_threshold.png>
 File: images/pictures/chart_size.png Graphic file (type bmp)
 <images/pictures/chart_size.png>
 
-Underfull \vbox (badness 1194) has occurred while \output is active []
-
- [35])
-[36]
+[37]) [38]
 \openout2 = `contents/chap5.aux'.
 
  (contents/chap5.tex
 \bfseries 5
-[37
+
+Underfull \vbox (badness 2635) has occurred while \output is active []
+
+ [39
 
 
 
 
 ]
-Underfull \vbox (badness 4779) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [38]
+ [40]
 File: images/pictures/network_arch.pdf Graphic file (type pdf)
 <use images/pictures/network_arch.pdf>
 
-[39] [40] [41] [42] [43] [44]
+Underfull \vbox (badness 3118) has occurred while \output is active []
+
+ [41]
+[42] [43]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [44]
+Underfull \vbox (badness 6268) has occurred while \output is active []
+
+ [45]
+[46]
 File: images/pictures/training_curves_p2ema.pdf Graphic file (type pdf)
 <use images/pictures/training_curves_p2ema.pdf>
- [45] [46] [47]
+ [47]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [48]
+Underfull \vbox (badness 7133) has occurred while \output is active []
+
+ [49]
 File: images/pictures/compare_01_baseline.png Graphic file (type bmp)
 <images/pictures/compare_01_baseline.png>
 File: images/pictures/compare_01_combined.png Graphic file (type bmp)
@@ -1945,91 +2008,68 @@ File: images/pictures/compare_02_baseline.png Graphic file (type bmp)
 <images/pictures/compare_02_baseline.png>
 File: images/pictures/compare_02_combined.png Graphic file (type bmp)
 <images/pictures/compare_02_combined.png>
- [48] [49] [50] [51] [52]
+
+[50] [51] [52]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [53]
+[54]
 File: images/pictures/pr_curve_p2ema.png Graphic file (type bmp)
 <images/pictures/pr_curve_p2ema.png>
 File: images/pictures/confusion_matrix_p2ema.png Graphic file (type bmp)
 <images/pictures/confusion_matrix_p2ema.png>
- [53]
+ [55]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [54]
-[55]
+ [56]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [57]
 File: images/pictures/deadzone_before_after.pdf Graphic file (type pdf)
 <use images/pictures/deadzone_before_after.pdf>
 File: images/pictures/sim_angle_error_2panel.pdf Graphic file (type pdf)
 <use images/pictures/sim_angle_error_2panel.pdf>
- [56] [57] [58]
-Underfull \vbox (badness 3271) has occurred while \output is active []
 
- [59]
+Underfull \vbox (badness 2941) has occurred while \output is active []
+
+ [58]
+[59]
+Underfull \vbox (badness 7030) has occurred while \output is active []
+
+ [60]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [60])
-[61]
+ [61])
+[62]
 \openout2 = `contents/chap6.aux'.
 
  (contents/chap6.tex
 \bfseries 6
-) [62
+) [63
 
 
 
 
-] [63
+] [64
 
 
 
-] [64] [65] [66] [67
+] [65] [66] [67] [68] [69
 
 
-] [68
+] [70
 
+] [71
 
 ]
 \openout2 = `contents/dataset.aux'.
 
- (contents/dataset.tex
-*geometry* verbose mode - [ newgeometry ] result:
-* driver: xetex
-* paper: <default>
-* layout: <same size as paper>
-* layoutoffset:(h,v)=(0.0pt,0.0pt)
-* bindingoffset: 28.45274pt
-* modes: twoside 
-* h-part:(L,W,R)=(85.35826pt, 398.33861pt, 85.35826pt)
-* v-part:(T,H,B)=(85.35826pt, 702.78308pt, 56.9055pt)
-* \paperwidth=597.50787pt
-* \paperheight=845.04684pt
-* \textwidth=398.33861pt
-* \textheight=702.78308pt
-* \oddsidemargin=41.54102pt
-* \evensidemargin=13.08827pt
-* \topmargin=-19.78552pt
-* \headheight=13.0pt
-* \headsep=19.8738pt
-* \topskip=12.0pt
-* \footskip=30.0pt
-* \marginparwidth=88.0pt
-* \marginparsep=7.0pt
-* \columnsep=10.0pt
-* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
-* \hoffset=0.0pt
-* \voffset=0.0pt
-* \mag=1000
-* \@twocolumnfalse
-* \@twosidetrue
-* \@mparswitchtrue
-* \@reversemarginfalse
-* (1in=72.27pt=25.4mm, 1cm=28.453pt)
-
- [69
+ (contents/dataset.tex [72
 
 
-
-]) (main.aux
-(contents/abstract.aux) (contents/chap1.aux) (contents/chap2.aux)
-(contents/chap3.aux) (contents/chap4.aux) (contents/chap5.aux)
+])
+[73] (main.aux (contents/abstract.aux) (contents/chap1.aux) (contents/chap2.aux
+) (contents/chap3.aux) (contents/chap4.aux) (contents/chap5.aux)
 (contents/chap6.aux) (contents/dataset.aux))
  ***********
 LaTeX2e <2025-11-01>
@@ -2048,10 +2088,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  32922 strings out of 402987
  703224 string characters out of 5448523
- 1733084 words of memory out of 5000000
+ 1732956 words of memory out of 5000000
  61133 multiletter control sequences out of 15000+600000
  644066 words of font info for 168 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  107i,14n,125p,1199b,5215s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (78 pages).
+Output written on main.pdf (87 pages).

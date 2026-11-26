@@ -1,6 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{ustbthesis}[2023/09/01 v0.1 北京科技大学博士学位论文模板]
-\LoadClass[zihao=-4,a4paper,twoside,openany]{ctexbook}
+\LoadClass[zihao=-4,a4paper,twoside]{ctexbook}
 \RequirePackage{calc,etoolbox,expl3,xparse}
 
 \RequirePackage[x11names,svgnames,table,hyperref]{xcolor}
@@ -25,15 +25,15 @@
 \RequirePackage{setspace}
 
 \setlength{\parindent}{2em}
-\setlength{\parskip}{0.15em plus 0.05em minus 0.05em}
-\linespread{1.35}
+\setlength{\parskip}{0.1em plus .1ex minus .1ex}
+\linespread{1.5}
 \xeCJKsetup{CJKmath=true}
 
 \everydisplay{
-\abovedisplayskip0.7em plus 0.2em minus 0.1em
-\abovedisplayshortskip0.4em plus 0.1em
-\belowdisplayskip0.7em plus 0.2em minus 0.1em
-\belowdisplayshortskip0.4em plus 0.1em
+\abovedisplayskip0.4em plus 0.1em
+\abovedisplayshortskip0.2em plus 0.1em
+\belowdisplayskip0.4em plus 0.1em
+\belowdisplayshortskip0.2em plus 0.1em
 }
 
 %\RequirePackage{mathtools}
@@ -66,10 +66,10 @@
 
 \RenewDocumentCommand\contentsname{}{目\hspace{1em}录}
 \renewcommand\tableofcontents{%
-\clearpage %另起一页并输出当前页的浮动内容
+\cleardoublepage %另起一页并输出当前页的浮动内容
 \pagestyle{fancy} %页面风格是empty
 %\setlength{\baselineskip}{20pt}
-\linespread{1.35} %目录与正文保持一致的行距
+\linespread{1.3} %目录 1.3 倍行距（模板值）
 %\pdfbookmark[1]{目录}{tableofcontents}
     \if@twocolumn
         \@restoncoltrue\oneclumn
@@ -85,7 +85,7 @@
     \@starttoc{toc}%
     \if@restonecol\twocolumn\fi
     %\thispagestyle{empty} %
-    \clearpage
+    \cleardoublepage
 }
 %% 去掉目录中的加粗
 \let\LaTeXStandardTableOfContents\tableofcontents
@@ -370,7 +370,7 @@
 \pagestyle{empty}
 \TitlePageHeader \vfill \TitleBanner \vfill 
     \begin{center}\TitlePageFooter\end{center}
-\clearpage
+\cleardoublepage
 }
 \ProvideDocumentCommand{\EnglishTitleBanner}{}{
 \begin{center}
@@ -382,7 +382,7 @@
 }
 
 \ProvideDocumentCommand{\SecondPage}{}{
-\clearpage
+\cleardoublepage
 \pagestyle{brief}
 %\TitleBanner %中文标题信息
 \phantom{}\vskip6pt
@@ -431,7 +431,7 @@ University of Science and Technology Beijing
 \end{center}
 \vfill
 
-\clearpage
+\cleardoublepage
 }
 \ProvideDocumentCommand{\ThirdPageTopInfo}{}{
 {
@@ -497,12 +497,12 @@ U D C &：& \ustb@UDCNumber & 密级 &: & \ustb@SecurityLevel \\
 \end{raggedright}
 
 \vfill
-\clearpage
+\cleardoublepage
 }
 
 %% 中文摘要
 \ProvideDocumentEnvironment{ChineseAbstract}{}%
-{\clearpage
+{\cleardoublepage
 \pagestyle{fancy}
 \pagenumbering{Roman}\setcounter{page}{1}
 %\vskip17pt
@@ -510,11 +510,11 @@ U D C &：& \ustb@UDCNumber & 密级 &: & \ustb@SecurityLevel \\
 \chapter*{\bfseries 摘\quad 要}\addcontentsline{toc}{chapter}{摘要}
 \vskip16.5pt
 }%
-{\vskip0.8em
-\noindent {\bfseries\zihao{-4} 关键词：}\ustb@ChineseKeywords \clearpage}
+{
+\noindent {\bfseries\zihao{-4} 关键词：}\ustb@ChineseKeywords \cleardoublepage}
 
 \ProvideDocumentEnvironment{EnglishAbstract}{}%
-{\clearpage
+{\cleardoublepage
 \pagestyle{fancy}
 \begin{center}
 \zihao{-3}\bfseries\ustb@EnglishTitle
@@ -534,13 +534,12 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
 %\centerline{\bfseries\zihao{3}\linespread{2.41} Abstract}
 %\vskip16.5pt
 
-\vskip0.8em
-\noindent {\bfseries\zihao{-4} Key Words:} \ustb@EnglishKeywords \clearpage
+\noindent {\bfseries\zihao{-4} Key Words:} \ustb@EnglishKeywords \cleardoublepage
 }
 
 %% 序言
 \ProvideDocumentEnvironment{Preclude}{}%
-{\clearpage
+{\cleardoublepage
 %\pagenumbering{Roman}\setcounter{page}{1}
 \vskip17pt
 %\centerline{\heiti\zihao{3}\linespread{2.41} 序}
@@ -550,7 +549,7 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
 }%
 {}
 \ProvideDocumentCommand{\TableOfContents}{}{
-    \clearpage \zihao{-3}
+    \cleardoublepage \zihao{-3}
     \chapter*{目录} %\addcontentsline{toc}{chapter}{目录}
 \mainToc
 }
@@ -576,7 +575,7 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
 \renewcommand{\algorithmicensure}{\textbf{输出:}} % 输出关键字
 
 \DeclareDocumentCommand{\originalityDeclaration}{}{
-\clearpage
+\cleardoublepage
 \vskip17pt
 %\centerline{\bfseries\zihao{3}\linespread{2.41} 独创性说明}
 \chapter*{独创性声明}
@@ -593,7 +592,7 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
 \noindent 备注：提交时须有作者亲笔签名！
 }
 \DeclareDocumentCommand{\authorityDeclaration}{}{
-\clearpage
+\cleardoublepage
 \vskip17pt
 %\centerline{\bfseries\zihao{3}\linespread{2.41} 关于论文使用授权的说明}
 \chapter*{关于论文使用授权的说明}
@@ -611,7 +610,7 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
 \noindent 签名：\wideunderline[6em]{}\ 导师签名：\wideunderline[6em]{}\ 日期：\wideunderline[6em]{}
 }
 \ProvideDocumentCommand{\DatasetInfo}{}{
-\clearpage
+\cleardoublepage
 \vskip17pt
 \chapter*{学位论文数据集}
 \addcontentsline{toc}{chapter}{学位论文数据集}
@@ -658,7 +657,7 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
     chapter/number = \bfseries\arabic{chapter},
     chapter/format = \heiti\bfseries\centering\zihao{-3},
     chapter/beforeskip=0pt,
-    chapter/afterskip=22pt,
+    chapter/afterskip=16.5pt,
     chapter/pagestyle=fancy,
     section/format = \heiti\bfseries\zihao{4},
     %section/name = {\arabic{section}.,},
@@ -667,14 +666,11 @@ ABSTRACT \addcontentsline{toc}{chapter}{ABSTRACT}
     subsubsection/format=\heiti\bfseries\zihao{4}
 }
 \RequirePackage{titlesec}
-\titlespacing{\section}{0pt}{16pt plus 2pt minus 2pt}{10pt plus 1pt minus 1pt}
-\titlespacing{\subsection}{0pt}{14pt plus 2pt minus 2pt}{8pt plus 1pt minus 1pt}
-\titlespacing{\subsubsection}{0pt}{12pt plus 1pt minus 1pt}{6pt}
+\titlespacing{\section}{0pt}{10pt}{10pt}
+\titlespacing{\subsection}{0pt}{10pt}{10pt}
+\titlespacing{\subsubsection}{0pt}{10pt}{10pt}
 
-\setlength{\textfloatsep}{14pt plus 2pt minus 2pt}
-\setlength{\intextsep}{12pt plus 2pt minus 2pt}
-\setlength{\abovecaptionskip}{8pt}
-\setlength{\belowcaptionskip}{6pt}
+\setlength{\textfloatsep}{5pt}
 % \RequirePackage[backend=biber, style=caspervector,utf8,
 %     sortcites=true,autopunct=true,hyperref=true,
 % %    citestyle=authoryear-icomp,
